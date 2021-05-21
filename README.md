@@ -1,2 +1,2 @@
 # nussems
-Degree planning platform for National University of Singapore lfjkvnfejn
+Degree planning platform for National University of Singapore
