@@ -13,10 +13,10 @@
 
 **List of Technologies:** 
  * MERN stack
-   * MongoDB - document database 
-   * Express(.js) - Node.js web framework
-   * React(.js) - a client-side JavaScript framework
    * Node(.js) - the premier JavaScript web server
+   * Express(.js) - Node.js web framework
+   * MongoDB - document database 
+   * React(.js) - a client-side JavaScript framework
  * HTML/CSS/Javascript
  * Git
  * Hosted on Heroku
