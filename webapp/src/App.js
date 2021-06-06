@@ -1,4 +1,4 @@
-import { useState , useEffect} from "react";
+import { useState, useEffect } from "react";
 import { firebase } from "@firebase/app";
 import "@firebase/auth";
 import "@firebase/firestore";
@@ -15,50 +15,42 @@ import {
 import Login from "./pages/Login";
 import AppPage from "./pages/AppPage";
 import "./styles.css";
+import React from "react";
+export default class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      loggedin: firebase.auth().currentUser != null
+    };
+  }
 
-function CheckAndLoadMain() {
-  if (firebase.auth().currentUser) {
-      return <AppPage />;
+  render() {
+    if (!this.state.loggedin) {
+      return <Login logIn={this.logIn.bind(this)} />;
     } else {
-      return <Login />;
-    }          
+      return (
+        <>
+          <div className="App">
+            <AppShell setLogout={this.logOut.bind(this)} />
+            <div style={{ maxWidth: "64rem", margin: "0 auto" }}>
+              <AppPage />
+            </div>
+          </div>
+        </>
+      );
+    }
+  }
+
+  logOut() {
+    this.setState({loggedin: false}); 
+  }
+
+  logIn() {
+    this.setState({loggedin: true});
+  }
 }
 
-// useEffect(() => {
-//   const unsubscribe = firebase.auth().onAuthStateChanged((user) => { // detaching the listener
-//       if (user) {
-//         return <AppPage />;
-//       } else {
-//         return <Login />;
-//       }
-//   });
-//   return () => unsubscribe(); // unsubscribing from the listener when the component is unmounting. 
-// }, []);
-
-
-// useEffect(() => {
-//   firebase.auth().onAuthStateChanged(function(user) {
-//     if (user) {
-//       return <AppPage />;
-//     } else {
-//       return <Login />;
-//     }
-//   });
-// }, [user]);
-
-
-export default function App() {
-  return (
-    <div className="App">
-        <AppShell />
-      <div style={{ maxWidth: "64rem", margin: "0 auto" }}>
-        <CheckAndLoadMain />
-      </div>
-    </div>
-  );
-}
-
-function AppShell() {
+function AppShell(props) {
   const [anchorEl, setAnchorEl] = useState(null);
 
   const handleClick = (event) => {
@@ -72,45 +64,36 @@ function AppShell() {
   const handleLogout = (firebase) => {
     handleClose();
     firebase.auth().signOut();
+    props.setLogout();
   };
 
-  function CheckAndLoad() {
-    if (firebase.auth().currentUser) {
-      return (<div>
-      <Avatar
-        alt={firebase.auth().currentUser.displayName}
-        src={firebase.auth().currentUser.photoURL}
-        aria-controls="simple-menu"
-        aria-haspopup="true"
-        onClick={handleClick}
-      />
-      <Menu
-        id="simple-menu"
-        anchorEl={anchorEl}
-        keepMounted
-        open={Boolean(anchorEl)}
-        onClose={handleClose}
-      >
-        <MenuItem onClick={() => handleLogout(firebase)}>
-          Logout
-        </MenuItem>
-      </Menu>
-    </div>)           
-    }
-    return ("");
-  }
+  const user = firebase.auth().currentUser;
 
   return (
     <AppBar position="static">
       <Toolbar>
         <Typography variant="h6" style={{ flexGrow: 1, textAlign: "left" }}>
-          nus-tutors
+          Todo List
         </Typography>
-        <CheckAndLoad />
+        <div>
+          <Avatar
+            alt={user.displayName}
+            src={user.photoURL}
+            aria-controls="simple-menu"
+            aria-haspopup="true"
+            onClick={handleClick}
+          />
+          <Menu
+            id="simple-menu"
+            anchorEl={anchorEl}
+            keepMounted
+            open={Boolean(anchorEl)}
+            onClose={handleClose}
+          >
+            <MenuItem onClick={() => handleLogout(firebase)}>Logout</MenuItem>
+          </Menu>
+        </div>
       </Toolbar>
     </AppBar>
   );
 }
-
-
-
