@@ -20,37 +20,58 @@ export default class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      loggedin: firebase.auth().currentUser != null
+      user: firebase.auth().currentUser,
     };
   }
 
   render() {
-    if (!this.state.loggedin) {
-      return <Login logIn={this.logIn.bind(this)} />;
-    } else {
-      return (
-        <>
-          <div className="App">
-            <AppShell setLogout={this.logOut.bind(this)} />
-            <div style={{ maxWidth: "64rem", margin: "0 auto" }}>
-              <AppPage />
-            </div>
-          </div>
-        </>
-      );
-    }
+    return (
+      <div className="App">
+        <AppShell logOut={this.logOut.bind(this)} user={this.state.user} />
+        <Body logIn={this.logIn.bind(this)} user={this.state.user} />
+      </div>
+    );
   }
 
   logOut() {
-    this.setState({loggedin: false}); 
+    this.setState({ user: null });
   }
 
-  logIn() {
-    this.setState({loggedin: true});
+  logIn(user) {
+    this.setState({ user: user });
+  }
+}
+
+function Body(props) {
+  if (!props.user) {
+    return <Login logIn={props.logIn.bind(this)} />;
+  } else {
+    return (
+      <>
+        <div style={{ maxWidth: "64rem", margin: "0 auto" }}>
+          <AppPage />
+        </div>
+      </>
+    );
   }
 }
 
 function AppShell(props) {
+  return (
+    <AppBar position="static">
+      <Toolbar>
+        <Typography variant="h6" style={{ flexGrow: 1, textAlign: "left" }}>
+          Todo List
+        </Typography>
+        <LogoutButton user={props.user} logOut={props.logOut}/>
+      </Toolbar>
+    </AppBar>
+  );
+}
+
+function LogoutButton(props) {
+  const user = props.user;
+
   const [anchorEl, setAnchorEl] = useState(null);
 
   const handleClick = (event) => {
@@ -64,36 +85,31 @@ function AppShell(props) {
   const handleLogout = (firebase) => {
     handleClose();
     firebase.auth().signOut();
-    props.setLogout();
+    props.logOut();
   };
 
-  const user = firebase.auth().currentUser;
-
-  return (
-    <AppBar position="static">
-      <Toolbar>
-        <Typography variant="h6" style={{ flexGrow: 1, textAlign: "left" }}>
-          Todo List
-        </Typography>
-        <div>
-          <Avatar
-            alt={user.displayName}
-            src={user.photoURL}
-            aria-controls="simple-menu"
-            aria-haspopup="true"
-            onClick={handleClick}
-          />
-          <Menu
-            id="simple-menu"
-            anchorEl={anchorEl}
-            keepMounted
-            open={Boolean(anchorEl)}
-            onClose={handleClose}
-          >
-            <MenuItem onClick={() => handleLogout(firebase)}>Logout</MenuItem>
-          </Menu>
-        </div>
-      </Toolbar>
-    </AppBar>
-  );
+  if (props.user) {
+    return (
+      <div>
+        <Avatar
+          alt={user.displayName}
+          src={user.photoURL}
+          aria-controls="simple-menu"
+          aria-haspopup="true"
+          onClick={handleClick}
+        />
+        <Menu
+          id="simple-menu"
+          anchorEl={anchorEl}
+          keepMounted
+          open={Boolean(anchorEl)}
+          onClose={handleClose}
+        >
+          <MenuItem onClick={() => handleLogout(firebase)}>Logout</MenuItem>
+        </Menu>
+      </div>
+    );
+  } else {
+    return <></>;
+  }
 }
