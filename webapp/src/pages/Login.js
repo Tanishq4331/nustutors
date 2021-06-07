@@ -2,12 +2,13 @@ import { Button } from "@material-ui/core";
 import { firebase } from "@firebase/app";
 import "@firebase/auth";
 import "@firebase/firestore";
+import LoginBody from "../components/LoginBody";
 
 export default function Login(props) {
-  function handleLogin() {
+  const handleLogin = () => {
     console.log("handling");
     const googleAuthProvider = new firebase.auth.GoogleAuthProvider();
-    var signedin = false;
+    // var signedin = false;
     firebase
       .auth()
       .signInWithPopup(googleAuthProvider)
@@ -41,12 +42,5 @@ export default function Login(props) {
       });
   }
 
-  return (
-    <>
-      <h1>Login</h1>
-      <Button variant="contained" color="primary" onClick={handleLogin}>
-        Sign in with Google
-      </Button>
-    </>
-  );
+  return <LoginBody handleLogin={handleLogin} />
 }
