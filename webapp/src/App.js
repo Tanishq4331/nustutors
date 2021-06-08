@@ -8,30 +8,26 @@ import AppShell from "./components/AppShell";
 
 import "./styles.css";
 import React from "react";
-export default class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      user: firebase.auth().currentUser,
-    };
-  }
 
-  render() {
-    return (
-      <div className="App">
-        <AppShell logOut={this.logOut.bind(this)} user={this.state.user} />
-        <Body logIn={this.logIn.bind(this)} user={this.state.user} />
-      </div>
-    );
-  }
+export default function App() {
 
-  logOut() {
-    this.setState({ user: null });
-  }
+  const [user, setUser] = useState(firebase.auth().currentUser)
 
-  logIn(user) {
-    this.setState({ user: user });
-  }
+  const logOut = () => {
+    setUser(null);
+  };
+
+  const logIn = (user) => {
+    setUser(user);
+  };
+
+  return (
+    <div className="App">
+      <AppShell logOut={logOut} user={user} />
+      <Body logIn={logIn} user={user} />
+    </div>
+  );
+
 }
 
 
