@@ -21,3 +21,13 @@
  * Git
  * Hosted on Heroku
 
+ **Troubleshooting**
+  * When trying to use hooks, the given error is displayed despite all the hook rules being followed:
+
+      ```
+      hooks can only be called inside the body of a function component
+      ```
+    This occurs when an imported module uses a react version that is different from the version used in the index. 
+
+    This can be resolved by appending `react: path.resolve('./node_modules/react')` to the `alias` property within `resolve` in `/webapp/node_modules/react-scripts/config/webpack.config.js`   
+
