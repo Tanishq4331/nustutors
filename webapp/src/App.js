@@ -7,24 +7,15 @@ import "./styles.css";
 import { AuthProvider } from "./contexts/AuthContext";
 import AppShell from "./components/AppShell";
 import React from "react";
+import { useAuth } from "./contexts/AuthContext";
+
 
 export default function App() {
-  const [user, setUser] = useState(firebase.auth().currentUser);
-  const [display, setDisplay] = useState("Login");
-
-  const logOut = () => {
-    setUser(null);
-  };
-
-  const logIn = (user) => {
-    setUser(user);
-  };
-
   return (
     <AuthProvider>
       <div className="App">
-        <AppShell logOut={logOut} user={user} setDisplay={setDisplay} />
-        <Body logIn={logIn} user={user} display={display} />
+        <AppShell />
+        <Body />
       </div>
     </AuthProvider>
   );

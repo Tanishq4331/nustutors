@@ -1,18 +1,38 @@
+import { useAuth } from "../../contexts/AuthContext";
+import Dashboard from "../../pages/Dashboard";
+import Signup from "../../pages/Signup";
+import ForgotPassword from "../../pages/ForgotPassword";
 import Login from "../../pages/Login";
-import AppPage from "../../pages/AppPage";
-import { useAuth } from "../../contexts/AuthContext"
 
-export default function Body(props) {
-  const { currentUser } = useAuth() 
-  if (!currentUser) {
-    return <Login logIn={props.logIn.bind(this)} />;
-  } else {
-    return (
-      <>
-        <div style={{ maxWidth: "64rem", margin: "0 auto" }}>
-          <AppPage display={props.display} />
-        </div>
-      </>
-    );
+function ToRender() {
+  const { display } = useAuth();
+  console.log(display);
+  switch (display) {
+    case "Login":
+      return <Login />;
+    case "Dashboard":
+      return <Dashboard />;
+    case "Signup":
+      return <Signup />;
+    case "ForgotPassword":
+      return <ForgotPassword />;
+    default:
+      return <Login />;
   }
+}
+
+export default function Body() {
+  return (
+    <div style={{ maxWidth: "64rem", margin: "0 auto" }}>
+      <div className="App">
+        <header>
+          {/* <div style={{ display: "flex", flexFlow: "row nowrap" }}>
+          </div> */}
+        </header>
+        <main>
+          <ToRender />
+        </main>
+      </div>
+    </div>
+  );
 }

@@ -1,5 +1,5 @@
 import {useState} from "react";
-import { firebase } from "@firebase/app";
+import { useAuth } from "../../contexts/AuthContext";
 
 import {
   Avatar,
@@ -7,8 +7,8 @@ import {
   MenuItem,
 } from "@material-ui/core";
 
-export default function LogoutButton(props) {
-  const user = props.user;
+export default function LogoutButton() {
+  const { currentUser, logout } = useAuth();
 
   const [anchorEl, setAnchorEl] = useState(null);
 
@@ -20,18 +20,11 @@ export default function LogoutButton(props) {
     setAnchorEl(null);
   };
 
-  const handleLogout = (firebase) => {
-    handleClose();
-    firebase.auth().signOut();
-    props.logOut();
-  };
-
-  if (props.user) {
     return (
       <div>
         <Avatar
-          alt={user.displayName}
-          src={user.photoURL}
+          alt={currentUser.displayName}
+          src={currentUser.photoURL}
           aria-controls="simple-menu"
           aria-haspopup="true"
           onClick={handleClick}
@@ -43,11 +36,8 @@ export default function LogoutButton(props) {
           open={Boolean(anchorEl)}
           onClose={handleClose}
         >
-          <MenuItem onClick={() => handleLogout(firebase)}>Logout</MenuItem>
+          <MenuItem onClick={logout}>Logout</MenuItem>
         </Menu>
       </div>
     );
-  } else {
-    return <></>;
-  }
 }

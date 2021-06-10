@@ -5,12 +5,20 @@ import {
 } from "@material-ui/core";
 
 import LogoutButton from "./LogoutButton";
+import { useAuth } from "../../contexts/AuthContext";
 
-export default function AppShell(props) {
+export default function AppShell() {
 
-  const renderDashboard = () => {
-    if (props.user) {
-      return (<button onClick={() => props.setDisplay("Dashboard")}> Dashboard </button>);
+  const { currentUser, setDisplay } = useAuth();
+
+  const renderMenu = () => {
+    if (currentUser) {
+      return (
+        <>
+          <button onClick={() => setDisplay("Dashboard")}> Dashboard </button>
+          <LogoutButton />
+        </>
+      );
     } else {
       return <></>;
     }   
@@ -22,8 +30,7 @@ export default function AppShell(props) {
         <Typography variant="h6" style={{ flexGrow: 1, textAlign: "left" }}>
           <h3> NUSTutors </h3>
         </Typography>
-          {renderDashboard() }
-        <LogoutButton user={props.user} logOut={props.logOut}/>
+          {renderMenu()}
       </Toolbar>
     </AppBar>
   );
