@@ -3,6 +3,7 @@ import Dashboard from "../../pages/Dashboard";
 import Signup from "../../pages/Signup";
 import ForgotPassword from "../../pages/ForgotPassword";
 import Login from "../../pages/Login";
+import UpdateProfile from "../../pages/UpdateProfile";
 
 function ToRender() {
   const { display } = useAuth();
@@ -16,6 +17,8 @@ function ToRender() {
       return <Signup />;
     case "ForgotPassword":
       return <ForgotPassword />;
+    case "UpdateProfile":
+      return <UpdateProfile />
     default:
       return <Login />;
   }

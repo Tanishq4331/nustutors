@@ -3,24 +3,22 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useRef, useState } from "react";
 import { Form, Card, Alert } from "react-bootstrap";
 import { useAuth } from "../contexts/AuthContext";
-import Signup from "./Signup";
-import ForgotPassword from "./ForgotPassword";
 
 export default function LoginBody() {
   const emailRef = useRef();
   const passwordRef = useRef();
-  console.log(useAuth());
-  const { loginWithGoogle, login, setDisplay } = useAuth();
+  const { loginWithGoogle, login, setDisplay} = useAuth();
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false)
 
-  async function handleSubmit(e) {
+  async function handleLogin(e) {
     e.preventDefault();
 
     try {
       setError("");
       setLoading(true);
       await login(emailRef.current.value, passwordRef.current.value);
+      setDisplay("Dashboard")
     } catch {
       setError("Failed to log in");
     }
@@ -28,13 +26,27 @@ export default function LoginBody() {
     setLoading(false);
   }
 
+  async function handleLoginWithGoogle() {
+
+    try {
+      setError("");
+      setLoading(true);
+      await loginWithGoogle();
+      setDisplay("Dashboard")
+    } catch {
+      setError("Failed to log in");
+    }
+
+    setLoading(false);
+  }  
+
   return (
     <>
       <Card>
         <Card.Body>
           <h2 className="text-center mb-4">Log In</h2>
           {error && <Alert variant="danger">{error}</Alert>}
-          <Form onSubmit={handleSubmit}>
+          <Form onSubmit={handleLogin}>
             <Form.Group id="email">
               <Form.Label>Email</Form.Label>
               <Form.Control type="email" ref={emailRef} required />
@@ -48,7 +60,7 @@ export default function LoginBody() {
             </Button>
           </Form>
           <div className="w-100 text-center mt-3">
-            <button onClick={setDisplay("ForgotPassword")}>
+            <button onClick={() => setDisplay("ForgotPassword")}>
               Forgot Password
             </button>
           </div>
@@ -56,9 +68,9 @@ export default function LoginBody() {
       </Card>
       <div className="w-100 text-center mt-2">
         Need an account?{" "}
-        <button onClick={setDisplay("Signup")}>Sign Up</button>
+        <button onClick={() => setDisplay("Signup")}>Sign Up</button>
       </div>
-      <Button variant="contained" color="primary" onClick={loginWithGoogle}>
+      <Button variant="contained" color="primary" onClick={handleLoginWithGoogle}>
         Sign in with Google
       </Button>
     </>

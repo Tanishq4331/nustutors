@@ -1,5 +1,7 @@
 import {useState} from "react";
+import { Alert } from "react-bootstrap"
 import { useAuth } from "../../contexts/AuthContext";
+import React from 'react';
 
 import {
   Avatar,
@@ -8,9 +10,19 @@ import {
 } from "@material-ui/core";
 
 export default function LogoutButton() {
-  const { currentUser, logout } = useAuth();
+  const { currentUser, logout, setDisplay } = useAuth();
 
+  const [error, setError] = useState("")
   const [anchorEl, setAnchorEl] = useState(null);
+
+  async function handleLogout() {
+    setError("")
+    try {
+      await logout()
+    } catch {
+      setError("Failed to log out")
+    } 
+  }
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -20,8 +32,13 @@ export default function LogoutButton() {
     setAnchorEl(null);
   };
 
+  if (!currentUser) {
+    setDisplay("Login");
+    return null;
+  } else {
     return (
       <div>
+        {error && <Alert variant="danger">{error}</Alert>}
         <Avatar
           alt={currentUser.displayName}
           src={currentUser.photoURL}
@@ -36,8 +53,9 @@ export default function LogoutButton() {
           open={Boolean(anchorEl)}
           onClose={handleClose}
         >
-          <MenuItem onClick={logout}>Logout</MenuItem>
+          <MenuItem onClick={handleLogout}>Logout</MenuItem>
         </Menu>
       </div>
     );
+  }
 }

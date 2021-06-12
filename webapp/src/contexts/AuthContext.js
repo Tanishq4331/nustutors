@@ -1,13 +1,11 @@
 import React, { useContext, useState, useEffect } from "react";
 import { auth } from "../config/firebase";
 import { firebase } from "@firebase/app";
-
 //use components directly instead of using string representation as intermediate
 
 const AuthContext = React.createContext();
 
 export function useAuth() {
-  console.log(useContext(React.createContext()));
   return useContext(AuthContext);
 }
 
@@ -43,7 +41,7 @@ export function AuthProvider({ children }) {
   function loginWithGoogle() {
     const googleAuthProvider = new firebase.auth.GoogleAuthProvider();
 
-    auth
+    const loggedIn = auth
       .signInWithPopup(googleAuthProvider)
       .then((result) => {
         /** @type {firebase.auth.OAuthCredential} */
@@ -67,20 +65,15 @@ export function AuthProvider({ children }) {
         var credential = error.credential;
         // ...
       });
+      return loggedIn;
   }
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
-      setCurrentUser(user);
-      setLoading(false);
+        setCurrentUser(user);
+        setLoading(false);
     });
     return unsubscribe;
-  });
-
-  useEffect(() => {
-    if (!user) {
-      setDisplay("Login");
-    }
   });
 
   const value = {
@@ -94,7 +87,6 @@ export function AuthProvider({ children }) {
     resetPassword,
     updateEmail,
     updatePassword,
-    loginWithGoogle,
   };
 
   return (
