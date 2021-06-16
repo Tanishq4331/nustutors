@@ -4,7 +4,7 @@ import { useAuth } from "../contexts/AuthContext"
 
 export default function ForgotPassword() {
   const emailRef = useRef()
-  const { resetPassword, setDisplay } = useAuth()
+  const { resetPassword, redirect } = useAuth()
   const [error, setError] = useState("")
   const [message, setMessage] = useState("")
   const [loading, setLoading] = useState(false)
@@ -42,12 +42,12 @@ export default function ForgotPassword() {
             </Button>
           </Form>
           <div className="w-100 text-center mt-3">
-            <Button onClick={() => setDisplay("Login")}>Login</Button>
+            <Button onClick={() => redirect("Login")}>Login</Button>
           </div>
         </Card.Body>
       </Card>
       <div className="w-100 text-center mt-2">
-        Need an account? <Button onClick={() => setDisplay("Signup")}>Sign Up</Button>
+        Need an account? <Button onClick={() => redirect("Signup")}>Sign Up</Button>
       </div>
     </>
   )

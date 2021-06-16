@@ -7,7 +7,6 @@ import UpdateProfile from "../../pages/UpdateProfile";
 
 function ToRender() {
   const { display } = useAuth();
-  console.log(display);
   switch (display) {
     case "Login":
       return <Login />;

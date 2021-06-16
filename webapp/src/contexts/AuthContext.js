@@ -1,7 +1,6 @@
 import React, { useContext, useState, useEffect } from "react";
 import { auth } from "../config/firebase";
 import { firebase } from "@firebase/app";
-//use components directly instead of using string representation as intermediate
 
 const AuthContext = React.createContext();
 
@@ -12,10 +11,17 @@ export function useAuth() {
 export function AuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState();
   const [loading, setLoading] = useState(true);
-  const [display, setDisplay] = useState("Login");
+  const [display, setDisplay] = useState(
+    localStorage.getItem("SelectedPage") || "Login"
+  );
 
   function signup(email, password) {
     return auth.createUserWithEmailAndPassword(email, password);
+  }
+
+  function redirect(page) {
+    localStorage.setItem("SelectedPage", page);
+    setDisplay(page);
   }
 
   function login(email, password) {
@@ -23,7 +29,7 @@ export function AuthProvider({ children }) {
   }
 
   function logout() {
-    return auth.signOut();
+    return auth.signOut().then(() => redirect("Login"));
   }
 
   function resetPassword(email) {
@@ -43,7 +49,7 @@ export function AuthProvider({ children }) {
       currentUser.email,
       password
     );
-    return currentUser.reauthenticateWithCredential(credential)
+    return currentUser.reauthenticateWithCredential(credential);
   }
 
   function loginWithGoogle() {
@@ -86,7 +92,7 @@ export function AuthProvider({ children }) {
 
   const value = {
     currentUser,
-    setDisplay,
+    redirect,
     display,
     loginWithGoogle,
     login,

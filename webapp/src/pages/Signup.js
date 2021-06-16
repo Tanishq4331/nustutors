@@ -6,7 +6,7 @@ export default function Signup() {
   const emailRef = useRef()
   const passwordRef = useRef()
   const passwordConfirmRef = useRef()
-  const { signup, setDisplay } = useAuth()
+  const { signup, redirect } = useAuth()
   const [error, setError] = useState("")
   const [loading, setLoading] = useState(false)
 
@@ -21,7 +21,7 @@ export default function Signup() {
       setError("")
       setLoading(true)
       await signup(emailRef.current.value, passwordRef.current.value)
-      setDisplay("Login")
+      redirect("Login")
     } catch (error) {
       switch (error.code) {
         case "auth/email-already-in-use": 
@@ -71,7 +71,7 @@ export default function Signup() {
         </Card.Body>
       </Card>
       <div className="w-100 text-center mt-2">
-        Already have an account? <Button onClick={() => setDisplay("Login")}>Log In</Button>
+        Already have an account? <Button onClick={() => redirect("Login")}>Log In</Button>
       </div>
     </>
   )

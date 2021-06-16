@@ -1,27 +1,23 @@
-import {useState} from "react";
-import { Alert } from "react-bootstrap"
+import { useState } from "react";
+import { Alert } from "react-bootstrap";
 import { useAuth } from "../../contexts/AuthContext";
-import React from 'react';
+import React from "react";
 
-import {
-  Avatar,
-  Menu,
-  MenuItem,
-} from "@material-ui/core";
+import { Avatar, Menu, MenuItem } from "@material-ui/core";
 
 export default function LogoutButton() {
-  const { currentUser, logout, setDisplay } = useAuth();
+  const { currentUser, logout, redirect } = useAuth();
 
-  const [error, setError] = useState("")
+  const [error, setError] = useState("");
   const [anchorEl, setAnchorEl] = useState(null);
 
   async function handleLogout() {
-    setError("")
+    setError("");
     try {
-      await logout()
+      await logout();
     } catch {
-      setError("Failed to log out")
-    } 
+      setError("Failed to log out");
+    }
   }
 
   const handleClick = (event) => {
@@ -32,30 +28,25 @@ export default function LogoutButton() {
     setAnchorEl(null);
   };
 
-  if (!currentUser) {
-    setDisplay("Login");
-    return null;
-  } else {
-    return (
-      <div>
-        {error && <Alert variant="danger">{error}</Alert>}
-        <Avatar
-          alt={currentUser.displayName}
-          src={currentUser.photoURL}
-          aria-controls="simple-menu"
-          aria-haspopup="true"
-          onClick={handleClick}
-        />
-        <Menu
-          id="simple-menu"
-          anchorEl={anchorEl}
-          keepMounted
-          open={Boolean(anchorEl)}
-          onClose={handleClose}
-        >
-          <MenuItem onClick={handleLogout}>Logout</MenuItem>
-        </Menu>
-      </div>
-    );
-  }
+  return (
+    <div>
+      {error && <Alert variant="danger">{error}</Alert>}
+      <Avatar
+        alt={currentUser.displayName}
+        src={currentUser.photoURL}
+        aria-controls="simple-menu"
+        aria-haspopup="true"
+        onClick={handleClick}
+      />
+      <Menu
+        id="simple-menu"
+        anchorEl={anchorEl}
+        keepMounted
+        open={Boolean(anchorEl)}
+        onClose={handleClose}
+      >
+        <MenuItem onClick={handleLogout}>Logout</MenuItem>
+      </Menu>
+    </div>
+  );
 }

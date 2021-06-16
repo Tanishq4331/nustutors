@@ -7,9 +7,9 @@ import { useAuth } from "../contexts/AuthContext";
 export default function LoginBody() {
   const emailRef = useRef();
   const passwordRef = useRef();
-  const { loginWithGoogle, login, setDisplay} = useAuth();
+  const { loginWithGoogle, login, redirect } = useAuth();
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
 
   async function handleLogin(e) {
     e.preventDefault();
@@ -18,27 +18,38 @@ export default function LoginBody() {
       setError("");
       setLoading(true);
       await login(emailRef.current.value, passwordRef.current.value);
-      setDisplay("Dashboard")
-    } catch {
-      setError("Failed to log in");
+      redirect("Dashboard");
+    } catch (error) {
+      switch (error.code) {
+        case "auth/wrong-password":
+          setError("Incorrect Password");
+          break;
+        case "auth/invalid-email":
+          setError("Invalid Email");
+          break;
+        case "auth/user-not-found":
+          setError("Invalid Email");
+          break;
+        default:
+          console.log(`${error.code}: ${error.message}`);
+      }
     }
 
     setLoading(false);
   }
 
   async function handleLoginWithGoogle() {
-
     try {
       setError("");
       setLoading(true);
       await loginWithGoogle();
-      setDisplay("Dashboard")
+      redirect("Dashboard");
     } catch {
       setError("Failed to log in");
     }
 
     setLoading(false);
-  }  
+  }
 
   return (
     <>
@@ -60,7 +71,7 @@ export default function LoginBody() {
             </Button>
           </Form>
           <div className="w-100 text-center mt-3">
-            <button onClick={() => setDisplay("ForgotPassword")}>
+            <button onClick={() => redirect("ForgotPassword")}>
               Forgot Password
             </button>
           </div>
@@ -68,9 +79,13 @@ export default function LoginBody() {
       </Card>
       <div className="w-100 text-center mt-2">
         Do not have an account?{" "}
-        <button onClick={() => setDisplay("Signup")}>Sign Up</button>
+        <button onClick={() => redirect("Signup")}>Sign Up</button>
       </div>
-      <Button variant="contained" color="primary" onClick={handleLoginWithGoogle}>
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={handleLoginWithGoogle}
+      >
         Sign in with Google
       </Button>
     </>

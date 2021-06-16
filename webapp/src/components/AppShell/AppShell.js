@@ -9,13 +9,13 @@ import { useAuth } from "../../contexts/AuthContext";
 
 export default function AppShell() {
 
-  const { currentUser, setDisplay } = useAuth();
+  const { currentUser, redirect } = useAuth();
 
-  const renderMenu = () => {
+  const Menu = () => {
     if (currentUser) {
       return (
         <>
-          <button onClick={() => setDisplay("Dashboard")}> Dashboard </button>
+          <button onClick={() => redirect("Dashboard")}> Dashboard </button>
           <LogoutButton />
         </>
       );
@@ -30,7 +30,7 @@ export default function AppShell() {
         <Typography variant="h6" style={{ flexGrow: 1, textAlign: "left" }}>
           <h3> NUSTutors </h3>
         </Typography>
-          {renderMenu()}
+          <Menu />
       </Toolbar>
     </AppBar>
   );
