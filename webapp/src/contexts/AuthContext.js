@@ -38,6 +38,14 @@ export function AuthProvider({ children }) {
     return currentUser.updatePassword(password);
   }
 
+  function reauthenticate(password) {
+    const credential = firebase.auth.EmailAuthProvider.credential(
+      currentUser.email,
+      password
+    );
+    return currentUser.reauthenticateWithCredential(credential)
+  }
+
   function loginWithGoogle() {
     const googleAuthProvider = new firebase.auth.GoogleAuthProvider();
 
@@ -49,7 +57,7 @@ export function AuthProvider({ children }) {
 
         // This gives you a Google Access Token. You can use it to access the Google API.
         var token = credential.accessToken;
-        // The signed-in user info.
+        // The signed-in user info.P
         var user = result.user;
         // signedin = firebase.auth().currentUser != null;
         // ...
@@ -65,13 +73,13 @@ export function AuthProvider({ children }) {
         var credential = error.credential;
         // ...
       });
-      return loggedIn;
+    return loggedIn;
   }
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
-        setCurrentUser(user);
-        setLoading(false);
+      setCurrentUser(user);
+      setLoading(false);
     });
     return unsubscribe;
   });
@@ -82,6 +90,7 @@ export function AuthProvider({ children }) {
     display,
     loginWithGoogle,
     login,
+    reauthenticate,
     signup,
     logout,
     resetPassword,

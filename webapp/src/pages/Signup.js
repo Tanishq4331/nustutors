@@ -22,10 +22,26 @@ export default function Signup() {
       setLoading(true)
       await signup(emailRef.current.value, passwordRef.current.value)
       setDisplay("Login")
-    } catch {
-      setError("Failed to create an account")
+    } catch (error) {
+      switch (error.code) {
+        case "auth/email-already-in-use": 
+          setError("Email already in use");
+          break;
+        case "auth/invalid-email": 
+          setError("Invalid email");
+          break;
+        case "auth/operation-not-allowed":
+          console.log(`${error.code}: ${error.message}`);
+          setError("An unknown error occurred");
+          break;  
+        case "auth/weak-password":
+          setError("Password too weak");
+          break;
+        default:
+          console.log(`${error.code}: ${error.message}`);
+          setError("An unknown error occurred");
+      }
     }
-
     setLoading(false)
   }
 

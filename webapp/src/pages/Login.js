@@ -67,7 +67,7 @@ export default function LoginBody() {
         </Card.Body>
       </Card>
       <div className="w-100 text-center mt-2">
-        Need an account?{" "}
+        Do not have an account?{" "}
         <button onClick={() => setDisplay("Signup")}>Sign Up</button>
       </div>
       <Button variant="contained" color="primary" onClick={handleLoginWithGoogle}>
