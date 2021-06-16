@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { Form, Button, Card, Alert } from "react-bootstrap";
 import { useAuth } from "../contexts/AuthContext";
 
@@ -14,29 +14,37 @@ export default function UpdateProfile() {
     setDisplay,
     reauthenticate,
   } = useAuth();
+
   const [error, setError] = useState("");
-  const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState(true);
+  const [success, setSuccess] = useState(false);
+  const [changeEmail, setChangeEmail] = useState(false);
+  const [changePassword, setChangePassword] = useState(false);
+  const [provider, setProvider] = useState("google.com");
+
+  useEffect(() => {
+    currentUser
+      .getIdTokenResult()
+      .then((idToken) => {
+        setProvider(idToken.signInProvider);
+      })
+      .catch((error) => {
+        console.log(`${error.code}: ${error.message}`);
+      });
+  }, []);
+
+  useEffect(() => {
+    setChangeEmail(emailRef.current.value !== currentUser.email);
+    setChangePassword(newPasswordRef.current.value !== ""); //assuming password fields are reset on submit
+  });
 
   function handleSubmit(e) {
     e.preventDefault();
 
-    if (newPasswordRef.current.value !== passwordConfirmRef.current.value) {
-      setSuccess(false);
-      return setError("Passwords do not match");
-    } else if (
-      newPasswordRef.current.value === currentPasswordRef.current.value
-    ) {
-      setSuccess(false);
-      return setError("New password is the same as the Current password");
-    }
-
-    const promises = [];
-    const resetEmail = emailRef.current.value !== currentUser.email;
-    const resetPassword = newPasswordRef.current.value;
     setLoading(true);
+    setSuccess(true);
     setError("");
+    const promises = [];
 
     const handleError = (error) => {
       setSuccess(false);
@@ -49,44 +57,57 @@ export default function UpdateProfile() {
       }
     };
 
-    if (resetEmail) {
-      promises.push(
-        reauthenticate(currentPasswordRef.current.value)
-          .then(() => updateEmail(emailRef.current.value))
-          .catch(handleError)
-      );
-    }
+    if (changeEmail || changePassword) {
+      if (newPasswordRef.current.value === currentPasswordRef.current.value) {
+        setSuccess(false);
+        setError("New password is the same as the Current password");
+      } else if (
+        newPasswordRef.current.value !== passwordConfirmRef.current.value
+      ) {
+        setSuccess(false);
+        setError("Passwords do not match");
+      } else {
+        if (changeEmail) {
+          promises.push(
+            reauthenticate(currentPasswordRef.current.value)
+              .then(() => updateEmail(emailRef.current.value))
+              .catch(handleError)
+          );
+        }
 
-    if (resetPassword) {
-      promises.push(
-        reauthenticate(currentPasswordRef.current.value)
-          .then(() => updatePassword(newPasswordRef.current.value))
-          .catch(handleError)
-      );
+        if (changePassword) {
+          promises.push(
+            reauthenticate(currentPasswordRef.current.value)
+              .then(() => updatePassword(newPasswordRef.current.value))
+              .catch(handleError)
+          );
+        }
+      }
     }
 
     Promise.all(promises).then(() => {
-      if (resetPassword || resetEmail) {
-        setMessage(success && "Profile successfully updated");
-      }
       setLoading(false);
     });
   }
 
-  //   firebase
-  // .auth()
-  // .currentUser.reauthenticateWithPopup(new firebase.auth.GoogleAuthProvider())
-  // .then((UserCredential) => {
-  //     console.log("re-outh", UserCredential);
-  // });
+  const StatusBar = () => {
+    if (changeEmail || changePassword) {
+      if (!loading && success) {
+        return <Alert variant="success">Profile successfully updated</Alert>;
+      } else {
+        return <Alert variant="danger">{error}</Alert>;
+      }
+    } else {
+      return null;
+    }
+  };
 
   return (
     <>
       <Card>
         <Card.Body>
           <h2 className="text-center mb-4">Update Profile</h2>
-          {error && <Alert variant="danger">{error}</Alert>}
-          {message && <Alert variant="success">{message}</Alert>}
+          <StatusBar />
           <Form onSubmit={handleSubmit}>
             <Form.Group id="email">
               <Form.Label>Email</Form.Label>
@@ -121,7 +142,7 @@ export default function UpdateProfile() {
                 placeholder="Leave blank to keep the same"
               />
             </Form.Group>
-            <Button disabled={loading} className="w-100" type="submit">
+            <Button disabled={loading || provider!=="password"} className="w-100" type="submit">
               Update
             </Button>
           </Form>
