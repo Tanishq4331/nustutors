@@ -4,6 +4,7 @@ import Signup from "../../pages/Signup";
 import ForgotPassword from "../../pages/ForgotPassword";
 import Login from "../../pages/Login";
 import UpdateProfile from "../../pages/UpdateProfile";
+import UpdateSuccessful from "../../pages/UpdateSuccessful";
 
 function ToRender() {
   const { display } = useAuth();
@@ -17,7 +18,9 @@ function ToRender() {
     case "ForgotPassword":
       return <ForgotPassword />;
     case "UpdateProfile":
-      return <UpdateProfile />
+      return <UpdateProfile />;
+    case "UpdateSuccessful":
+      return <UpdateSuccessful />;
     default:
       return <Login />;
   }

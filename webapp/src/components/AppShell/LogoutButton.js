@@ -6,7 +6,7 @@ import React from "react";
 import { Avatar, Menu, MenuItem } from "@material-ui/core";
 
 export default function LogoutButton() {
-  const { currentUser, logout, redirect } = useAuth();
+  const { currentUser, logout } = useAuth();
 
   const [error, setError] = useState("");
   const [anchorEl, setAnchorEl] = useState(null);

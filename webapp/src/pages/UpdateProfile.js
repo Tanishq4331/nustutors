@@ -7,19 +7,12 @@ export default function UpdateProfile() {
   const newPasswordRef = useRef();
   const passwordConfirmRef = useRef();
   const currentPasswordRef = useRef();
-  const {
-    currentUser,
-    updatePassword,
-    updateEmail,
-    setDisplay,
-    reauthenticate,
-  } = useAuth();
+  const { currentUser, updatePassword, updateEmail, redirect, reauthenticate } =
+    useAuth();
 
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState(false);
-  const [changeEmail, setChangeEmail] = useState(false);
-  const [changePassword, setChangePassword] = useState(false);
+
   const [provider, setProvider] = useState("google.com");
 
   useEffect(() => {
@@ -33,81 +26,72 @@ export default function UpdateProfile() {
       });
   }, []);
 
-  useEffect(() => {
-    setChangeEmail(emailRef.current.value !== currentUser.email);
-    setChangePassword(newPasswordRef.current.value !== ""); //assuming password fields are reset on submit
-  });
-
   function handleSubmit(e) {
     e.preventDefault();
 
+    var success = true;
+
     setLoading(true);
-    setSuccess(true);
     setError("");
     const promises = [];
 
     const handleError = (error) => {
-      setSuccess(false);
+      console.log("some error");
+      success = false;
       switch (error.code) {
         case "auth/wrong-password":
           setError("Incorrect Password");
           break;
+
         default:
           console.log(`${error.code}: ${error.message}`);
       }
     };
 
-    if (changeEmail || changePassword) {
-      if (newPasswordRef.current.value === currentPasswordRef.current.value) {
-        setSuccess(false);
-        setError("New password is the same as the Current password");
-      } else if (
-        newPasswordRef.current.value !== passwordConfirmRef.current.value
-      ) {
-        setSuccess(false);
-        setError("Passwords do not match");
-      } else {
-        if (changeEmail) {
-          promises.push(
-            reauthenticate(currentPasswordRef.current.value)
-              .then(() => updateEmail(emailRef.current.value))
-              .catch(handleError)
-          );
-        }
+    if (newPasswordRef.current.value === currentPasswordRef.current.value) {
+      success = false;
+      setError("New password is the same as the Current password");
+    } else if (
+      newPasswordRef.current.value !== passwordConfirmRef.current.value
+    ) {
+      success = false;
+      setError("Passwords do not match");
+    } else if (newPasswordRef.current.value.length < 6) {
+      success = false;
+      setError("Weak password");
+    } else {
+      if (emailRef.current.value !== currentUser.email) {
+        promises.push(
+          reauthenticate(currentPasswordRef.current.value)
+            .then(() => updateEmail(emailRef.current.value))
+            .catch(handleError)
+        );
+      }
 
-        if (changePassword) {
-          promises.push(
-            reauthenticate(currentPasswordRef.current.value)
-              .then(() => updatePassword(newPasswordRef.current.value))
-              .catch(handleError)
-          );
-        }
+      if (newPasswordRef.current.value !== "") {
+        promises.push(
+          reauthenticate(currentPasswordRef.current.value)
+            .then(() => updatePassword(newPasswordRef.current.value))
+            .catch(handleError)
+        );
       }
     }
 
     Promise.all(promises).then(() => {
       setLoading(false);
+      if (success) {
+        console.log("success");
+        redirect("UpdateSuccessful");
+      }
     });
   }
-
-  const StatusBar = () => {
-    if (changeEmail || changePassword) {
-      if (!loading && success) {
-        return <Alert variant="success">Profile successfully updated</Alert>;
-      } else {
-        return <Alert variant="danger">{error}</Alert>;
-      }
-    } else {
-      return null;
-    }
-  };
 
   return (
     <>
       <Card>
         <Card.Body>
           <h2 className="text-center mb-4">Update Profile</h2>
-          <StatusBar />
+          {error && <Alert variant="danger">{error}</Alert>}
           <Form onSubmit={handleSubmit}>
             <Form.Group id="email">
               <Form.Label>Email</Form.Label>
@@ -142,14 +126,18 @@ export default function UpdateProfile() {
                 placeholder="Leave blank to keep the same"
               />
             </Form.Group>
-            <Button disabled={loading || provider!=="password"} className="w-100" type="submit">
+            <Button
+              disabled={loading || provider !== "password"}
+              className="w-100"
+              type="submit"
+            >
               Update
             </Button>
           </Form>
         </Card.Body>
       </Card>
       <div className="w-100 text-center mt-2">
-        <button onClick={() => setDisplay("Dashboard")}>Cancel</button>
+        <button onClick={() => redirect("Dashboard")}>Cancel</button>
       </div>
     </>
   );
