@@ -1,11 +1,37 @@
 .App {
   font-family: sans-serif;
   text-align: center;
-  max-width: 64rem;
+  /* max-width: 64rem; */
   margin: 0 auto;
+  padding: 10px;
 }
 
 .HeaderBox {
   flex-basis: 50%;
   flex-grow: 0;
 }
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+main {
+  text-align: center;
+}
+
+.form-group {
+  text-align: left; 
+}
+
+#signup:hover {
+  color: rgb(54, 80, 197);
+}
+
+#login:hover {
+  color: rgb(54, 80, 197);
+}
+
+.w-100 {
+  padding:10px;
+}
+
