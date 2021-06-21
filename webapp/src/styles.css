@@ -15,12 +15,17 @@
   margin-bottom: 15px;
 }
 
+.dropdown-menu {
+  right: 0;
+  left: auto;
+}
+
 main {
   text-align: center;
 }
 
 .form-group {
-  text-align: left; 
+  text-align: left;
 }
 
 #signup:hover {
@@ -32,6 +37,5 @@ main {
 }
 
 .w-100 {
-  padding:10px;
+  padding: 10px;
 }
-
