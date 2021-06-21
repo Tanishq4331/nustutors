@@ -15,6 +15,11 @@
   margin-bottom: 15px;
 }
 
+form {
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
 .dropdown-menu {
   right: 0;
   left: auto;

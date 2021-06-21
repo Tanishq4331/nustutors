@@ -2,6 +2,7 @@ import { useState } from "react";
 import { NavDropdown, Nav, Navbar, Alert } from "react-bootstrap";
 import { useAuth } from "../../contexts/AuthContext";
 import styles from "./AppShell.module.css";
+import blankProfile from "./blank_profile.png";
 
 export default function AppShell() {
   const { currentUser, redirect, logout } = useAuth();
@@ -18,36 +19,55 @@ export default function AppShell() {
   }
 
   const Menu = () => {
-    return (
-      <Nav>
-        <NavDropdown
-          title={
-            <img
-              className={styles["avatar"]}
-              alt={currentUser.displayName}
-              src={currentUser.photoURL}
-            />
-          }
-          id={styles["collasible-nav-dropdown"]}
-          class={styles["dropdown-menu"]}
-        >
-          <NavDropdown.Item href="#action/3.2">Profile</NavDropdown.Item>
-          <NavDropdown.Divider />
-          <NavDropdown.Item onClick={handleLogout}>Log out</NavDropdown.Item>
-        </NavDropdown>
-      </Nav>
-    );
+    if (currentUser) {
+      return (
+        <Nav>
+          <NavDropdown
+            title={
+              <img
+                className={styles["avatar"]}
+                alt={currentUser.displayName}
+                src={currentUser.photoURL}
+              />
+            }
+            id={styles["collasible-nav-dropdown"]}
+            class={styles["dropdown-menu"]}
+          >
+            <NavDropdown.Item href="#action/3.2">Profile</NavDropdown.Item>
+            <NavDropdown.Divider />
+            <NavDropdown.Item onClick={handleLogout}>Log out</NavDropdown.Item>
+          </NavDropdown>
+        </Nav>
+      );
+    } else {
+      return (
+        <Nav>
+          <NavDropdown
+            title={
+              <img
+                className={styles["avatar"]}
+                alt="Not logged in"
+                src={blankProfile}
+              />
+            }
+            id={styles["collasible-nav-dropdown"]}
+            class={styles["dropdown-menu"]}
+          >
+            <NavDropdown.Item onClick={() => redirect("Login")}>
+              Login
+            </NavDropdown.Item>
+          </NavDropdown>
+        </Nav>
+      );
+    }
   };
 
   const Restricted = () => {
     if (currentUser) {
       return (
-        <>
-          <Nav>
-            <Nav.Link onClick={() => redirect("Dashboard")}>Dashboard</Nav.Link>
-          </Nav>
-          <Menu />
-        </>
+        <Nav>
+          <Nav.Link onClick={() => redirect("Dashboard")}>Dashboard</Nav.Link>
+        </Nav>
       );
     } else {
       return null;
@@ -72,6 +92,7 @@ export default function AppShell() {
         <Navbar.Collapse id="responsive-navbar-nav">
           <Public />
           <Restricted />
+          <Menu />
         </Navbar.Collapse>
       </Navbar>
     </>
