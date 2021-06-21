@@ -1,40 +1,79 @@
-import {
-  AppBar,
-  Toolbar,
-  Typography,
-} from "@material-ui/core";
-
-import LogoutButton from "./LogoutButton";
+import { useState } from "react";
+import { NavDropdown, Nav, Navbar, Alert } from "react-bootstrap";
 import { useAuth } from "../../contexts/AuthContext";
+import styles from "./AppShell.module.css";
 
 export default function AppShell() {
+  const { currentUser, redirect, logout } = useAuth();
 
-  const { currentUser, redirect } = useAuth();
+  const [error, setError] = useState("");
+
+  async function handleLogout() {
+    setError("");
+    try {
+      logout().then(() => redirect("Login"));
+    } catch {
+      setError("Failed to log out");
+    }
+  }
 
   const Menu = () => {
+    return (
+      <Nav>
+        <NavDropdown
+          title={
+            <img
+              className={styles["avatar"]}
+              alt={currentUser.displayName}
+              src={currentUser.photoURL}
+            />
+          }
+          id={styles["collasible-nav-dropdown"]}
+          class={styles["dropdown-menu"]}
+        >
+          <NavDropdown.Item href="#action/3.2">Profile</NavDropdown.Item>
+          <NavDropdown.Divider />
+          <NavDropdown.Item onClick={handleLogout}>Log out</NavDropdown.Item>
+        </NavDropdown>
+      </Nav>
+    );
+  };
+
+  const Restricted = () => {
     if (currentUser) {
       return (
         <>
-          <button onClick={() => redirect("Dashboard")}> Dashboard </button>
-          <LogoutButton />
+          <Nav>
+            <Nav.Link onClick={() => redirect("Dashboard")}>Dashboard</Nav.Link>
+          </Nav>
+          <Menu />
         </>
       );
     } else {
-      return <></>;
-    }   
-  }
+      return null;
+    }
+  };
+
+  const Public = () => {
+    return (
+      <Nav className="mr-auto">
+        <Nav.Link onClick={() => redirect("Home")}>Home</Nav.Link>
+        <Nav.Link href="#pricing">Pricing</Nav.Link>
+      </Nav>
+    );
+  };
 
   return (
-    <AppBar position="static">
-      <Toolbar>
-        <Typography variant="h6" style={{ flexGrow: 1, textAlign: "left" }}>
-          <h3> NUSTutors </h3>
-        </Typography>
-          <Menu />
-      </Toolbar>
-    </AppBar>
+    <>
+      {error && <Alert variant="danger">{error}</Alert>}
+      <Navbar collapseOnSelect expand="lg" bg="primary" variant="dark">
+        <Navbar.Brand href="#home">NUSTutors</Navbar.Brand>
+        <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+        <Navbar.Collapse id="responsive-navbar-nav">
+          <Public />
+          <Restricted />
+        </Navbar.Collapse>
+      </Navbar>
+    </>
   );
 }
-
-
-

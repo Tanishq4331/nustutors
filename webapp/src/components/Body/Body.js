@@ -6,6 +6,7 @@ import Login from "../../pages/Login";
 import UpdateProfile from "../../pages/UpdateProfile";
 import UpdateSuccessful from "../../pages/UpdateSuccessful";
 import AppShell from "../AppShell";
+import Home from "../../pages/Home";
 
 export default function Body() {
   const Page = () => {
@@ -23,16 +24,15 @@ export default function Body() {
         return <UpdateProfile />;
       case "UpdateSuccessful":
         return <UpdateSuccessful />;
+      case "Home":
+        return <Home />;
       default:
         return <Login />;
     }
   };
   return (
     <div>
-      <header>
-        <div style={{ display: "flex", flexFlow: "row nowrap" }}></div>
-        <AppShell />
-      </header>
+      <AppShell />
       <main>
         <Page />
       </main>

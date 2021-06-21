@@ -7,8 +7,14 @@ export default function UpdateProfile() {
   const newPasswordRef = useRef();
   const passwordConfirmRef = useRef();
   const currentPasswordRef = useRef();
-  const { currentUser, updatePassword, updateEmail, redirect, reauthenticate } =
-    useAuth();
+  const {
+    currentUser,
+    updatePassword,
+    updateEmail,
+    redirect,
+    reauthenticate,
+    logout,
+  } = useAuth();
 
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -81,6 +87,7 @@ export default function UpdateProfile() {
       setLoading(false);
       if (success) {
         console.log("success");
+        logout();
         redirect("UpdateSuccessful");
       }
     });
@@ -137,7 +144,9 @@ export default function UpdateProfile() {
         </Card.Body>
       </Card>
       <div className="w-100 text-center mt-2">
-        <button onClick={() => redirect("Dashboard")}>Cancel</button>
+        <Button variant="outline-secondary" onClick={() => redirect("Dashboard")}>
+          Cancel
+        </Button>
       </div>
     </>
   );

@@ -20,6 +20,7 @@ export function AuthProvider({ children }) {
   }
 
   function redirect(page) {
+    console.log("redirecting");
     localStorage.setItem("SelectedPage", page);
     setDisplay(page);
   }
@@ -29,7 +30,7 @@ export function AuthProvider({ children }) {
   }
 
   function logout() {
-    return auth.signOut().then(() => redirect("Login"));
+    return auth.signOut();
   }
 
   function resetPassword(email) {

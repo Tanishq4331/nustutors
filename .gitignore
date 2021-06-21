@@ -1,3 +1,4 @@
 .env.local
 *.swp
 webapp/.eslintrc.json
+node_modules

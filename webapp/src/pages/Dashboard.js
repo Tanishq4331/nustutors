@@ -9,7 +9,7 @@ export default function Dashboard() {
   async function handleLogout() {
     setError("");
     try {
-      await logout();
+      logout().then(() => redirect("Login"));
     } catch {
       setError("Failed to log out");
     }
