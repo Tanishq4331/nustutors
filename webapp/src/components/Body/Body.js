@@ -26,8 +26,6 @@ export default function Body() {
         return <UpdateSuccessful />;
       case "Home":
         return <Home />;
-      default:
-        return <Login />;
     }
   };
   return (

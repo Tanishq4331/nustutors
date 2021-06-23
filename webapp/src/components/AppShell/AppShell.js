@@ -18,6 +18,27 @@ export default function AppShell() {
     }
   }
 
+  const Public = () => {
+    return (
+      <Nav className="mr-auto">
+        <Nav.Link onClick={() => redirect("Home")}>Home</Nav.Link>
+        <Nav.Link href="#pricing">Pricing</Nav.Link>
+      </Nav>
+    );
+  };
+
+  const Restricted = () => {
+    if (currentUser) {
+      return (
+        <Nav>
+          <Nav.Link onClick={() => redirect("Dashboard")}>Dashboard</Nav.Link>
+        </Nav>
+      );
+    } else {
+      return null;
+    }
+  };
+
   const Menu = () => {
     if (currentUser) {
       return (
@@ -60,27 +81,6 @@ export default function AppShell() {
         </Nav>
       );
     }
-  };
-
-  const Restricted = () => {
-    if (currentUser) {
-      return (
-        <Nav>
-          <Nav.Link onClick={() => redirect("Dashboard")}>Dashboard</Nav.Link>
-        </Nav>
-      );
-    } else {
-      return null;
-    }
-  };
-
-  const Public = () => {
-    return (
-      <Nav className="mr-auto">
-        <Nav.Link onClick={() => redirect("Home")}>Home</Nav.Link>
-        <Nav.Link href="#pricing">Pricing</Nav.Link>
-      </Nav>
-    );
   };
 
   return (

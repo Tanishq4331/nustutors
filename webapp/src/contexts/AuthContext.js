@@ -12,7 +12,7 @@ export function AuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState();
   const [loading, setLoading] = useState(true);
   const [display, setDisplay] = useState(
-    localStorage.getItem("SelectedPage") || "Login"
+    localStorage.getItem("SelectedPage") || "Home"
   );
 
   function signup(email, password) {
