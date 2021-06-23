@@ -5,6 +5,7 @@
   border-radius: 50%;
 }
 
+/* hide chevron next to avatar */
 #collasible-nav-dropdown::after {
   display: none;
 }

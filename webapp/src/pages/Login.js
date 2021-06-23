@@ -3,13 +3,15 @@ import React, { useRef, useState } from "react";
 import { Form, Card, Alert, Button } from "react-bootstrap";
 import { useAuth } from "../contexts/AuthContext";
 import { Container } from "react-bootstrap";
+import { Link, useHistory } from "react-router-dom";
 
 export default function LoginBody() {
   const emailRef = useRef();
   const passwordRef = useRef();
-  const { loginWithGoogle, login, redirect } = useAuth();
+  const { loginWithGoogle, login } = useAuth();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const history = useHistory();
 
   async function handleLogin(e) {
     e.preventDefault();
@@ -18,7 +20,7 @@ export default function LoginBody() {
       setError("");
       setLoading(true);
       await login(emailRef.current.value, passwordRef.current.value);
-      redirect("Dashboard");
+      history.push("/");
     } catch (error) {
       switch (error.code) {
         case "auth/wrong-password":
@@ -43,9 +45,10 @@ export default function LoginBody() {
       setError("");
       setLoading(true);
       await loginWithGoogle();
-      redirect("Dashboard");
+      history.push("/");
     } catch {
       setError("Failed to log in");
+      throw error;
     }
 
     setLoading(false);
@@ -81,25 +84,12 @@ export default function LoginBody() {
             {error && <Alert variant="danger">{error}</Alert>}
             <LoginForm />
             <div className="w-100 text-center mt-2">
-              <Button
-                variant="light"
-                onClick={() => redirect("ForgotPassword")}
-              >
-                Forgot Password
-              </Button>
+              <Link to="/forgot-password">Forgot Password?</Link>
             </div>
           </Card.Body>
         </Card>
         <div className="w-100 text-center mt-2">
-          Do not have an account?{" "}
-          <a
-            id={"signup"}
-            onClick={() => redirect("Signup")}
-            style={{ cursor: "pointer" }}
-          >
-            {" "}
-            Sign Up{" "}
-          </a>
+          Need an account? <Link to="/signup">Sign Up</Link>
           <br></br>
           <br></br>
           Or

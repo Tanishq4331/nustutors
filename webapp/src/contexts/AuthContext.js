@@ -11,18 +11,9 @@ export function useAuth() {
 export function AuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState();
   const [loading, setLoading] = useState(true);
-  const [display, setDisplay] = useState(
-    localStorage.getItem("SelectedPage") || "Home"
-  );
 
   function signup(email, password) {
     return auth.createUserWithEmailAndPassword(email, password);
-  }
-
-  function redirect(page) {
-    console.log("redirecting");
-    localStorage.setItem("SelectedPage", page);
-    setDisplay(page);
   }
 
   function login(email, password) {
@@ -89,12 +80,10 @@ export function AuthProvider({ children }) {
       setLoading(false);
     });
     return unsubscribe;
-  });
+  }, []);
 
   const value = {
     currentUser,
-    redirect,
-    display,
     loginWithGoogle,
     login,
     reauthenticate,

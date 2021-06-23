@@ -1,20 +1,17 @@
 import React, { useRef, useState, useEffect } from "react";
 import { Form, Button, Card, Alert, Container } from "react-bootstrap";
 import { useAuth } from "../contexts/AuthContext";
+import { Link, useHistory } from "react-router-dom";
 
 export default function UpdateProfile() {
   const emailRef = useRef();
   const newPasswordRef = useRef();
   const passwordConfirmRef = useRef();
   const currentPasswordRef = useRef();
-  const {
-    currentUser,
-    updatePassword,
-    updateEmail,
-    redirect,
-    reauthenticate,
-    logout,
-  } = useAuth();
+  const history = useHistory();
+
+  const { currentUser, updatePassword, updateEmail, reauthenticate, logout } =
+    useAuth();
 
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -88,7 +85,7 @@ export default function UpdateProfile() {
       if (success) {
         console.log("success");
         logout();
-        redirect("UpdateSuccessful");
+        history.push("/update-successful");
       }
     });
   }
@@ -148,12 +145,9 @@ export default function UpdateProfile() {
           </Card.Body>
         </Card>
         <div className="w-100 text-center mt-2">
-          <Button
-            variant="outline-secondary"
-            onClick={() => redirect("Dashboard")}
-          >
-            Cancel
-          </Button>
+          <div className="w-100 text-center mt-2">
+            <Link to="/">Cancel</Link>
+          </div>
         </div>
       </div>
     </Container>

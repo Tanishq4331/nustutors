@@ -5,38 +5,28 @@ import styles from "./AppShell.module.css";
 import blankProfile from "./blank_profile.png";
 
 export default function AppShell() {
-  const { currentUser, redirect, logout } = useAuth();
+  const { currentUser, logout } = useAuth();
 
   const [error, setError] = useState("");
 
   async function handleLogout() {
     setError("");
     try {
-      logout().then(() => redirect("Login"));
+      logout();
     } catch {
       setError("Failed to log out");
     }
   }
 
-  const Public = () => {
+  const Tabs = () => {
     return (
-      <Nav className="mr-auto">
-        <Nav.Link onClick={() => redirect("Home")}>Home</Nav.Link>
-        <Nav.Link href="#pricing">Pricing</Nav.Link>
-      </Nav>
-    );
-  };
-
-  const Restricted = () => {
-    if (currentUser) {
-      return (
-        <Nav>
-          <Nav.Link onClick={() => redirect("Dashboard")}>Dashboard</Nav.Link>
+      <>
+        <Nav className="mr-auto">
+          <Nav.Link href="/home">Home</Nav.Link>
         </Nav>
-      );
-    } else {
-      return null;
-    }
+        <Nav>{currentUser && <Nav.Link href="/">Dashboard</Nav.Link>}</Nav>
+      </>
+    );
   };
 
   const Menu = () => {
@@ -44,6 +34,8 @@ export default function AppShell() {
       return (
         <Nav>
           <NavDropdown
+            alignRight
+            flip
             title={
               <img
                 className={styles["avatar"]}
@@ -54,7 +46,7 @@ export default function AppShell() {
             id={styles["collasible-nav-dropdown"]}
             class={styles["dropdown-menu"]}
           >
-            <NavDropdown.Item href="#action/3.2">Profile</NavDropdown.Item>
+            <NavDropdown.Item href="/Dashboard">Profile</NavDropdown.Item>
             <NavDropdown.Divider />
             <NavDropdown.Item onClick={handleLogout}>Log out</NavDropdown.Item>
           </NavDropdown>
@@ -74,9 +66,7 @@ export default function AppShell() {
             id={styles["collasible-nav-dropdown"]}
             class={styles["dropdown-menu"]}
           >
-            <NavDropdown.Item onClick={() => redirect("Login")}>
-              Login
-            </NavDropdown.Item>
+            <NavDropdown.Item href="/login">Login</NavDropdown.Item>
           </NavDropdown>
         </Nav>
       );
@@ -87,11 +77,10 @@ export default function AppShell() {
     <>
       {error && <Alert variant="danger">{error}</Alert>}
       <Navbar collapseOnSelect expand="lg" bg="primary" variant="dark">
-        <Navbar.Brand href="#home">NUSTutors</Navbar.Brand>
+        <Navbar.Brand href="/home">NUSTutors</Navbar.Brand>
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
-          <Public />
-          <Restricted />
+          <Tabs />
           <Menu />
         </Navbar.Collapse>
       </Navbar>

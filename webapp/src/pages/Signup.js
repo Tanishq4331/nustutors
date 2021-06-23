@@ -2,6 +2,7 @@ import React, { useRef, useState } from "react";
 import { Form, Button, Card, Alert } from "react-bootstrap";
 import { useAuth } from "../contexts/AuthContext";
 import { Container } from "react-bootstrap";
+import { Link, useHistory } from "react-router-dom";
 
 export default function Signup() {
   const emailRef = useRef();
@@ -10,6 +11,7 @@ export default function Signup() {
   const { signup, redirect } = useAuth();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const history = useHistory();
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -22,7 +24,7 @@ export default function Signup() {
       setError("");
       setLoading(true);
       await signup(emailRef.current.value, passwordRef.current.value);
-      redirect("Login");
+      history.push("/"); //https://stackoverflow.com/questions/57762736/firebase-auth-createuserwithemailandpassword-prevent-login-until-email-is
     } catch (error) {
       switch (error.code) {
         case "auth/email-already-in-use":
@@ -80,14 +82,7 @@ export default function Signup() {
           </Card.Body>
         </Card>
         <div className="w-100 text-center mt-2">
-          Already have an account?{" "}
-          <a
-            id={"login"}
-            onClick={() => redirect("Login")}
-            style={{ cursor: "pointer" }}
-          >
-            Log In
-          </a>
+          Already have an account? <Link to="/login">Log In</Link>
         </div>
       </div>
     </Container>
