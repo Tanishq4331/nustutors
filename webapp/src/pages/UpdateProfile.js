@@ -6,7 +6,8 @@ import { Link, useHistory } from "react-router-dom";
 export default function UpdateProfile() {
   const history = useHistory();
 
-  const { currentUser, updatePassword, updateEmail, logout } = useAuth();
+  const { currentUser, updatePassword, updateEmail, logout, setLogoutMessage } =
+    useAuth();
 
   const [inputState, setInputState] = useState({
     email: currentUser.email,
@@ -90,7 +91,7 @@ export default function UpdateProfile() {
       setLoading(false);
       if (success) {
         try {
-          logout().then(() => history.push("/update-successful"));
+          logout().then(() => setLogoutMessage("Profile sucessfully updated"));
         } catch {
           setError("Unable to update profile");
           console.log("Unable to log out");

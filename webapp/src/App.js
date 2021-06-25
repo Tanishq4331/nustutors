@@ -2,12 +2,11 @@ import "@firebase/auth";
 import NavBar from "./components/NavBar/NavBar";
 import "./styles.css";
 import { AuthProvider } from "./contexts/AuthContext";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { BrowserRouter as Router, Switch } from "react-router-dom";
 import Signup from "./pages/Signup";
 import ForgotPassword from "./pages/ForgotPassword";
 import Login from "./pages/Login";
 import UpdateProfile from "./pages/UpdateProfile";
-import UpdateSuccessful from "./pages/UpdateSuccessful";
 import Home from "./pages/Home";
 import NoMatch from "./pages/NoMatch";
 import React from "react";
@@ -27,11 +26,6 @@ export default function App() {
             <PrivateRoute exact path="/dashboard" component={Dashboard} />
             <PrivateRoute exact path="/profile" component={Profile} />
             <PrivateRoute path="/update-profile" component={UpdateProfile} />
-            <PublicRoute
-              restricted={false}
-              path="/update-successful"
-              component={UpdateSuccessful}
-            />
             <PublicRoute restricted={true} path="/signup" component={Signup} />
             <PublicRoute restricted={true} path="/login" component={Login} />
             <PublicRoute

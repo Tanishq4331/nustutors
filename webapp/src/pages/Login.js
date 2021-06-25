@@ -8,7 +8,7 @@ import { Link, useHistory } from "react-router-dom";
 export default function LoginBody() {
   const emailRef = useRef();
   const passwordRef = useRef();
-  const { loginWithGoogle, login } = useAuth();
+  const { loginWithGoogle, login, logoutMessage, setLogoutMessage } = useAuth();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const history = useHistory();
@@ -20,6 +20,7 @@ export default function LoginBody() {
       setError("");
       setLoading(true);
       await login(emailRef.current.value, passwordRef.current.value);
+      setLogoutMessage("");
       history.push("/");
     } catch (error) {
       switch (error.code) {
@@ -63,6 +64,7 @@ export default function LoginBody() {
         <Card>
           <Card.Body>
             <h2 className="text-center mb-4">Log In</h2>
+            {logoutMessage && <Alert variant="success">{logoutMessage}</Alert>}
             {error && <Alert variant="danger">{error}</Alert>}
             <Form onSubmit={handleLogin}>
               <Form.Group id="email">
