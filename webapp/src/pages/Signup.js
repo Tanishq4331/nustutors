@@ -11,6 +11,8 @@ export default function Signup() {
   const history = useHistory();
 
   const [inputState, setInputState] = useState({
+    name:"",
+    phone:"",
     email: "",
     password: "",
     passwordConfirm: "",

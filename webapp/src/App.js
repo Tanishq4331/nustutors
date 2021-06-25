@@ -2,7 +2,7 @@ import "@firebase/auth";
 import NavBar from "./components/NavBar/NavBar";
 import "./styles.css";
 import { AuthProvider } from "./contexts/AuthContext";
-import { BrowserRouter as Router, Switch } from "react-router-dom";
+import { BrowserRouter, Switch } from "react-router-dom";
 import Signup from "./pages/Signup";
 import ForgotPassword from "./pages/ForgotPassword";
 import Login from "./pages/Login";
@@ -17,7 +17,7 @@ import Dashboard from "./pages/Dashboard";
 
 export default function App() {
   return (
-    <Router>
+    <BrowserRouter>
       <AuthProvider>
         <NavBar />
         <main>
@@ -39,6 +39,6 @@ export default function App() {
           </Switch>
         </main>
       </AuthProvider>
-    </Router>
+    </BrowserRouter>
   );
 }
