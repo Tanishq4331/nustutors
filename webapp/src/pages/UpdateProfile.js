@@ -4,13 +4,16 @@ import { useAuth } from "../contexts/AuthContext";
 import { Link, useHistory } from "react-router-dom";
 
 export default function UpdateProfile() {
-  const emailRef = useRef();
-  const newPasswordRef = useRef();
-  const passwordConfirmRef = useRef();
-  const currentPasswordRef = useRef();
   const history = useHistory();
 
   const { currentUser, updatePassword, updateEmail, logout } = useAuth();
+
+  const [inputState, setInputState] = useState({
+    email: currentUser.email,
+    currPasword: "",
+    newPassword: "",
+    confirmPassword: "",
+  });
 
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -27,6 +30,12 @@ export default function UpdateProfile() {
         console.log(`${error.code}: ${error.message}`);
       });
   }, []);
+
+  const handleChange = (e) => {
+    const name = e.target.name;
+    const value = e.target.value;
+    setInputState({ ...inputState, [name]: value });
+  };
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -48,10 +57,10 @@ export default function UpdateProfile() {
     };
 
     const promises = [];
-    const email = emailRef.current.value;
-    const newPassword = newPasswordRef.current.value;
-    const currentPassword = currentPasswordRef.current.value;
-    const passwordConfirm = passwordConfirmRef.current.value;
+    const email = inputState.email;
+    const newPassword = inputState.newPassword;
+    const currentPassword = inputState.currPasword;
+    const passwordConfirm = inputState.confirmPassword;
 
     if (newPassword || passwordConfirm) {
       if (newPassword === currentPassword) {
@@ -105,34 +114,38 @@ export default function UpdateProfile() {
                 <Form.Label>Email</Form.Label>
                 <Form.Control
                   type="email"
-                  ref={emailRef}
+                  name="email"
                   required
-                  defaultValue={currentUser.email}
+                  value={inputState.email}
+                  onChange={handleChange}
                 />
               </Form.Group>
               <Form.Group id="current-passsword">
                 <Form.Label>Current Password</Form.Label>
                 <Form.Control
                   type="password"
-                  ref={currentPasswordRef}
-                  placeholder="Enter your current password"
+                  name="currPasword"
                   required="true"
+                  value={inputState.currPasword}
+                  onChange={handleChange}
                 />
               </Form.Group>
               <Form.Group id="password">
                 <Form.Label>New Password</Form.Label>
                 <Form.Control
                   type="password"
-                  ref={newPasswordRef}
-                  placeholder="Leave blank to keep the same"
+                  name="newPassword"
+                  value={inputState.newPassword}
+                  onChange={handleChange}
                 />
               </Form.Group>
               <Form.Group id="password-confirm">
                 <Form.Label>Password Confirmation</Form.Label>
                 <Form.Control
                   type="password"
-                  ref={passwordConfirmRef}
-                  placeholder="Leave blank to keep the same"
+                  name={"confirmPassword"}
+                  value={inputState.passwordConfirm}
+                  onChange={handleChange}
                 />
               </Form.Group>
               <Button

@@ -5,25 +5,34 @@ import { Container } from "react-bootstrap";
 import { Link, useHistory } from "react-router-dom";
 
 export default function Signup() {
-  const emailRef = useRef();
-  const passwordRef = useRef();
-  const passwordConfirmRef = useRef();
-  const { signup, redirect } = useAuth();
+  const { signup } = useAuth();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const history = useHistory();
 
+  const [inputState, setInputState] = useState({
+    email: "",
+    password: "",
+    passwordConfirm: "",
+  });
+
+  const handleChange = (e) => {
+    const name = e.target.name;
+    const value = e.target.value;
+    setInputState({ ...inputState, [name]: value });
+  };
+
   async function handleSubmit(e) {
     e.preventDefault();
 
-    if (passwordRef.current.value !== passwordConfirmRef.current.value) {
+    if (inputState.password !== inputState.passwordConfirm) {
       return setError("Passwords do not match");
     }
 
     try {
       setError("");
       setLoading(true);
-      await signup(emailRef.current.value, passwordRef.current.value);
+      await signup(inputState.email, inputState.password);
       history.push("/"); //https://stackoverflow.com/questions/57762736/firebase-auth-createuserwithemailandpassword-prevent-login-until-email-is
     } catch (error) {
       switch (error.code) {
@@ -61,18 +70,32 @@ export default function Signup() {
             <Form onSubmit={handleSubmit}>
               <Form.Group id="email">
                 <Form.Label>Email</Form.Label>
-                <Form.Control type="email" ref={emailRef} required />
+                <Form.Control
+                  type="email"
+                  name="email"
+                  value={inputState.email}
+                  onChange={handleChange}
+                  required
+                />
               </Form.Group>
               <Form.Group id="password">
                 <Form.Label>Password</Form.Label>
-                <Form.Control type="password" ref={passwordRef} required />
+                <Form.Control
+                  type="password"
+                  name="password"
+                  value={inputState.password}
+                  required
+                  onChange={handleChange}
+                />
               </Form.Group>
               <Form.Group id="password-confirm">
                 <Form.Label>Password Confirmation</Form.Label>
                 <Form.Control
                   type="password"
-                  ref={passwordConfirmRef}
+                  name="passwordConfirm"
+                  value={inputState.passwordConfirm}
                   required
+                  onChange={handleChange}
                 />
               </Form.Group>
               <Button disabled={loading} className="w-100" type="submit">

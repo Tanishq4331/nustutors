@@ -39,11 +39,15 @@ export default function NavBar() {
             alignRight
             flip
             title={
-              <img
-                className={styles["avatar"]}
-                alt={currentUser.displayName}
-                src={currentUser.photoURL}
-              />
+              currentUser.photoURL ? (
+                <img
+                  className={styles["avatar"]}
+                  alt={currentUser.displayName}
+                  src={currentUser.photoURL}
+                />
+              ) : (
+                <AccountCircleIcon style={{ fontSize: 40 }} />
+              )
             }
             id={styles["collasible-nav-dropdown"]}
             class={styles["dropdown-menu"]}
