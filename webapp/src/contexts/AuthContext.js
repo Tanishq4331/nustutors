@@ -28,12 +28,14 @@ export function AuthProvider({ children }) {
     return auth.sendPasswordResetEmail(email);
   }
 
-  function updateEmail(email) {
-    return currentUser.updateEmail(email);
+  function updateEmail(newEmail, password) {
+    return reauthenticate(password).then((user) => user.updateEmail(newEmail));
   }
 
-  function updatePassword(password) {
-    return currentUser.updatePassword(password);
+  function updatePassword(currPassword, newPassword) {
+    return reauthenticate(currPassword).then(() =>
+      currentUser.updatePassword(newPassword)
+    );
   }
 
   function reauthenticate(password) {
@@ -76,6 +78,7 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
+      console.log("useEffect called");
       setCurrentUser(user);
       setLoading(false);
     });

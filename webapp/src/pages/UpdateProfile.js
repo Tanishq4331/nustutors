@@ -10,14 +10,13 @@ export default function UpdateProfile() {
   const currentPasswordRef = useRef();
   const history = useHistory();
 
-  const { currentUser, updatePassword, updateEmail, reauthenticate, logout } =
-    useAuth();
+  const { currentUser, updatePassword, updateEmail, logout } = useAuth();
 
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [provider, setProvider] = useState("");
 
-  const [provider, setProvider] = useState("google.com");
-
+  //set the provider state to the sign in provider
   useEffect(() => {
     currentUser
       .getIdTokenResult()
@@ -33,59 +32,60 @@ export default function UpdateProfile() {
     e.preventDefault();
 
     var success = true;
-
     setLoading(true);
     setError("");
-    const promises = [];
 
     const handleError = (error) => {
-      console.log("some error");
       success = false;
       switch (error.code) {
         case "auth/wrong-password":
           setError("Incorrect Password");
           break;
-
         default:
+          setError("An unknown error occurred");
           console.log(`${error.code}: ${error.message}`);
       }
     };
 
-    if (newPasswordRef.current.value === currentPasswordRef.current.value) {
-      success = false;
-      setError("New password is the same as the Current password");
-    } else if (
-      newPasswordRef.current.value !== passwordConfirmRef.current.value
-    ) {
-      success = false;
-      setError("Passwords do not match");
-    } else if (newPasswordRef.current.value.length < 6) {
-      success = false;
-      setError("Weak password");
-    } else {
-      if (emailRef.current.value !== currentUser.email) {
-        promises.push(
-          reauthenticate(currentPasswordRef.current.value)
-            .then(() => updateEmail(emailRef.current.value))
-            .catch(handleError)
-        );
-      }
+    const promises = [];
+    const email = emailRef.current.value;
+    const newPassword = newPasswordRef.current.value;
+    const currentPassword = currentPasswordRef.current.value;
+    const passwordConfirm = passwordConfirmRef.current.value;
 
-      if (newPasswordRef.current.value !== "") {
+    if (newPassword || passwordConfirm) {
+      if (newPassword === currentPassword) {
+        success = false;
+        setError("New password is the same as the Current password");
+      } else if (newPassword !== passwordConfirm) {
+        success = false;
+        setError("Passwords do not match");
+      } else if (newPassword.length < 6) {
+        success = false;
+        setError("Weak password");
+      } else {
         promises.push(
-          reauthenticate(currentPasswordRef.current.value)
-            .then(() => updatePassword(newPasswordRef.current.value))
-            .catch(handleError)
+          updatePassword(currentPassword, newPassword).catch(handleError)
         );
       }
+    } else if (email === currentUser.email) {
+      success = false;
+      setError("You haven't made any changes");
+    }
+
+    if (email !== currentUser.email) {
+      promises.push(updateEmail(email, passwordConfirm).catch(handleError));
     }
 
     Promise.all(promises).then(() => {
       setLoading(false);
       if (success) {
-        console.log("success");
-        logout();
-        history.push("/update-successful");
+        try {
+          logout().then(() => history.push("/update-successful"));
+        } catch {
+          setError("Unable to update profile");
+          console.log("Unable to log out");
+        }
       }
     });
   }
@@ -116,6 +116,7 @@ export default function UpdateProfile() {
                   type="password"
                   ref={currentPasswordRef}
                   placeholder="Enter your current password"
+                  required="true"
                 />
               </Form.Group>
               <Form.Group id="password">
@@ -141,7 +142,7 @@ export default function UpdateProfile() {
               >
                 Update
               </Button>
-            </Form>
+            </Form>{" "}
           </Card.Body>
         </Card>
         <div className="w-100 text-center mt-2">

@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { NavDropdown, Nav, Navbar, Alert } from "react-bootstrap";
 import { useAuth } from "../../contexts/AuthContext";
-import styles from "./AppShell.module.css";
-import blankProfile from "./blank_profile.png";
+import styles from "./NavBar.module.css";
+import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 
-export default function AppShell() {
+export default function NavBar() {
   const { currentUser, logout } = useAuth();
 
   const [error, setError] = useState("");
@@ -24,7 +24,9 @@ export default function AppShell() {
         <Nav className="mr-auto">
           <Nav.Link href="/home">Home</Nav.Link>
         </Nav>
-        <Nav>{currentUser && <Nav.Link href="/">Dashboard</Nav.Link>}</Nav>
+        <Nav>
+          {currentUser && <Nav.Link href="/dashboard">Dashboard</Nav.Link>}
+        </Nav>
       </>
     );
   };
@@ -46,7 +48,7 @@ export default function AppShell() {
             id={styles["collasible-nav-dropdown"]}
             class={styles["dropdown-menu"]}
           >
-            <NavDropdown.Item href="/Dashboard">Profile</NavDropdown.Item>
+            <NavDropdown.Item href="/profile">View Profile</NavDropdown.Item>
             <NavDropdown.Divider />
             <NavDropdown.Item onClick={handleLogout}>Log out</NavDropdown.Item>
           </NavDropdown>
@@ -55,19 +57,9 @@ export default function AppShell() {
     } else {
       return (
         <Nav>
-          <NavDropdown
-            title={
-              <img
-                className={styles["avatar"]}
-                alt="Not logged in"
-                src={blankProfile}
-              />
-            }
-            id={styles["collasible-nav-dropdown"]}
-            class={styles["dropdown-menu"]}
-          >
-            <NavDropdown.Item href="/login">Login</NavDropdown.Item>
-          </NavDropdown>
+          <Nav.Link href="/login">
+            <AccountCircleIcon style={{ fontSize: 40 }} />
+          </Nav.Link>
         </Nav>
       );
     }

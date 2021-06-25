@@ -38,7 +38,6 @@
 
 **TODO**
 
-- Use form input control
-- Use react router
+- Sidebar instead of dropdown for narrow viewports
 - Set up loading
-- ref.current.focus
+- Use framer motion
