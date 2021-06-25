@@ -1,5 +1,4 @@
 import "@firebase/auth";
-import "@firebase/firestore";
 import NavBar from "./components/NavBar/NavBar";
 import "./styles.css";
 import { AuthProvider } from "./contexts/AuthContext";
