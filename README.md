@@ -41,3 +41,7 @@
 - Sidebar instead of dropdown for narrow viewports
 - Set up loading
 - Use framer motion
+- Make registration using multi-stage form
+
+- Add form validation with
+  https://dev.to/alecgrey/controlled-forms-with-front-and-backend-validations-using-react-bootstrap-5a2
