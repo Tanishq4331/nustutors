@@ -3,6 +3,7 @@ import * as ReactDOM from "react-dom";
 
 import { Form, Button, Card, Alert, Container } from "react-bootstrap";
 import { Link, useHistory } from "react-router-dom";
+import { useEffect } from "react";
 
 import AccountDetails from "./account-details";
 import PersonalDetails from "./personal-details";
@@ -12,24 +13,13 @@ import Stepper from "@material-ui/core/Stepper";
 import Step from "@material-ui/core/Step";
 import StepLabel from "@material-ui/core/StepLabel";
 import Typography from "@material-ui/core/Typography";
+import { accountValidation, personalValidation } from "./validators";
 
-const stepPages = [AccountDetails, PersonalDetails];
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    width: "100%",
-  },
-  backButton: {
-    marginRight: theme.spacing(1),
-  },
-  instructions: {
-    marginTop: theme.spacing(1),
-    marginBottom: theme.spacing(1),
-  },
-}));
+const stepPages = [PersonalDetails, AccountDetails];
 
 export default function Registration() {
   const [activeStep, setActiveStep] = React.useState(0);
+  const [errors, setErrors] = React.useState("");
   const history = useHistory();
 
   const [formState, setFormState] = React.useState({
@@ -40,8 +30,8 @@ export default function Registration() {
     passwordConfirm: "",
   });
   const [steps, setSteps] = React.useState([
-    { label: "Account Details", isValid: undefined },
     { label: "Personal Details", isValid: undefined },
+    { label: "Account Details", isValid: undefined },
   ]);
 
   const lastStepIndex = steps.length - 1;
@@ -57,41 +47,59 @@ export default function Registration() {
     setFormState({ ...formState, [name]: value });
   };
 
-  const onStepSubmit = React.useCallback(
-    //or handleNext
-    (event) => {
-      //check the validity of submitted form page and update steps
-      // const { isValid, values } = event;
+  //validates the fields on the current page and updates errors and pages
+  const validatePage = () => {
+    switch (steps[activeStep].label) {
+      case "Personal Details":
+        return personalValidation(formState.name, formState.phone);
+      case "Account Details":
+        return accountValidation(
+          formState.email,
+          formState.password,
+          formState.passwordConfirm
+        );
+    }
+  };
 
-      // const currentSteps = steps.map((currentStep, index) => ({
-      //   ...currentStep,
-      //   isValid: index === activeStep ? isValid : currentStep.isValid,
-      // }));
+  const onStepSubmit = () => {
+    const newErrors = validatePage();
+    setErrors(newErrors);
 
-      // setSteps(currentSteps);
+    const errorPresent = Object.values(newErrors).some((x) => x !== "");
+    console.log(errorPresent);
+    //update the validity of the active page
+    // if (errorPresent) {
+    //   setSteps((prev) => [
+    //     ...prev.slice(0, activeStep),
+    //     {
+    //       ...prev[activeStep],
+    //       isValid: false,
+    //     },
+    //     ...prev.slice(activeStep + 1),
+    //   ]);
+    // } else {
+    //   setSteps((prev) => [
+    //     ...prev.slice(0, activeStep),
+    //     {
+    //       ...prev[activeStep],
+    //       isValid: true,
+    //     },
+    //     ...prev.slice(activeStep + 1),
+    //   ]);
+    // }
 
-      // if (!isValid) {
-      //   return;
-      // }
+    //if the current page is not valid do nothing; could disable button alternatively
+    if (errorPresent) {
+      return;
+    }
 
-      //if the form is valid update to the next state
-      setActiveStep(() => Math.min(activeStep + 1, lastStepIndex));
+    //move to next step
+    setActiveStep(() => Math.min(activeStep + 1, lastStepIndex));
 
-      // if (isLastStep && isPreviousStepsValid && isValid) {
-      if (isLastStep) {
-        alert(JSON.stringify(formState));
-      }
-    },
-    [
-      activeStep,
-      steps,
-      setSteps,
-      setActiveStep,
-      setFormState,
-      isLastStep,
-      isPreviousStepsValid,
-    ]
-  );
+    if (isLastStep && isPreviousStepsValid && !errorPresent) {
+      alert(JSON.stringify(formState));
+    }
+  };
 
   const onPrevClick = React.useCallback(
     (event) => {
@@ -123,7 +131,11 @@ export default function Registration() {
             </Stepper>
 
             <Form>
-              <FormPage formState={formState} handleChange={handleChange} />
+              <FormPage
+                formState={formState}
+                handleChange={handleChange}
+                errors={errors}
+              />
               <hr />
               <div
                 style={{
