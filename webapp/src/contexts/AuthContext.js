@@ -1,7 +1,6 @@
 import React, { useContext, useState, useEffect } from "react";
 import { auth, db } from "../config/firebase";
 import { firebase } from "@firebase/app";
-import { ListItemText } from "@material-ui/core";
 
 const AuthContext = React.createContext();
 
@@ -10,7 +9,6 @@ export function useAuth() {
 }
 
 export async function emailAlreadyExists(email) {
-  // console.log(db.collection("users").where("email", "==", email).get());
   const snapshot = await db
     .collection("users")
     .where("email", "==", email)
@@ -25,15 +23,19 @@ export function AuthProvider({ children }) {
   const [logoutMessage, setLogoutMessage] = useState("");
 
   function signup(email, password) {
-    return auth
-      .createUserWithEmailAndPassword(email, password)
-      .then((response) => {
-        const user = {
-          uid: response.user.uid,
-          email: email,
-        };
-        db.collection("users").doc(user.uid).set(user);
-      });
+    return auth.createUserWithEmailAndPassword(email, password);
+  }
+
+  function register(formState) {
+    const { email, password, name, phone } = formState;
+    return signup(email, password).then((response) => {
+      const user = {
+        email: email,
+        name: name,
+        phone: phone,
+      };
+      db.collection("users").doc(response.user.uid).set(user);
+    });
   }
 
   function login(email, password) {
@@ -112,7 +114,7 @@ export function AuthProvider({ children }) {
     loginWithGoogle,
     login,
     reauthenticate,
-    signup,
+    register,
     logout,
     resetPassword,
     updateEmail,

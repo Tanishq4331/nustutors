@@ -1,11 +1,11 @@
 import * as React from "react";
-
+import { useState } from "react";
 import { Form, Button, Card, Alert, Container } from "react-bootstrap";
 import { Link, useHistory } from "react-router-dom";
 
 import AccountDetails from "./account-details";
 import PersonalDetails from "./personal-details";
-
+import { useAuth } from "../../contexts/AuthContext";
 import Stepper from "@material-ui/core/Stepper";
 import Step from "@material-ui/core/Step";
 import StepLabel from "@material-ui/core/StepLabel";
@@ -13,11 +13,14 @@ import Typography from "@material-ui/core/Typography";
 import { accountValidation, personalValidation } from "./validators";
 
 export default function Registration() {
-  const [activeStep, setActiveStep] = React.useState(0);
+  const { register } = useAuth();
+  const [activeStep, setActiveStep] = useState(0);
   const [errors, setErrors] = React.useState("");
+  const [loading, setLoading] = useState(false);
+  const [globalError, setGlobalError] = useState("");
   const history = useHistory();
 
-  const [formState, setFormState] = React.useState({
+  const [formState, setFormState] = useState({
     name: "",
     phone: "",
     email: "",
@@ -39,7 +42,7 @@ export default function Registration() {
     setFormState({ ...formState, [name]: value });
   };
 
-  //validates the fields on the current page and updates errors and pages
+  //returns an error object
   const validatePage = () => {
     switch (steps[activeStep].label) {
       case "Personal Details":
@@ -53,15 +56,16 @@ export default function Registration() {
     }
   };
 
-  const onStepSubmit = () => {
-    const newErrors = validatePage();
+  const onStepSubmit = async () => {
+    setLoading(true);
+    const newErrors = await validatePage();
     setErrors(newErrors);
 
     const errorPresent = Object.values(newErrors).some((x) => x !== "");
-    console.log(errorPresent);
 
     //if the current page is not valid do nothing; could disable button alternatively
     if (errorPresent) {
+      setLoading(false);
       return;
     }
 
@@ -70,8 +74,15 @@ export default function Registration() {
 
     //submit at the final page
     if (isLastStep && !errorPresent) {
-      alert(JSON.stringify(formState));
+      try {
+        setGlobalError("");
+        await register(formState);
+      } catch (error) {
+        console.log(`${error.code}: ${error.message}`);
+        setGlobalError("An unknown error occurred. Please try again later.");
+      }
     }
+    setLoading(false);
   };
 
   const onPrevClick = React.useCallback(
@@ -93,8 +104,7 @@ export default function Registration() {
         <Card>
           <Card.Body>
             <h2 className="text-center mb-4">Registration</h2>
-            {/* {error && <Alert variant="danger">{error}</Alert>} */}
-
+            {globalError && <Alert variant="danger">{globalError}</Alert>}
             <Stepper activeStep={activeStep} alternativeLabel>
               {steps.map((step) => (
                 <Step key={step.label}>
