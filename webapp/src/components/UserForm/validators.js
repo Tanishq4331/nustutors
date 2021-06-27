@@ -1,4 +1,5 @@
 import * as React from "react";
+import { emailAlreadyExists } from "../../contexts/AuthContext";
 
 const emailRegex = new RegExp(/\S+@\S+\.\S+/);
 const phoneRegex = new RegExp(/^[0-9 ()+-]+$/);
@@ -7,12 +8,25 @@ const cvcRegex = new RegExp(/^[0-9]+$/);
 
 export const termsValidator = (value) =>
   value ? "" : "It's required to agree with Terms and Conditions.";
-export const emailValidator = (value) =>
-  !value
-    ? "Email field is required."
-    : emailRegex.test(value)
-    ? ""
-    : "Email is not in a valid format.";
+
+export const emailValidator = async (value) => {
+  if (!value) {
+    return "Email field is required";
+  } else {
+    if (emailRegex.test(value)) {
+      const emailExists = await emailAlreadyExists(value);
+      console.log(emailExists);
+      if (emailExists) {
+        return "Email already exists";
+      } else {
+        return "";
+      }
+    } else {
+      return "Email is not in a valid format.";
+    }
+  }
+};
+
 export const nameValidator = (value) =>
   !value
     ? "Full Name is required"
@@ -64,9 +78,9 @@ export function personalValidation(name, phone) {
   };
 }
 
-export function accountValidation(email, password, passwordConfirm) {
+export async function accountValidation(email, password, passwordConfirm) {
   return {
-    email: emailValidator(email),
+    email: await emailValidator(email),
     password: passwordValidator(password),
     passwordConfirm:
       password === passwordConfirm ? "" : "Passwords do not match",
