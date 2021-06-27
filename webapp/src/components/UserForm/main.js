@@ -1,21 +1,16 @@
 import * as React from "react";
-import * as ReactDOM from "react-dom";
 
 import { Form, Button, Card, Alert, Container } from "react-bootstrap";
 import { Link, useHistory } from "react-router-dom";
-import { useEffect } from "react";
 
 import AccountDetails from "./account-details";
 import PersonalDetails from "./personal-details";
 
-import { makeStyles } from "@material-ui/core/styles";
 import Stepper from "@material-ui/core/Stepper";
 import Step from "@material-ui/core/Step";
 import StepLabel from "@material-ui/core/StepLabel";
 import Typography from "@material-ui/core/Typography";
 import { accountValidation, personalValidation } from "./validators";
-
-const stepPages = [PersonalDetails, AccountDetails];
 
 export default function Registration() {
   const [activeStep, setActiveStep] = React.useState(0);
@@ -29,17 +24,14 @@ export default function Registration() {
     password: "",
     passwordConfirm: "",
   });
-  const [steps, setSteps] = React.useState([
-    { label: "Personal Details", isValid: undefined },
-    { label: "Account Details", isValid: undefined },
-  ]);
+
+  const steps = [
+    { label: "Account Details", form: AccountDetails },
+    { label: "Personal Details", form: PersonalDetails },
+  ];
 
   const lastStepIndex = steps.length - 1;
   const isLastStep = lastStepIndex === activeStep;
-  const isPreviousStepsValid =
-    steps
-      .slice(0, activeStep)
-      .findIndex((currentStep) => currentStep.isValid === false) === -1;
 
   const handleChange = (e) => {
     const name = e.target.name;
@@ -67,26 +59,6 @@ export default function Registration() {
 
     const errorPresent = Object.values(newErrors).some((x) => x !== "");
     console.log(errorPresent);
-    //update the validity of the active page
-    // if (errorPresent) {
-    //   setSteps((prev) => [
-    //     ...prev.slice(0, activeStep),
-    //     {
-    //       ...prev[activeStep],
-    //       isValid: false,
-    //     },
-    //     ...prev.slice(activeStep + 1),
-    //   ]);
-    // } else {
-    //   setSteps((prev) => [
-    //     ...prev.slice(0, activeStep),
-    //     {
-    //       ...prev[activeStep],
-    //       isValid: true,
-    //     },
-    //     ...prev.slice(activeStep + 1),
-    //   ]);
-    // }
 
     //if the current page is not valid do nothing; could disable button alternatively
     if (errorPresent) {
@@ -96,7 +68,8 @@ export default function Registration() {
     //move to next step
     setActiveStep(() => Math.min(activeStep + 1, lastStepIndex));
 
-    if (isLastStep && isPreviousStepsValid && !errorPresent) {
+    //submit at the final page
+    if (isLastStep && !errorPresent) {
       alert(JSON.stringify(formState));
     }
   };
@@ -109,7 +82,7 @@ export default function Registration() {
     [activeStep, setActiveStep]
   );
 
-  const FormPage = stepPages[activeStep];
+  const FormPage = steps[activeStep].form;
 
   return (
     <Container
