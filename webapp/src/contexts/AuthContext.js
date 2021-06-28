@@ -111,6 +111,17 @@ export function AuthProvider({ children }) {
     return loggedIn;
   }
 
+  //if there is a change in user state update the database
+  useEffect(() => {
+    if (currentUser) {
+      const unsubscribe = db
+        .collection("users")
+        .doc(currentUser.uid)
+        .set(userData);
+      return unsubscribe;
+    }
+  }, [userData]);
+
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(async (user) => {
       //load/unload user data
@@ -128,8 +139,8 @@ export function AuthProvider({ children }) {
         setCurrentUser(user);
         setUserData(null);
       }
+      setLoading(false);
     });
-    setLoading(false);
 
     return unsubscribe;
   }, []);
@@ -137,6 +148,7 @@ export function AuthProvider({ children }) {
   const value = {
     currentUser,
     emailAlreadyExists,
+    setUserData,
     logoutMessage,
     setLogoutMessage,
     loginWithGoogle,

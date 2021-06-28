@@ -14,6 +14,8 @@ export default function PrivateRoute({ component: Component, ...rest }) {
         if (currentUser) {
           return <Component {...props} />;
         } else {
+          console.log(location);
+          console.log("redirecting");
           return <Redirect to="/login" />;
         }
       }}

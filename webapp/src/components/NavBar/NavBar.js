@@ -33,7 +33,6 @@ export default function NavBar() {
 
   const Menu = () => {
     if (currentUser) {
-      console.log(userData)
       return (
         <Nav>
           <NavDropdown
