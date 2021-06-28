@@ -1,6 +1,7 @@
 import React, { useContext, useState, useEffect } from "react";
-import { auth, db } from "../config/firebase";
+import { auth, db, storage } from "../config/firebase";
 import { firebase } from "@firebase/app";
+import { version } from "react";
 
 const AuthContext = React.createContext();
 
@@ -19,8 +20,20 @@ export async function emailAlreadyExists(email) {
 
 export function AuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState();
+  const [userData, setUserData] = useState();
   const [loading, setLoading] = useState(true);
   const [logoutMessage, setLogoutMessage] = useState("");
+
+  //   useEffect(() => {
+  //     const unsubscribe = db.collection("requests").onSnapshot(snapshot => {
+  //       const requests = snapshot.docs.map(doc => doc.data())
+  //       //requests filtered based on relevance to user
+  //       this.setRelevantRequests(requests)
+  //     });
+
+  //     //remember to unsubscribe from your realtime listener on unmount or you will create a memory leak
+  //     return () => unsubscribe()
+  // }, []);
 
   function signup(email, password) {
     return auth.createUserWithEmailAndPassword(email, password);
@@ -99,8 +112,23 @@ export function AuthProvider({ children }) {
   }
 
   useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((user) => {
+    const unsubscribe = auth.onAuthStateChanged(async (user) => {
       setCurrentUser(user);
+
+      //load/unload user data
+      if (user) {
+        //user logged in
+        await db
+          .collection("users")
+          .doc(user.uid)
+          .get()
+          .then((doc) => {
+            setUserData(doc.data());
+          });
+      } else {
+        setUserData(null);
+      }
+
       setLoading(false);
     });
     return unsubscribe;
@@ -113,7 +141,7 @@ export function AuthProvider({ children }) {
     setLogoutMessage,
     loginWithGoogle,
     login,
-    reauthenticate,
+    userData,
     register,
     logout,
     resetPassword,

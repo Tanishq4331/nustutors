@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Card, Button, Alert, Container } from "react-bootstrap";
 import { useAuth } from "../contexts/AuthContext";
 import { Link, useHistory } from "react-router-dom";
+import UploadForm from "../components/UploadForm/UploadForm";
 
 export default function Profile() {
   const [error, setError] = useState("");
@@ -29,6 +30,7 @@ export default function Profile() {
             <h2 className="text-center mb-4">Profile</h2>
             {error && <Alert variant="danger">{error}</Alert>}
             <strong>Email:</strong> {currentUser.email}
+            <UploadForm />
             <Link to="/update-profile" className="btn btn-primary w-100 mt-3">
               Update Profile
             </Link>

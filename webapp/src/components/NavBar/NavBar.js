@@ -5,7 +5,7 @@ import styles from "./NavBar.module.css";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 
 export default function NavBar() {
-  const { currentUser, logout } = useAuth();
+  const { currentUser, logout, userData } = useAuth();
 
   const [error, setError] = useState("");
 
@@ -33,17 +33,18 @@ export default function NavBar() {
 
   const Menu = () => {
     if (currentUser) {
+      console.log(userData)
       return (
         <Nav>
           <NavDropdown
             alignRight
             flip
             title={
-              currentUser.photoURL ? (
+              userData.url ? (
                 <img
                   className={styles["avatar"]}
-                  alt={currentUser.displayName}
-                  src={currentUser.photoURL}
+                  alt={userData.name}
+                  src={userData.url}
                 />
               ) : (
                 <AccountCircleIcon style={{ fontSize: 40 }} />
