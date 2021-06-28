@@ -113,8 +113,6 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(async (user) => {
-      setCurrentUser(user);
-
       //load/unload user data
       if (user) {
         //user logged in
@@ -125,12 +123,14 @@ export function AuthProvider({ children }) {
           .then((doc) => {
             setUserData(doc.data());
           });
+        setCurrentUser(user);
       } else {
+        setCurrentUser(user);
         setUserData(null);
       }
-
-      setLoading(false);
     });
+    setLoading(false);
+
     return unsubscribe;
   }, []);
 
