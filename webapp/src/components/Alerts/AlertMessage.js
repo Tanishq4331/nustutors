@@ -7,7 +7,8 @@ export default function AlertMessage() {
   const { message, success } = alert;
 
   const fixedHeightDiv = {
-    height: "50px",
+    height: "60px",
+    textAlign: 'center'
   };
 
   const Message = () => {

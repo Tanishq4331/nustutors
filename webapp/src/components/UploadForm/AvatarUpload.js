@@ -54,6 +54,7 @@ export default function AvatarUpload() {
 
           //add the generated url to userData
           setUserData({ ...userData, url: newUrl });
+          setAlert({ message: "Avatar successfully updated", success: true });
         })
         .catch((error) => {
           console.log(error.message);

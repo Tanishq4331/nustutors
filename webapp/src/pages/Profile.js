@@ -4,16 +4,20 @@ import { Link, useHistory } from "react-router-dom";
 import AvatarUpload from "../components/UploadForm/AvatarUpload";
 import { useState, useEffect } from "react";
 import AlertMessage from "../components/Alerts/AlertMessage";
+import { personalValidation } from "../components/UserForm/validators";
 
 export default function Profile() {
   const { userData, setUserData, setAlert } = useAuth();
   const [buttonDisabled, setButtonDisabled] = useState(true);
+  const [formErrors, setFormErrors] = useState("");
+  const [loading, setLoading] = useState(false);
   const history = useHistory();
   const [formState, setFormState] = useState({ ...userData });
 
   const handleChange = (e) => {
     const name = e.target.name;
     const value = e.target.value;
+
     setFormState({ ...formState, [name]: value });
   };
 
@@ -25,7 +29,23 @@ export default function Profile() {
 
   function handleSubmit(e) {
     e.preventDefault();
-    console.log("handling");
+
+    setLoading(true);
+    const newErrors = personalValidation(
+      formState.name,
+      formState.phone,
+      formState.dateOfBirth
+    );
+    setFormErrors(newErrors);
+
+    const errorPresent = Object.values(newErrors).some((x) => x !== "");
+
+    if (errorPresent) {
+      setLoading(false);
+      return;
+    }
+    setFormErrors(newErrors);
+
     setUserData(formState);
     setAlert({ message: "Profile successfully updated", success: true });
   }
@@ -47,31 +67,43 @@ export default function Profile() {
             <Card className=" mb-5 ">
               <Card.Body>
                 <Form.Group id="name">
-                  <Form.Label> Name</Form.Label>
+                  <Form.Label>Name</Form.Label>
                   <Form.Control
                     type="text"
                     name="name"
                     value={formState.name}
                     onChange={handleChange}
+                    isInvalid={!!formErrors.name}
                   />
+                  <Form.Control.Feedback type="invalid">
+                    {formErrors.name}
+                  </Form.Control.Feedback>
+                </Form.Group>
+                <Form.Group id="dateOfBirth">
+                  <Form.Label>Date of Birth</Form.Label>
+                  <Form.Control
+                    type="date"
+                    name="dateOfBirth"
+                    value={formState.dateOfBirth}
+                    onChange={handleChange}
+                    isInvalid={!!formErrors.dateOfBirth}
+                  />
+                  <Form.Control.Feedback type="invalid">
+                    {formErrors.dateOfBirth}
+                  </Form.Control.Feedback>
                 </Form.Group>
                 <Form.Group id="phone">
                   <Form.Label>Phone Number</Form.Label>
                   <Form.Control
-                    type="phone"
+                    type="tel"
                     name="phone"
                     value={formState.phone}
                     onChange={handleChange}
+                    isInvalid={!!formErrors.phone}
                   />
-                </Form.Group>
-                <Form.Group id="dateOfBirth">
-                  <Form.Label>Date of Birth </Form.Label>
-                  <Form.Control
-                    type="date"
-                    name={"dateOfBirth"}
-                    value={formState.dateOfBirth}
-                    onChange={handleChange}
-                  />
+                  <Form.Control.Feedback type="invalid">
+                    {formErrors.phone}
+                  </Form.Control.Feedback>
                 </Form.Group>
                 <div className="align-items-center justify-content-center mt-4 ">
                   <Button disabled={buttonDisabled} type="submit">

@@ -11,7 +11,6 @@ export default function PersonalDetails({ formState, handleChange, errors }) {
           value={formState.name}
           onChange={handleChange}
           isInvalid={!!errors.name}
-          required
         />
         <Form.Control.Feedback type="invalid">
           {errors.name}
@@ -25,7 +24,6 @@ export default function PersonalDetails({ formState, handleChange, errors }) {
           value={formState.dateOfBirth}
           onChange={handleChange}
           isInvalid={!!errors.dateOfBirth}
-          required
         />
         <Form.Control.Feedback type="invalid">
           {errors.dateOfBirth}
@@ -37,7 +35,6 @@ export default function PersonalDetails({ formState, handleChange, errors }) {
           type="tel"
           name="phone"
           value={formState.phone}
-          required
           onChange={handleChange}
           isInvalid={!!errors.phone}
         />

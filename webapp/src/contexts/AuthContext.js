@@ -150,6 +150,10 @@ export function AuthProvider({ children }) {
           .get()
           .then((doc) => {
             setUserData(doc.data());
+          })
+          .catch((error) => {
+            console.log(`${error.code}: ${error.message}`);
+            setAlert({ message: "Could not contact server", success: false });
           });
         setCurrentUser(user);
       } else {
