@@ -51,20 +51,6 @@ hr {
 
 /* avatarformatting */
 
-/* animation upon style changes */
-@keyframes open {
-  0% {
-    background-position: 166% -25%, 220% -69%;
-  }
-  100% {
-    background-position: 120% -5%, 200% -40%;
-  }
-}
-
-input[type="file"] {
-  display: none;
-}
-
 .custom-file-upload {
   border-radius: 50%;
   display: inline-block;
@@ -75,52 +61,22 @@ input[type="file"] {
   margin-bottom: 15px;
 }
 
+.custom-file-upload:hover {
+  background: #0c66c0;
+  margin-bottom: 15px;
+}
+
 .img-wrap {
   position: relative;
-  width: 200px;
-  height: 200px;
+  width: 250px;
+  height: 250px;
   overflow: hidden;
+  background: #0c66c0;
+  padding: 4px;
   border-radius: 50%;
 }
-
-/* .img {
-  position: absolute;
-  top: -100%;
-  bottom:  -100%;
-  left:  -100%;
-  right:  -100%;
-  margin: auto;
-} */
-
-.img-upload:before {
-  content: "\f093";
-  font-size: 90px;
-  position: absolute;
-  padding-top: 80px;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  text-align: center;
-  color: #007bff;
-  width: 200px;
-  height: 200px;
-  border-radius: 50%;
-  opacity: 0;
-  transition: 0.5s ease;
-  background-color: #fff;
-}
-
 
 .hide {
   display: none;
 }
 
-
-.img-upload:hover:before {
-  opacity: 1;
-}
-
-img {
-  width: auto;
-  height: 100%;
-}

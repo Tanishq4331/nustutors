@@ -6,7 +6,7 @@ import { Form } from "react-bootstrap";
 //   passwordValidator,
 // } from "./validators";
 
-export default function AccountDetails({ formState, handleChange, errors }) {
+export default function LoginDetails({ formState, handleChange, errors }) {
   return (
     <>
       <Form.Group id="email">

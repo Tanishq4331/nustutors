@@ -1,48 +1,90 @@
-import React, { useState } from "react";
-import { Card, Button, Alert, Container } from "react-bootstrap";
+import { Form, Button, Card, Alert, Container } from "react-bootstrap";
 import { useAuth } from "../contexts/AuthContext";
 import { Link, useHistory } from "react-router-dom";
 import AvatarUpload from "../components/UploadForm/AvatarUpload";
+import { useState, useEffect } from "react";
 
 export default function Profile() {
   const [error, setError] = useState("");
-  const { currentUser, logout } = useAuth();
+  const { userData, setUserData } = useAuth();
+  const [buttonDisabled, setButtonDisabled] = useState(true);
   const history = useHistory();
+  const [formState, setFormState] = useState({ ...userData });
 
-  async function handleLogout() {
-    setError("");
-    try {
-      await logout();
-      history.push("login");
-    } catch {
-      setError("Failed to log out");
-    }
+  const handleChange = (e) => {
+    const name = e.target.name;
+    const value = e.target.value;
+    setFormState({ ...formState, [name]: value });
+  };
+
+  useEffect(() => {
+    //assuming ordering of data is same
+    const changesMade = JSON.stringify(formState) === JSON.stringify(userData);
+    setButtonDisabled(changesMade);
+  });
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    console.log("handling");
+    setUserData(formState);
   }
 
   return (
-    <Container
-      className="d-flex align-items-center justify-content-center mb-4"
-      style={{ minHeight: "100vh" }}
-    >
-      <AvatarUpload setError={setError}/>
-
-      <div className="w-100" style={{ maxWidth: "450px" }}>
-        <Card>
-          <Card.Body>
-            <h2 className="text-center mb-4">Profile</h2>
-            {error && <Alert variant="danger">{error}</Alert>}
-            <strong>Email:</strong> {currentUser.email}
-            <Link to="/update-profile" className="btn btn-primary w-100 mt-3">
-              Update Profile
-            </Link>
-          </Card.Body>
-        </Card>
-        <div className="text-center mt-2">
-          <Button variant="link" onClick={handleLogout}>
-            Log Out
-          </Button>
-        </div>
+    <>
+      <div className="align-items-center justify-content-center mb-5">
+        {error && <Alert variant="danger">{error}</Alert>}
+        <br></br>
+        <h2 className="text-center mb-4">Profile</h2>
       </div>
-    </Container>
+      <div className="align-items-center justify-content-center mb-4 ">
+        <AvatarUpload setError={setError} />
+      </div>
+      <Container
+        className="d-flex justify-content-center mb-4"
+        style={{ minHeight: "60vh" }}
+      >
+        <div className="w-100" style={{ maxWidth: "450px" }}>
+          <Form onSubmit={handleSubmit}>
+            <Card className=" mb-5 ">
+              <Card.Body>
+                <Form.Group id="name">
+                  <Form.Label> Name</Form.Label>
+                  <Form.Control
+                    type="text"
+                    name="name"
+                    value={formState.name}
+                    onChange={handleChange}
+                  />
+                </Form.Group>
+                <Form.Group id="phone">
+                  <Form.Label>Phone Number</Form.Label>
+                  <Form.Control
+                    type="phone"
+                    name="phone"
+                    value={formState.phone}
+                    onChange={handleChange}
+                  />
+                </Form.Group>
+                <Form.Group id="dateOfBirth">
+                  <Form.Label>Date of Birth </Form.Label>
+                  <Form.Control
+                    type="date"
+                    name={"dateOfBirth"}
+                    value={formState.dateOfBirth}
+                    onChange={handleChange}
+                  />
+                </Form.Group>
+                <div className="align-items-center justify-content-center mt-4 ">
+                  <Button disabled={buttonDisabled} type="submit">
+                    Save
+                  </Button>
+                </div>
+              </Card.Body>
+            </Card>
+          </Form>{" "}
+        </div>{" "}
+      </Container>
+      Click <Link to="/update-profile">here</Link> to change your login details
+    </>
   );
 }

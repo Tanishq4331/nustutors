@@ -40,12 +40,10 @@ export function AuthProvider({ children }) {
   }
 
   function register(formState) {
-    const { email, password, name, phone } = formState;
+    const { email, password } = formState;
     return signup(email, password).then((response) => {
       const user = {
-        email: email,
-        name: name,
-        phone: phone,
+        ...formState,
       };
       db.collection("users").doc(response.user.uid).set(user);
     });

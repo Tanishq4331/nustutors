@@ -1,9 +1,9 @@
 import * as React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Form, Button, Card, Alert, Container } from "react-bootstrap";
 import { Link, useHistory } from "react-router-dom";
 
-import AccountDetails from "./account-details";
+import LoginDetails from "./LoginDetails";
 import PersonalDetails from "./personal-details";
 import { useAuth } from "../../contexts/AuthContext";
 import Stepper from "@material-ui/core/Stepper";
@@ -11,8 +11,12 @@ import Step from "@material-ui/core/Step";
 import StepLabel from "@material-ui/core/StepLabel";
 import Typography from "@material-ui/core/Typography";
 import { accountValidation, personalValidation } from "./validators";
+import Qualifications from "./qualifications";
+import TutoringPreferences from "./tutoring-preferences";
+import Confirmation from "./Confirmation";
 
 export default function Registration() {
+  console.log("registration re-rending");
   const { register } = useAuth();
   const [activeStep, setActiveStep] = useState(0);
   const [errors, setErrors] = React.useState("");
@@ -24,13 +28,18 @@ export default function Registration() {
     name: "",
     phone: "",
     email: "",
+    dateOfBirth: null,
     password: "",
     passwordConfirm: "",
+    tutor: null,
   });
 
   const steps = [
-    { label: "Account Details", form: AccountDetails },
+    { label: "Login Details", form: LoginDetails },
     { label: "Personal Details", form: PersonalDetails },
+    { label: "Qualifications", form: Qualifications },
+    { label: "Tutoring Preferences", form: TutoringPreferences },
+    { label: "Confirmation", form: Confirmation },
   ];
 
   const lastStepIndex = steps.length - 1;
@@ -46,13 +55,19 @@ export default function Registration() {
   const validatePage = () => {
     switch (steps[activeStep].label) {
       case "Personal Details":
-        return personalValidation(formState.name, formState.phone);
-      case "Account Details":
+        return personalValidation(
+          formState.name,
+          formState.phone,
+          formState.dateOfBirth
+        );
+      case "Login Details":
         return accountValidation(
           formState.email,
           formState.password,
           formState.passwordConfirm
         );
+      case "Confirmation":
+        return "";
     }
   };
 
@@ -93,26 +108,92 @@ export default function Registration() {
     [activeStep, setActiveStep]
   );
 
+  const onSkipClick = React.useCallback(
+    (event) => {
+      event.preventDefault();
+      setActiveStep(() => steps.length - 1);
+    },
+    [steps, setActiveStep]
+  );
+
   const FormPage = steps[activeStep].form;
+
+  const BackButton = () => {
+    if (activeStep !== 0) {
+      return (
+        <Button style={{ marginRight: "16px" }} onClick={onPrevClick}>
+          Previous
+        </Button>
+      );
+    } else {
+      return null;
+    }
+  };
+
+  const NextButton = () => {
+    return (
+      <Button primary={true} onClick={onStepSubmit}>
+        {isLastStep ? "Submit" : "Next"}
+      </Button>
+    );
+  };
+
+  const SkipButton = () => {
+    if (activeStep > 1 && !isLastStep) {
+      return (
+        <Button style={{ marginRight: "16px" }} onClick={onSkipClick}>
+          Skip Tutor Registration
+        </Button>
+      );
+    } else {
+      return null;
+    }
+  };
+
+  const Progress = () => {
+    return (
+      <Stepper activeStep={activeStep} alternativeLabel>
+        {steps.map((step) => (
+          <Step key={step.label}>
+            <StepLabel>{step.label}</StepLabel>
+          </Step>
+        ))}
+      </Stepper>
+    );
+  };
+
+  const Navigation = () => {
+    return (
+      <div
+        style={{
+          justifyContent: "space-between",
+          alignContent: "center",
+        }}
+        className={"k-form-buttons k-buttons-end"}
+      >
+        <span style={{ alignSelf: "center" }}>
+          Step {activeStep + 1} of {steps.length}
+        </span>
+        <div>
+          <BackButton />
+          <SkipButton />
+          <NextButton />
+        </div>
+      </div>
+    );
+  };
 
   return (
     <Container
       className="d-flex align-items-center justify-content-center"
       style={{ minHeight: "100vh" }}
     >
-      <div className="w-100" style={{ maxWidth: "450px" }}>
+      <div className="w-100" style={{ maxWidth: "600px" }}>
         <Card>
           <Card.Body>
             <h2 className="text-center mb-4">Registration</h2>
             {globalError && <Alert variant="danger">{globalError}</Alert>}
-            <Stepper activeStep={activeStep} alternativeLabel>
-              {steps.map((step) => (
-                <Step key={step.label}>
-                  <StepLabel>{step.label}</StepLabel>
-                </Step>
-              ))}
-            </Stepper>
-
+            <Progress />
             <Form>
               <FormPage
                 formState={formState}
@@ -120,34 +201,7 @@ export default function Registration() {
                 errors={errors}
               />
               <hr />
-              <div
-                style={{
-                  justifyContent: "space-between",
-                  alignContent: "center",
-                }}
-                className={"k-form-buttons k-buttons-end"}
-              >
-                <span style={{ alignSelf: "center" }}>
-                  Step {activeStep + 1} of {steps.length}
-                </span>
-                <div>
-                  {activeStep !== 0 ? (
-                    <Button
-                      style={{ marginRight: "16px" }}
-                      onClick={onPrevClick}
-                    >
-                      Previous
-                    </Button>
-                  ) : undefined}
-                  <Button
-                    primary={true}
-                    // disabled={!formRenderProps.allowSubmit}
-                    onClick={onStepSubmit}
-                  >
-                    {isLastStep ? "Submit" : "Next"}
-                  </Button>
-                </div>
-              </div>
+              <Navigation />{" "}
             </Form>
           </Card.Body>
         </Card>

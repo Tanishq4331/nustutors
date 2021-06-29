@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { Button } from "react-bootstrap";
+import { Button, Container } from "react-bootstrap";
 import { storage } from "../../config/firebase";
 import { useAuth } from "../../contexts/AuthContext";
+import EditIcon from "@material-ui/icons/Edit";
 
 export default function AvatarUpload({ setError }) {
   const [file, setFile] = useState("");
@@ -29,8 +30,39 @@ export default function AvatarUpload({ setError }) {
       };
       reader.readAsDataURL(file);
     } else {
-      setError("Please select an image file (png or jpg)");
+      return setError("Please select an image file (png or jpg)");
     }
+
+    //generate ref to new img in database
+    const storageRef = storage.ref(file.name);
+
+    //upload img to storage
+    storageRef
+      .put(file)
+      .then(async (snapshot) => {
+        const existingUrl = userData.url;
+
+        const newUrl = await storageRef.getDownloadURL();
+
+        if (existingUrl) {
+          //delete the previous avatar from the databse (if any)
+          const prevRef = storage.refFromURL(existingUrl);
+          prevRef
+            .delete()
+            .then(() => {
+              console.log("Deleted");
+            })
+            .catch((err) => console.log(err));
+        }
+
+        //add the generated url to userData
+        setUserData({ ...userData, url: newUrl });
+        setFile(null);
+      })
+      .catch((error) => {
+        console.log(error.message);
+        setError(error.message);
+      });
   };
 
   const handleSubmit = (e) => {
@@ -59,7 +91,7 @@ export default function AvatarUpload({ setError }) {
 
         //add the generated url to userData
         setUserData({ ...userData, url: newUrl });
-        setFile(null)
+        setFile(null);
       })
       .catch((error) => {
         console.log(error.message);
@@ -69,18 +101,27 @@ export default function AvatarUpload({ setError }) {
 
   return (
     <div>
-      <form onSubmit={handleSubmit}>
-        <label htmlFor="photo-upload" className="custom-file-upload fas">
-          <div className="img-wrap img-upload">
-            <img className="img" htmlFor="photo-upload" src={imagePreviewUrl} />
+      <form>
+        <Container className="d-flex align-items-top justify-content-center">
+          <div>
+            <img
+              className="img img-wrap img-upload"
+              htmlFor="photo-upload"
+              src={imagePreviewUrl}
+            />
           </div>
-          <input
-            id="photo-upload"
-            className="hide"
-            type="file"
-            onChange={(e) => photoUpload(e)}
-          />
-        </label>
+          <div>
+            <label className="custom-file-upload" htmlFor="photo-upload">
+              <EditIcon style={{ fill: "white" }} />
+              <input
+                id="photo-upload"
+                className="hide"
+                type="file"
+                onChange={(e) => photoUpload(e)}
+              />
+            </label>
+          </div>
+        </Container>
         {file && (
           <Button type="submit" className="save">
             Set Avatar{" "}

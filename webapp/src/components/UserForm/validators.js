@@ -61,8 +61,8 @@ export const guestsValidator = (value) =>
   !value ? "Number of guests is required" : value < 5 ? "" : "Maximum 5 guests";
 export const nightsValidator = (value) =>
   value ? "" : "Number of Nights is required.";
-export const arrivalDateValidator = (value) =>
-  value ? "" : "Arrival Date is required.";
+export const birthDateValidator = (value) =>
+  value ? "" : "Date of Birth is required.";
 export const colorValidator = (value) => (value ? "" : "Color is required.");
 export const requiredValidator = (value) =>
   value ? "" : "Error: This field is required.";
@@ -71,10 +71,11 @@ export const passwordValidator = (value) =>
 export const addressValidator = (value) =>
   value ? "" : "Address is required.";
 
-export function personalValidation(name, phone) {
+export function personalValidation(name, phone, dateOfBirth) {
   return {
     name: nameValidator(name),
     phone: phoneValidator(phone),
+    dateOfBirth: birthDateValidator(dateOfBirth),
   };
 }
 

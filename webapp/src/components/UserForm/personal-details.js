@@ -17,6 +17,20 @@ export default function PersonalDetails({ formState, handleChange, errors }) {
           {errors.name}
         </Form.Control.Feedback>
       </Form.Group>
+      <Form.Group id="dateOfBirth">
+        <Form.Label>Date of Birth</Form.Label>
+        <Form.Control
+          type="date"
+          name="dateOfBirth"
+          value={formState.dateOfBirth}
+          onChange={handleChange}
+          isInvalid={!!errors.dateOfBirth}
+          required
+        />
+        <Form.Control.Feedback type="invalid">
+          {errors.dateOfBirth}
+        </Form.Control.Feedback>
+      </Form.Group>
       <Form.Group id="phone">
         <Form.Label>Phone Number</Form.Label>
         <Form.Control
