@@ -14,12 +14,14 @@ import PrivateRoute from "./PrivateRoute";
 import PublicRoute from "./PublicRoute";
 import Profile from "./pages/Profile";
 import Dashboard from "./pages/Dashboard";
+import AlertMessage from "./components/Alerts/AlertMessage";
 
 export default function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
         <NavBar />
+        <AlertMessage />
         <main>
           <Switch>
             <PrivateRoute exact path="/" component={Dashboard} />

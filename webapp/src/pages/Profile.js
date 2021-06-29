@@ -3,10 +3,10 @@ import { useAuth } from "../contexts/AuthContext";
 import { Link, useHistory } from "react-router-dom";
 import AvatarUpload from "../components/UploadForm/AvatarUpload";
 import { useState, useEffect } from "react";
+import AlertMessage from "../components/Alerts/AlertMessage";
 
 export default function Profile() {
-  const [error, setError] = useState("");
-  const { userData, setUserData } = useAuth();
+  const { userData, setUserData, setAlert } = useAuth();
   const [buttonDisabled, setButtonDisabled] = useState(true);
   const history = useHistory();
   const [formState, setFormState] = useState({ ...userData });
@@ -27,17 +27,16 @@ export default function Profile() {
     e.preventDefault();
     console.log("handling");
     setUserData(formState);
+    setAlert({ message: "Profile successfully updated", success: true });
   }
 
   return (
     <>
       <div className="align-items-center justify-content-center mb-5">
-        {error && <Alert variant="danger">{error}</Alert>}
-        <br></br>
         <h2 className="text-center mb-4">Profile</h2>
       </div>
       <div className="align-items-center justify-content-center mb-4 ">
-        <AvatarUpload setError={setError} />
+        <AvatarUpload />
       </div>
       <Container
         className="d-flex justify-content-center mb-4"

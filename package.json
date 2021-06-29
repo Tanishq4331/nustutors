@@ -6,6 +6,7 @@
     "@heroicons/react": "^1.0.1",
     "bootstrap": "^5.0.1",
     "firebase": "^8.6.5",
+    "framer-motion": "^4.1.17",
     "headlessui": "*",
     "heroicons": "^1.0.1",
     "react-bootstrap": "^1.6.1",

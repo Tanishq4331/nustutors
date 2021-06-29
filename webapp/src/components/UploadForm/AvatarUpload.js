@@ -4,14 +4,8 @@ import { storage } from "../../config/firebase";
 import { useAuth } from "../../contexts/AuthContext";
 import EditIcon from "@material-ui/icons/Edit";
 
-export default function AvatarUpload({ setError }) {
-  const [file, setFile] = useState("");
-  const { setUserData, userData } = useAuth();
-
-  const [imagePreviewUrl, setImagePreviewUrl] = useState(
-    userData.url ||
-      "https://cdn2.iconfinder.com/data/icons/instagram-ui/48/jee-74-1024.png"
-  );
+export default function AvatarUpload() {
+  const { setUserData, userData, setAlert } = useAuth();
 
   const types = ["image/png", "image/jpeg"];
 
@@ -25,109 +19,75 @@ export default function AvatarUpload({ setError }) {
     }
     if (types.includes(file.type)) {
       reader.onloadend = () => {
-        setFile(file);
-        setImagePreviewUrl(reader.result);
+        uploadFile();
       };
       reader.readAsDataURL(file);
     } else {
-      return setError("Please select an image file (png or jpg)");
+      return setAlert({
+        message: "Please select an image file (png or jpg)",
+        success: false,
+      });
     }
 
-    //generate ref to new img in database
-    const storageRef = storage.ref(file.name);
+    const uploadFile = () => {
+      //generate ref to new img in database
+      const storageRef = storage.ref(file.name);
 
-    //upload img to storage
-    storageRef
-      .put(file)
-      .then(async (snapshot) => {
-        const existingUrl = userData.url;
+      //upload img to ref
+      storageRef
+        .put(file)
+        .then(async (snapshot) => {
+          const existingUrl = userData.url;
 
-        const newUrl = await storageRef.getDownloadURL();
+          const newUrl = await storageRef.getDownloadURL();
 
-        if (existingUrl) {
-          //delete the previous avatar from the databse (if any)
-          const prevRef = storage.refFromURL(existingUrl);
-          prevRef
-            .delete()
-            .then(() => {
-              console.log("Deleted");
-            })
-            .catch((err) => console.log(err));
-        }
+          if (existingUrl) {
+            //delete the previous avatar from the databse (if any)
+            const prevRef = storage.refFromURL(existingUrl);
+            prevRef
+              .delete()
+              .then(() => {
+                console.log("Deleted");
+              })
+              .catch((err) => console.log(err));
+          }
 
-        //add the generated url to userData
-        setUserData({ ...userData, url: newUrl });
-        setFile(null);
-      })
-      .catch((error) => {
-        console.log(error.message);
-        setError(error.message);
-      });
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    //generate ref to new img in database
-    const storageRef = storage.ref(file.name);
-
-    //upload img to storage
-    storageRef
-      .put(file)
-      .then(async (snapshot) => {
-        const existingUrl = userData.url;
-
-        const newUrl = await storageRef.getDownloadURL();
-
-        if (existingUrl) {
-          //delete the previous avatar from the databse (if any)
-          const prevRef = storage.refFromURL(existingUrl);
-          prevRef
-            .delete()
-            .then(() => {
-              console.log("Deleted");
-            })
-            .catch((err) => console.log(err));
-        }
-
-        //add the generated url to userData
-        setUserData({ ...userData, url: newUrl });
-        setFile(null);
-      })
-      .catch((error) => {
-        console.log(error.message);
-        setError(error.message);
-      });
+          //add the generated url to userData
+          setUserData({ ...userData, url: newUrl });
+        })
+        .catch((error) => {
+          console.log(error.message);
+          setAlert({
+            message: error.message,
+            success: false,
+          });
+        });
+    };
   };
 
   return (
-    <div>
+    <Container className="d-flex align-items-top justify-content-center">
+      <div>
+        <img
+          className="img img-wrap img-upload"
+          htmlFor="photo-upload"
+          src={
+            userData.url ||
+            "https://cdn2.iconfinder.com/data/icons/instagram-ui/48/jee-74-1024.png"
+          }
+        />
+      </div>
       <form>
-        <Container className="d-flex align-items-top justify-content-center">
-          <div>
-            <img
-              className="img img-wrap img-upload"
-              htmlFor="photo-upload"
-              src={imagePreviewUrl}
-            />
-          </div>
-          <div>
-            <label className="custom-file-upload" htmlFor="photo-upload">
-              <EditIcon style={{ fill: "white" }} />
-              <input
-                id="photo-upload"
-                className="hide"
-                type="file"
-                onChange={(e) => photoUpload(e)}
-              />
-            </label>
-          </div>
-        </Container>
-        {file && (
-          <Button type="submit" className="save">
-            Set Avatar{" "}
-          </Button>
-        )}
+        <label className="custom-file-upload" htmlFor="photo-upload">
+          <EditIcon style={{ fill: "white" }} />
+          <input
+            id="photo-upload"
+            className="hide"
+            type="file"
+            onChange={(e) => photoUpload(e)}
+          />
+        </label>
       </form>
-    </div>
+    </Container>
   );
 }

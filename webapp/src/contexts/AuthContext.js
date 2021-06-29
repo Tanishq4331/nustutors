@@ -22,7 +22,10 @@ export function AuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState();
   const [userData, setUserData] = useState();
   const [loading, setLoading] = useState(true);
-  const [logoutMessage, setLogoutMessage] = useState("");
+  const [alert, setAlert] = useState({
+    message: "",
+    success: true,
+  });
 
   //   useEffect(() => {
   //     const unsubscribe = db.collection("requests").onSnapshot(snapshot => {
@@ -40,10 +43,13 @@ export function AuthProvider({ children }) {
   }
 
   function register(formState) {
-    const { email, password } = formState;
+    const { email, password, name, phone, dateOfBirth } = formState;
     return signup(email, password).then((response) => {
       const user = {
-        ...formState,
+        email: email,
+        name: name,
+        phone: phone,
+        dateOfBirth: dateOfBirth,
       };
       db.collection("users").doc(response.user.uid).set(user);
     });
@@ -109,6 +115,19 @@ export function AuthProvider({ children }) {
     return loggedIn;
   }
 
+  //display any alert for 5 seconds
+  useEffect(() => {
+    let timer1 = setTimeout(
+      () => setAlert({ message: "", successs: true }),
+      5000
+    );
+
+    // this will clear Timeout once component unmounts
+    return () => {
+      clearTimeout(timer1);
+    };
+  }, [alert]);
+
   //if there is a change in user state update the database
   useEffect(() => {
     if (currentUser) {
@@ -147,8 +166,8 @@ export function AuthProvider({ children }) {
     currentUser,
     emailAlreadyExists,
     setUserData,
-    logoutMessage,
-    setLogoutMessage,
+    alert,
+    setAlert,
     loginWithGoogle,
     login,
     userData,
