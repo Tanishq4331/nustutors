@@ -1,121 +1,182 @@
-import { Form, Button, Card, Alert, Container } from "react-bootstrap";
+import {
+  Form,
+  Button,
+  Card,
+  Alert,
+  Row,
+  Col,
+  Container,
+} from "react-bootstrap";
 import { useAuth } from "../contexts/AuthContext";
 import { Link, useHistory } from "react-router-dom";
 import AvatarUpload from "../components/UploadForm/AvatarUpload";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import AlertMessage from "../components/Alerts/AlertMessage";
 import { personalValidation } from "../components/UserForm/validators";
+import { useForkRef } from "@material-ui/core";
 
 export default function Profile() {
   const { userData, setUserData, setAlert } = useAuth();
-  const [buttonDisabled, setButtonDisabled] = useState(true);
   const [formErrors, setFormErrors] = useState("");
-  const [loading, setLoading] = useState(false);
-  const history = useHistory();
+  const [noChangesMade, setNoChangesMade] = useState(true);
   const [formState, setFormState] = useState({ ...userData });
 
   const handleChange = (e) => {
     const name = e.target.name;
     const value = e.target.value;
-
     setFormState({ ...formState, [name]: value });
   };
 
   useEffect(() => {
     //assuming ordering of data is same
-    const changesMade = JSON.stringify(formState) === JSON.stringify(userData);
-    setButtonDisabled(changesMade);
+    setNoChangesMade(JSON.stringify(formState) === JSON.stringify(userData));
   });
 
-  function handleSubmit(e) {
-    e.preventDefault();
+  function submit(e) {
+    const label = e.target.name;
 
-    setLoading(true);
+    if (noChangesMade) {
+      return;
+    }
+
     const newErrors = personalValidation(
       formState.name,
       formState.phone,
       formState.dateOfBirth
     );
+
     setFormErrors(newErrors);
 
     const errorPresent = Object.values(newErrors).some((x) => x !== "");
 
     if (errorPresent) {
-      setLoading(false);
       return;
     }
-    setFormErrors(newErrors);
 
-    setUserData(formState);
-    setAlert({ message: "Profile successfully updated", success: true });
+    setUserData({ ...formState });
+
+    setAlert({
+      message: `${labelToName(label)} successfully updated`,
+      success: true,
+    });
   }
+
+  function labelToName(label) {
+    switch (label) {
+      case "name":
+        return "Name";
+      case "dateOfBirth":
+        return "Date of Birth";
+      case "phone":
+        return "Phone";
+    }
+  }
+
+  const AccountDetails = () => {
+    return (
+      <Container>
+        <Row className="mb-5">
+          <Col sm={8} style={{ textAlign: "left" }}>
+            <h6> Email </h6>
+            <div>{userData.email}</div>
+          </Col>
+          <Col sm={4} style={{ textAlign: "right" }}>
+            {" "}
+            <Button>Change</Button>
+          </Col>
+        </Row>
+        <Row className="mb-5">
+          <Col sm={8} style={{ textAlign: "left" }}>
+            <h6> Change Password </h6>
+            <div> Password must be at least 8 characters long</div>
+          </Col>
+          <Col sm={4} style={{ textAlign: "right" }}>
+            {" "}
+            <Button>Change</Button>
+          </Col>
+        </Row>
+      </Container>
+    );
+  };
 
   return (
     <>
       <div className="align-items-center justify-content-center mb-5">
-        <h2 className="text-center mb-4">Profile</h2>
+        <h2>Profile</h2>
       </div>
       <div className="align-items-center justify-content-center mb-4 ">
         <AvatarUpload />
       </div>
-      <Container
-        className="d-flex justify-content-center mb-4"
-        style={{ minHeight: "60vh" }}
-      >
-        <div className="w-100" style={{ maxWidth: "450px" }}>
-          <Form onSubmit={handleSubmit}>
-            <Card className=" mb-5 ">
-              <Card.Body>
-                <Form.Group id="name">
+      <Container style={{ minHeight: "60vh" }}>
+        <div className="w-100">
+          <h5 className="text-center mb-4">Account Settings</h5>
+          <AccountDetails />
+          <hr />
+          <h5 className="text-center mb-5">Customize Profile</h5>
+          <Form>
+            <Form.Group id="name">
+              <Form.Row>
+                <Col sm={4}>
                   <Form.Label>Name</Form.Label>
+                </Col>
+                <Col sm={8}>
                   <Form.Control
                     type="text"
                     name="name"
                     value={formState.name}
                     onChange={handleChange}
+                    onBlur={submit}
                     isInvalid={!!formErrors.name}
                   />
                   <Form.Control.Feedback type="invalid">
                     {formErrors.name}
                   </Form.Control.Feedback>
-                </Form.Group>
-                <Form.Group id="dateOfBirth">
+                </Col>
+              </Form.Row>
+            </Form.Group>
+            <Form.Group id="dateOfBirth">
+              <Form.Row>
+                <Col sm={4}>
                   <Form.Label>Date of Birth</Form.Label>
+                </Col>
+                <Col sm={8}>
                   <Form.Control
                     type="date"
-                    name="dateOfBirth"
                     value={formState.dateOfBirth}
+                    name="dateOfBirth"
                     onChange={handleChange}
+                    onBlur={submit}
                     isInvalid={!!formErrors.dateOfBirth}
                   />
                   <Form.Control.Feedback type="invalid">
                     {formErrors.dateOfBirth}
                   </Form.Control.Feedback>
-                </Form.Group>
-                <Form.Group id="phone">
+                </Col>
+              </Form.Row>
+            </Form.Group>
+            <Form.Group id="phone">
+              <Form.Row>
+                <Col sm={4}>
                   <Form.Label>Phone Number</Form.Label>
+                </Col>
+                <Col sm={8}>
                   <Form.Control
                     type="tel"
                     name="phone"
                     value={formState.phone}
                     onChange={handleChange}
+                    onBlur={submit}
                     isInvalid={!!formErrors.phone}
                   />
                   <Form.Control.Feedback type="invalid">
                     {formErrors.phone}
                   </Form.Control.Feedback>
-                </Form.Group>
-                <div className="align-items-center justify-content-center mt-4 ">
-                  <Button disabled={buttonDisabled} type="submit">
-                    Save
-                  </Button>
-                </div>
-              </Card.Body>
-            </Card>
-          </Form>{" "}
+                </Col>
+              </Form.Row>
+            </Form.Group>
+          </Form>
         </div>{" "}
       </Container>
-      Click <Link to="/update-profile">here</Link> to change your login details
     </>
   );
 }

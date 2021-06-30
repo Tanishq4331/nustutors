@@ -6,7 +6,7 @@ import { Link, useHistory } from "react-router-dom";
 export default function UpdateProfile() {
   const history = useHistory();
 
-  const { currentUser, updatePassword, updateEmail, logout, setLogoutMessage } =
+  const { currentUser, updatePassword, updateEmail, logout, setAlert } =
     useAuth();
 
   const [inputState, setInputState] = useState({
@@ -91,7 +91,13 @@ export default function UpdateProfile() {
       setLoading(false);
       if (success) {
         try {
-          logout().then(() => setLogoutMessage("Profile sucessfully updated"));
+          logout().then(() =>
+            setAlert({
+              message:
+                "Login details sucessfully updated. Please login with your new credentials.",
+              success: true,
+            })
+          );
         } catch {
           setError("Unable to update profile");
           console.log("Unable to log out");

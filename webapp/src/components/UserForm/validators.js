@@ -67,7 +67,7 @@ export const colorValidator = (value) => (value ? "" : "Color is required.");
 export const requiredValidator = (value) =>
   value ? "" : "Error: This field is required.";
 export const passwordValidator = (value) =>
-  value && value.length > 5 ? "" : "Password must be at least 6 symbols.";
+  value && value.length > 7 ? "" : "Password must be at least 8 symbols.";
 export const addressValidator = (value) =>
   value ? "" : "Address is required.";
 
