@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { Button, Container } from "react-bootstrap";
+import { Container } from "react-bootstrap";
 import { storage } from "../../config/firebase";
 import { useAuth } from "../../contexts/AuthContext";
 import EditIcon from "@material-ui/icons/Edit";

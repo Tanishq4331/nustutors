@@ -67,7 +67,10 @@ export function AuthProvider({ children }) {
   }
 
   function updateEmail(newEmail, password) {
-    return reauthenticate(password).then((user) => user.updateEmail(newEmail));
+    return reauthenticate(password).then(() => {
+      currentUser.updateEmail(newEmail);
+      setUserData({ ...userData, email: newEmail });
+    });
   }
 
   function updatePassword(currPassword, newPassword) {
