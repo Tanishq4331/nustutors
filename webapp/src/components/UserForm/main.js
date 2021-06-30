@@ -71,15 +71,23 @@ export default function Registration() {
     }
   };
 
+  const errorPresent = (errors) => Object.values(errors).some((x) => x !== "");
+
+  useEffect(async () => {
+    //only actively validate the whole form where there are already errors
+    if (errorPresent(errors)) {
+      const newErrors = await validatePage();
+      setErrors(newErrors);
+    }
+  }, [formState]);
+
   const onStepSubmit = async () => {
     setLoading(true);
     const newErrors = await validatePage();
     setErrors(newErrors);
 
-    const errorPresent = Object.values(newErrors).some((x) => x !== "");
-
-    //if the current page is not valid do nothing; could disable button alternatively
-    if (errorPresent) {
+    //if the current page is not valid do nothing;
+    if (errorPresent(newErrors)) {
       setLoading(false);
       return;
     }
