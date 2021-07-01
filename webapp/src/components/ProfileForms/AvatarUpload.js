@@ -41,14 +41,20 @@ export default function AvatarUpload() {
           const newUrl = await storageRef.getDownloadURL();
 
           if (existingUrl) {
-            //delete the previous avatar from the databse (if any)
-            const prevRef = storage.refFromURL(existingUrl);
-            prevRef
-              .delete()
-              .then(() => {
-                console.log("Deleted");
-              })
-              .catch((err) => console.log(err));
+            try {
+              //delete the previous avatar from the databse (if any)
+              const prevRef = storage.refFromURL(existingUrl);
+              if (prevRef) {
+                prevRef.delete().then(() => {
+                  console.log("Deleted");
+                });
+              }
+            } catch (error) {
+              //Usually invalid when initial url is sourced from google instead of storage
+              if (error.code != "storage/invalid-argument") {
+                console.log(`${error.code}: ${error.message}`);
+              }
+            }
           }
 
           //add the generated url to userData

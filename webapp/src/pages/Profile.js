@@ -1,5 +1,5 @@
 import { Button, Row, Col, Container } from "react-bootstrap";
-import AvatarUpload from "../components/AvatarUpload/AvatarUpload";
+import AvatarUpload from "../components/ProfileForms/AvatarUpload";
 import CustomizeProfileForm from "../components/ProfileForms/CustomizeProfileForm";
 import ChangeAccountDetails from "../components/ProfileForms/ChangeAccountDetails";
 export default function Profile() {

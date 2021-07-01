@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import Registration from "../components/UserForm/main";
+import Registration from "./MainRegistration";
 
 export default function Signup() {
   return (

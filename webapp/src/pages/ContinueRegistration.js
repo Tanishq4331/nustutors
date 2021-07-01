@@ -1,41 +1,46 @@
 import * as React from "react";
 import { useState, useEffect } from "react";
-import { Form, Button, Card, Alert, Container } from "react-bootstrap";
-import { Link, useHistory } from "react-router-dom";
+import { Form, Button, Card, Container, Row, Col } from "react-bootstrap";
+import { db } from "../config/firebase";
 
-import LoginDetails from "./LoginDetails";
-import PersonalDetails from "./personal-details";
-import { useAuth } from "../../contexts/AuthContext";
+import LoginDetails from "../components/UserForm/LoginDetails";
+import PersonalDetails from "../components/UserForm/PersonalDetails";
+import { useAuth } from "../contexts/AuthContext";
 import Stepper from "@material-ui/core/Stepper";
 import Step from "@material-ui/core/Step";
 import StepLabel from "@material-ui/core/StepLabel";
-import Typography from "@material-ui/core/Typography";
-import { accountValidation, personalValidation } from "./validators";
-import Qualifications from "./qualifications";
-import TutoringPreferences from "./tutoring-preferences";
-import Confirmation from "./Confirmation";
+import {
+  accountValidation,
+  personalValidation,
+} from "../components/UserForm/validators";
+import Qualifications from "../components/UserForm/Qualifications";
+import TutoringPreferences from "../components/UserForm/TutoringPreferences";
+import Confirmation from "../components/UserForm/Confirmation";
+import { useHistory } from "react-router-dom";
 
-export default function Registration() {
-  console.log("registration re-rending");
-  const { register } = useAuth();
+export default function ContinueRegistration() {
+  const { register, setAlert, currentUser, userData } = useAuth();
+const history = useHistory();
+
+  //if user has already completed registration
+  if (userData) {
+    history.push("/");
+  }
+
   const [activeStep, setActiveStep] = useState(0);
   const [errors, setErrors] = React.useState("");
   const [loading, setLoading] = useState(false);
-  const [globalError, setGlobalError] = useState("");
-  const history = useHistory();
 
   const [formState, setFormState] = useState({
-    name: "",
+    name: currentUser.displayName,
     phone: "",
-    email: "",
+    email: currentUser.email,
     dateOfBirth: null,
-    password: "",
-    passwordConfirm: "",
     tutor: null,
+    url: currentUser.photoURL,
   });
 
   const steps = [
-    { label: "Login Details", form: LoginDetails },
     { label: "Personal Details", form: PersonalDetails },
     { label: "Qualifications", form: Qualifications },
     { label: "Tutoring Preferences", form: TutoringPreferences },
@@ -59,12 +64,6 @@ export default function Registration() {
           formState.name,
           formState.phone,
           formState.dateOfBirth
-        );
-      case "Login Details":
-        return accountValidation(
-          formState.email,
-          formState.password,
-          formState.passwordConfirm
         );
       case "Confirmation":
         return "";
@@ -96,13 +95,17 @@ export default function Registration() {
     setActiveStep(() => Math.min(activeStep + 1, lastStepIndex));
 
     //submit at the final page
-    if (isLastStep && !errorPresent) {
+    if (isLastStep && !errorPresent(newErrors)) {
       try {
-        setGlobalError("");
-        await register(formState);
+        await db.collection("users").doc(currentUser.uid).set(formState);
+        history.push("/");
+        setAlert({ message: "Registration successful", success: true });
       } catch (error) {
         console.log(`${error.code}: ${error.message}`);
-        setGlobalError("An unknown error occurred. Please try again later.");
+        setAlert({
+          message: "An unknown error occurred. Please try again later.",
+          success: false,
+        });
       }
     }
     setLoading(false);
@@ -140,14 +143,14 @@ export default function Registration() {
 
   const NextButton = () => {
     return (
-      <Button primary={true} onClick={onStepSubmit}>
+      <Button primary={true} disabled={loading} onClick={onStepSubmit}>
         {isLastStep ? "Submit" : "Next"}
       </Button>
     );
   };
 
   const SkipButton = () => {
-    if (activeStep > 1 && !isLastStep) {
+    if (activeStep > 0 && !isLastStep) {
       return (
         <Button style={{ marginRight: "16px" }} onClick={onSkipClick}>
           Skip Tutor Registration
@@ -172,20 +175,24 @@ export default function Registration() {
 
   const Navigation = () => {
     return (
-      <div
-        style={{
-          justifyContent: "space-between",
-          alignContent: "center",
-        }}
-        className={"k-form-buttons k-buttons-end"}
-      >
-        <span style={{ alignSelf: "center" }}>
-          Step {activeStep + 1} of {steps.length}
-        </span>
+      <div className={"align-items-center justify-content-center"}>
+        <div className={"align-items-center mb-3"}>
+          <span>
+            Step {activeStep + 1} of {steps.length}
+          </span>
+        </div>
         <div>
-          <BackButton />
-          <SkipButton />
-          <NextButton />
+          <Row>
+            <Col>
+              <BackButton />
+            </Col>
+            <Col>
+              <SkipButton />
+            </Col>
+            <Col>
+              <NextButton />
+            </Col>
+          </Row>
         </div>
       </div>
     );
@@ -200,7 +207,6 @@ export default function Registration() {
         <Card>
           <Card.Body>
             <h2 className="text-center mb-4">Registration</h2>
-            {globalError && <Alert variant="danger">{globalError}</Alert>}
             <Progress />
             <Form>
               <FormPage

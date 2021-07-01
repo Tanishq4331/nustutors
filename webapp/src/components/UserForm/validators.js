@@ -14,10 +14,14 @@ export const emailValidator = async (value) => {
     return "Email field is required";
   } else {
     if (emailRegex.test(value)) {
-      const emailExists = await emailAlreadyExists(value);
-      if (emailExists) {
-        return "Email already exists";
-      } else {
+      try {
+        const emailExists = await emailAlreadyExists(value);
+        if (emailExists) {
+          return "Email already exists";
+        } else {
+          return "";
+        }
+      } catch (error) {
         return "";
       }
     } else {

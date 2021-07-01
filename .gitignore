@@ -2,7 +2,3 @@
 *.swp
 webapp/.eslintrc.json
 node_modules
-webapp/src/components/UserForm/card-selector.js
-webapp/src/components/UserForm/data.js
-webapp/src/components/UserForm/form-components.js
-webapp/src/components/UserForm/tree-data-operations.js

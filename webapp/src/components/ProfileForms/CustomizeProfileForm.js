@@ -122,6 +122,6 @@ function labelToName(label) {
     case "dateOfBirth":
       return "Date of Birth";
     case "phone":
-      return "Phone";
+      return "Phone Number";
   }
 }

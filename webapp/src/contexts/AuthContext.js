@@ -1,6 +1,7 @@
 import React, { useContext, useState, useEffect } from "react";
 import { auth, db, storage } from "../config/firebase";
 import { firebase } from "@firebase/app";
+import { useHistory } from "react-router-dom";
 
 const AuthContext = React.createContext();
 
@@ -21,6 +22,7 @@ export function AuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState();
   const [userData, setUserData] = useState();
   const [loading, setLoading] = useState(true);
+  const history = useHistory();
   const [alert, setAlert] = useState({
     message: "",
     success: true,
@@ -105,15 +107,13 @@ export function AuthProvider({ children }) {
       })
       .catch((error) => {
         // Handle Errors here.
-        var errorCode = error.code;
-        var errorMessage = error.message;
-        <p> {errorMessage} </p>;
-        // The email of the user's account used.
-        var email = error.email;
+        setAlert({ message: "Unable to login", success: false });
+        console.log(`${error.code}: ${error.message}`);
         // The firebase.auth.AuthCredential type that was used.
         var credential = error.credential;
         // ...
       });
+
     return loggedIn;
   }
 
@@ -130,9 +130,9 @@ export function AuthProvider({ children }) {
     };
   }, [alert]);
 
-  //if there is a change in user state update the database
+  //if there is a change in user data update the database
   useEffect(() => {
-    if (currentUser) {
+    if (currentUser && userData) {
       const unsubscribe = db
         .collection("users")
         .doc(currentUser.uid)
@@ -143,6 +143,8 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(async (user) => {
+      console.log("logging in");
+
       //load/unload user data
       if (user) {
         //user logged in
@@ -151,7 +153,13 @@ export function AuthProvider({ children }) {
           .doc(user.uid)
           .get()
           .then((doc) => {
-            setUserData(doc.data());
+            //user isn't registered yet
+            if (!doc.exists) {
+              console.log("docs not found");
+              history.push("/continue-registration");
+            } else {
+              setUserData(doc.data());
+            }
           })
           .catch((error) => {
             console.log(`${error.code}: ${error.message}`);

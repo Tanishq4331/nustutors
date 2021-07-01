@@ -40,4 +40,3 @@
 
 - Sidebar instead of dropdown for narrow viewports
 - Set up loading
-- Losing focus from a field refreshes its error
