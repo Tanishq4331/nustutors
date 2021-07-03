@@ -85,7 +85,7 @@ export default function LoginBody() {
           </Card.Body>
         </Card>
         <div className="w-100 text-center mt-2">
-          Need an account? <Link to="/signup">Sign Up</Link>
+          Do not have an account? <Link to="/signup">Register</Link>
           <br></br>
           <br></br>
           Or

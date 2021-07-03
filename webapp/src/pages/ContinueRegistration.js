@@ -3,8 +3,8 @@ import { useState, useEffect } from "react";
 import { Form, Button, Card, Container, Row, Col } from "react-bootstrap";
 import { db } from "../config/firebase";
 
-import LoginDetails from "../components/UserForm/LoginDetails";
-import PersonalDetails from "../components/UserForm/PersonalDetails";
+import LoginDetails from "../components/RegistrationForm/LoginDetails";
+import PersonalDetails from "../components/RegistrationForm/PersonalDetails";
 import { useAuth } from "../contexts/AuthContext";
 import Stepper from "@material-ui/core/Stepper";
 import Step from "@material-ui/core/Step";
@@ -12,10 +12,10 @@ import StepLabel from "@material-ui/core/StepLabel";
 import {
   accountValidation,
   personalValidation,
-} from "../components/UserForm/validators";
-import Qualifications from "../components/UserForm/Qualifications";
-import TutoringPreferences from "../components/UserForm/TutoringPreferences";
-import Confirmation from "../components/UserForm/Confirmation";
+} from "../components/RegistrationForm/validators";
+import Qualifications from "../components/RegistrationForm/Qualifications";
+import TutoringPreferences from "../components/RegistrationForm/TutoringPreferences";
+import Confirmation from "../components/RegistrationForm/Confirmation";
 import { useHistory } from "react-router-dom";
 
 export default function ContinueRegistration() {

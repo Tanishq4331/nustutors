@@ -22,20 +22,8 @@ form {
   margin-right: 10px;
 }
 
-main {
-  text-align: center;
-}
-
 .form-group {
   text-align: left;
-}
-
-#signup:hover {
-  color: rgb(54, 80, 197);
-}
-
-#login:hover {
-  color: rgb(54, 80, 197);
 }
 
 .w-100 {
@@ -49,35 +37,13 @@ hr {
   border-top: 1px solid rgba(0, 0, 0, 0.1);
 }
 
-/* avatarformatting */
-
-.custom-file-upload {
-  border-radius: 50%;
-  display: inline-block;
-  position: relative;
-  top: 20px;
-  left: -65px;
-  padding: 6px;
-  cursor: pointer;
-  background: #007bff;
-  margin-bottom: 15px;
-}
-
-.custom-file-upload:hover {
-  background: #0c66c0;
-  margin-bottom: 15px;
-}
-
-.img-wrap {
-  position: relative;
-  width: 250px;
-  height: 250px;
-  overflow: hidden;
-  background: #0c66c0;
-  padding: 4px;
-  border-radius: 50%;
-}
-
 .hide {
   display: none;
+}
+
+.basic-grid {
+  display: grid;
+  gap: 15px;
+
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
 }

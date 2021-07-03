@@ -1,7 +1,7 @@
 import { Button, Row, Col, Form, Modal } from "react-bootstrap";
 import { useAuth } from "../../contexts/AuthContext";
 import { useState } from "react";
-import { emailValidator } from "../UserForm/validators";
+import { emailValidator } from "../RegistrationForm/validators";
 
 export default function ChangeEmailModal(props) {
   const { updateEmail, setAlert, userData } = useAuth();

@@ -39,4 +39,7 @@
 **TODO**
 
 - Sidebar instead of dropdown for narrow viewports
-- Set up loading
+- Emotion to make dynamic location selection buttons
+- MUI chips for module selection
+- MUI Snackbar for alerts
+- MUI Backdrop for loading

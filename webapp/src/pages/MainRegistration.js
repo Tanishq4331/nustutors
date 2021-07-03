@@ -2,16 +2,20 @@ import * as React from "react";
 import { useState, useEffect } from "react";
 import { Form, Button, Card, Container, Row, Col } from "react-bootstrap";
 
-import LoginDetails from "../components/UserForm/LoginDetails";
-import PersonalDetails from "../components/UserForm/PersonalDetails";
+import LoginDetails from "../components/RegistrationForm/LoginDetails";
+import PersonalDetails from "../components/RegistrationForm/PersonalDetails";
 import { useAuth } from "../contexts/AuthContext";
 import Stepper from "@material-ui/core/Stepper";
 import Step from "@material-ui/core/Step";
 import StepLabel from "@material-ui/core/StepLabel";
-import { accountValidation, personalValidation } from "../components/UserForm/validators";
-import Qualifications from "../components/UserForm/Qualifications";
-import TutoringPreferences from "../components/UserForm/TutoringPreferences";
-import Confirmation from "../components/UserForm/Confirmation";
+import {
+  accountValidation,
+  personalValidation,
+} from "../components/RegistrationForm/validators";
+import Qualifications from "../components/RegistrationForm/Qualifications";
+import TutoringPreferences from "../components/RegistrationForm/TutoringPreferences";
+import Confirmation from "../components/RegistrationForm/Confirmation";
+import zIndex from "@material-ui/core/styles/zIndex";
 
 export default function Registration() {
   console.log("registration re-rending");
@@ -27,7 +31,9 @@ export default function Registration() {
     dateOfBirth: null,
     password: "",
     passwordConfirm: "",
+    availableForOnline: false,
     tutor: null,
+    locations: [false, false, false, false, false, false, false, false],
   });
 
   const steps = [
@@ -45,6 +51,24 @@ export default function Registration() {
     const name = e.target.name;
     const value = e.target.value;
     setFormState({ ...formState, [name]: value });
+  };
+
+  const handleCheckboxChange = (e) => {
+    let index = e.target.name;
+    const checked = e.target.checked;
+    if (index == "availableForOnline") {
+      setFormState({ ...formState, availableForOnline: checked });
+    } else {
+      index = parseInt(index);
+      setFormState((prev) => {
+        const newLocations = [
+          ...prev.locations.slice(0, index),
+          checked,
+          ...prev.locations.slice(index + 1),
+        ];
+        return { ...prev, locations: newLocations };
+      });
+    }
   };
 
   //returns an error object
@@ -171,51 +195,55 @@ export default function Registration() {
 
   const Navigation = () => {
     return (
-      <div className={"align-items-center justify-content-center"}>
-        <div className={"align-items-center mb-3"}>
-          <span>
-            Step {activeStep + 1} of {steps.length}
-          </span>
-        </div>
-        <div>
-          <Row>
-            <Col>
-              <BackButton />
-            </Col>
-            <Col>
-              <SkipButton />
-            </Col>
-            <Col>
+      <div>
+        <Row>
+          <Col>
+            {/* <divstyle={{float: "right"}}> */}
+            <BackButton />
+          </Col>
+          <Col>
+            <SkipButton />
+          </Col>
+          <Col>
+            <div style={{ float: "right" }}>
               <NextButton />
-            </Col>
-          </Row>
-        </div>
+            </div>
+          </Col>
+        </Row>
       </div>
     );
   };
 
   return (
-    <Container
-      className="d-flex align-items-center justify-content-center"
-      style={{ minHeight: "100vh" }}
-    >
-      <div className="w-100" style={{ maxWidth: "600px" }}>
-        <Card>
-          <Card.Body>
-            <h2 className="text-center mb-4">Registration</h2>
-            <Progress />
-            <Form>
-              <FormPage
-                formState={formState}
-                handleChange={handleChange}
-                errors={errors}
-              />
-              <hr />
-              <Navigation />{" "}
-            </Form>
-          </Card.Body>
-        </Card>
+    <>
+      <div className="justify-content-center mb-5">
+        <h2 className="text-center">Registration</h2>
       </div>
-    </Container>
+
+      <Container className="d-flex align-items-center justify-content-center">
+        <div className="w-100" style={{ maxWidth: "1000px" }}>
+          <Progress />
+        </div>
+      </Container>
+
+      <Container
+        className="d-flex justify-content-center mt-4"
+        style={{ minHeight: "50vh" }}
+      >
+        {" "}
+        <div className="w-100" style={{ maxWidth: "800px" }}>
+          <Form className="mb-5">
+            <FormPage
+              formState={formState}
+              handleChange={handleChange}
+              errors={errors}
+              handleCheckboxChange={handleCheckboxChange}
+            />
+          </Form>
+          <hr />
+          <Navigation />{" "}
+        </div>
+      </Container>
+    </>
   );
 }

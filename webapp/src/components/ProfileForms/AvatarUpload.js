@@ -2,6 +2,7 @@ import { Container } from "react-bootstrap";
 import { storage } from "../../config/firebase";
 import { useAuth } from "../../contexts/AuthContext";
 import EditIcon from "@material-ui/icons/Edit";
+import styles from "./ProfileForms.module.css";
 
 export default function AvatarUpload() {
   const { setUserData, userData, setAlert } = useAuth();
@@ -75,7 +76,7 @@ export default function AvatarUpload() {
     <Container className="d-flex align-items-top justify-content-center">
       <div>
         <img
-          className="img img-wrap img-upload"
+          className={styles["img-wrap"]}
           htmlFor="photo-upload"
           src={
             userData.url ||
@@ -84,7 +85,7 @@ export default function AvatarUpload() {
         />
       </div>
       <form>
-        <label className="custom-file-upload" htmlFor="photo-upload">
+        <label className={styles["custom-file-upload"]} htmlFor="photo-upload">
           <EditIcon style={{ fill: "white" }} />
           <input
             id="photo-upload"

@@ -39,7 +39,7 @@ export default function ChangeAccountDetails() {
 
   return (
     <Container>
-      <Row className="mb-5">
+      <Row className="mt-3 mb-5">
         <Col sm={8} style={{ textAlign: "left" }}>
           <h6> Email </h6>
           <div>{userData.email}</div>
@@ -59,7 +59,7 @@ export default function ChangeAccountDetails() {
           />
         </Col>
       </Row>
-      <Row className="mb-5">
+      <Row className="mb-3">
         <Col sm={8} style={{ textAlign: "left" }}>
           <h6> Change Password </h6>
           <div> Password must be at least 7 characters long</div>

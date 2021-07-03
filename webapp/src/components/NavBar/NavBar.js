@@ -61,9 +61,12 @@ export default function NavBar() {
     } else {
       return (
         <Nav>
-          <Nav.Link href="/login">
-            <AccountCircleIcon style={{ fontSize: 40 }} />
-          </Nav.Link>
+          <Nav className="mr-auto">
+            <Nav.Link href="/login">Login</Nav.Link>
+          </Nav>
+          <Nav>
+            <Nav.Link href="/signup">Register</Nav.Link>
+          </Nav>
         </Nav>
       );
     }
