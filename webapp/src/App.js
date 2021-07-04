@@ -3,7 +3,6 @@ import NavBar from "./components/NavBar/NavBar";
 import "./styles.css";
 import { AuthProvider } from "./contexts/AuthContext";
 import { BrowserRouter, Switch } from "react-router-dom";
-import Signup from "./pages/Signup";
 import ForgotPassword from "./pages/ForgotPassword";
 import Login from "./pages/Login";
 import UpdateProfile from "./pages/UpdateProfile";
@@ -15,7 +14,7 @@ import PublicRoute from "./PublicRoute";
 import Profile from "./pages/Profile";
 import Dashboard from "./pages/Dashboard";
 import AlertMessage from "./components/Alerts/AlertMessage";
-import ContinueRegistration from "./pages/ContinueRegistration";
+import Registration from "./pages/Registration";
 
 export default function App() {
   return (
@@ -29,11 +28,7 @@ export default function App() {
             <PrivateRoute exact path="/dashboard" component={Dashboard} />
             <PrivateRoute exact path="/profile" component={Profile} />
             <PrivateRoute path="/update-profile" component={UpdateProfile} />
-            <PrivateRoute
-              path="/continue-registration"
-              component={ContinueRegistration}
-            />
-            <PublicRoute restricted={true} path="/signup" component={Signup} />
+            <PublicRoute restricted={false} path="/register" component={Registration} />
             <PublicRoute restricted={true} path="/login" component={Login} />
             <PublicRoute
               restricted={true}

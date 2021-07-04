@@ -10,6 +10,12 @@
   cursor: pointer;
   background: #007bff;
   margin-bottom: 15px;
+  transition: 0.3s;
+}
+
+.custom-file-upload:hover {
+  background: #0c66c0;
+  margin-bottom: 15px;
 }
 
 .img-wrap {

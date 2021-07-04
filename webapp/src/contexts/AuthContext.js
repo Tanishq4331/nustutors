@@ -45,9 +45,19 @@ export function AuthProvider({ children }) {
 
   function register(formState) {
     const { password, passwordConfirm, ...data } = formState;
-    return signup(formState.email, formState.password).then((response) => {
-      db.collection("users").doc(response.user.uid).set(data);
-    });
+
+    //if user is already authenticated through google, do not sign up
+    if (currentUser) {
+      return db
+        .collection("users")
+        .doc(currentUser.uid)
+        .set(formState)
+        .then(() => history.push("/"));
+    } else {
+      return signup(formState.email, formState.password).then((response) => {
+        db.collection("users").doc(response.user.uid).set(data);
+      });
+    }
   }
 
   function login(email, password) {
@@ -55,7 +65,7 @@ export function AuthProvider({ children }) {
   }
 
   function logout() {
-    return auth.signOut();
+    return auth.signOut().then(history.push("/login"));
   }
 
   function resetPassword(email) {
@@ -111,11 +121,11 @@ export function AuthProvider({ children }) {
     return loggedIn;
   }
 
-  //display any alert for 5 seconds
+  //display any alert for 8 seconds
   useEffect(() => {
     let timer1 = setTimeout(
       () => setAlert({ message: "", successs: true }),
-      5000
+      8000
     );
 
     // this will clear Timeout once component unmounts
@@ -137,8 +147,6 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(async (user) => {
-      console.log("logging in");
-
       //load/unload user data
       if (user) {
         //user logged in
@@ -149,17 +157,22 @@ export function AuthProvider({ children }) {
           .then((doc) => {
             //user isn't registered yet
             if (!doc.exists) {
-              console.log("docs not found");
-              history.push("/continue-registration");
+              setCurrentUser(user);
+              history.push("/signup");
+              setAlert({
+                message:
+                  "You have been logged in. Please complete the registration to use the app",
+                success: true,
+              });
             } else {
               setUserData(doc.data());
+              setCurrentUser(user);
             }
           })
           .catch((error) => {
             console.log(`${error.code}: ${error.message}`);
             setAlert({ message: "Could not contact server", success: false });
           });
-        setCurrentUser(user);
       } else {
         setCurrentUser(user);
         setUserData(null);

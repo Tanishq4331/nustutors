@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useState, useEffect } from "react";
-import { Form, Button, Card, Container, Row, Col } from "react-bootstrap";
+import { Form, Button, Container, Row, Col } from "react-bootstrap";
 
 import LoginDetails from "../components/RegistrationForm/LoginDetails";
 import PersonalDetails from "../components/RegistrationForm/PersonalDetails";
@@ -15,19 +15,26 @@ import {
 import Qualifications from "../components/RegistrationForm/Qualifications";
 import TutoringPreferences from "../components/RegistrationForm/TutoringPreferences";
 import Confirmation from "../components/RegistrationForm/Confirmation";
-import zIndex from "@material-ui/core/styles/zIndex";
+import { useHistory } from "react-router-dom";
 
 export default function Registration() {
-  console.log("registration re-rending");
-  const { register, setAlert } = useAuth();
+  const { register, setAlert, currentUser, userData } = useAuth();
+  const history = useHistory();
+
+  //if user has already completed registration redirect them to dashboard
+  if (userData) {
+    history.push("/");
+  }
+
   const [activeStep, setActiveStep] = useState(0);
   const [errors, setErrors] = React.useState("");
   const [loading, setLoading] = useState(false);
 
   const [formState, setFormState] = useState({
-    name: "",
+    name: currentUser ? currentUser.displayName : "",
+    email: currentUser ? currentUser.email : "",
+    url: currentUser ? currentUser.photoURL : null,
     phone: "",
-    email: "",
     dateOfBirth: null,
     password: "",
     passwordConfirm: "",
@@ -37,12 +44,16 @@ export default function Registration() {
   });
 
   const steps = [
-    { label: "Login Details", form: LoginDetails },
     { label: "Personal Details", form: PersonalDetails },
     { label: "Qualifications", form: Qualifications },
     { label: "Tutoring Preferences", form: TutoringPreferences },
     { label: "Confirmation", form: Confirmation },
   ];
+
+  //prepend the login details step if user is not already authenticated through google
+  if (!currentUser) {
+    steps.unshift({ label: "Login Details", form: LoginDetails });
+  }
 
   const lastStepIndex = steps.length - 1;
   const isLastStep = lastStepIndex === activeStep;
@@ -170,7 +181,8 @@ export default function Registration() {
   };
 
   const SkipButton = () => {
-    if (activeStep > 1 && !isLastStep) {
+    const label = steps[activeStep].label;
+    if (label == "Qualifications" || label == "Tutoring Preferences") {
       return (
         <Button style={{ marginRight: "16px" }} onClick={onSkipClick}>
           Skip Tutor Registration
@@ -198,7 +210,6 @@ export default function Registration() {
       <div>
         <Row>
           <Col>
-            {/* <divstyle={{float: "right"}}> */}
             <BackButton />
           </Col>
           <Col>
@@ -217,7 +228,9 @@ export default function Registration() {
   return (
     <>
       <div className="justify-content-center mb-5">
-        <h2 className="text-center">Registration</h2>
+        <h2 className="text-center">
+          {currentUser && "Complete"} Registration
+        </h2>
       </div>
 
       <Container className="d-flex align-items-center justify-content-center">

@@ -8,8 +8,7 @@ import { Link, useHistory } from "react-router-dom";
 export default function LoginBody() {
   const emailRef = useRef();
   const passwordRef = useRef();
-  const { loginWithGoogle, login, logoutMessage, setLogoutMessage } = useAuth();
-  const [error, setError] = useState("");
+  const { loginWithGoogle, login, setAlert } = useAuth();
   const [loading, setLoading] = useState(false);
   const history = useHistory();
 
@@ -17,21 +16,19 @@ export default function LoginBody() {
     e.preventDefault();
 
     try {
-      setError("");
       setLoading(true);
       await login(emailRef.current.value, passwordRef.current.value);
-      setLogoutMessage("");
       history.push("/");
     } catch (error) {
       switch (error.code) {
         case "auth/wrong-password":
-          setError("Incorrect Password");
+          setAlert({ message: "Incorrect Password", success: false });
           break;
         case "auth/invalid-email":
-          setError("Invalid Email");
+          setAlert({ message: "Invalid Email", success: false });
           break;
         case "auth/user-not-found":
-          setError("Invalid Email");
+          setAlert({ message: "Invalid Email", success: false });
           break;
         default:
           console.log(`${error.code}: ${error.message}`);
@@ -43,13 +40,12 @@ export default function LoginBody() {
 
   async function handleLoginWithGoogle() {
     try {
-      setError("");
       setLoading(true);
       await loginWithGoogle();
       history.push("/");
-    } catch {
-      setError("Failed to log in");
-      throw error;
+    } catch (error) {
+      setAlert({ message: error.message, successs: true });
+      console.log(`${error.code}: ${error.message}`);
     }
 
     setLoading(false);
@@ -64,8 +60,6 @@ export default function LoginBody() {
         <Card>
           <Card.Body>
             <h2 className="text-center mb-4">Log In</h2>
-            {logoutMessage && <Alert variant="success">{logoutMessage}</Alert>}
-            {error && <Alert variant="danger">{error}</Alert>}
             <Form onSubmit={handleLogin}>
               <Form.Group id="email">
                 <Form.Label>Email</Form.Label>
@@ -85,7 +79,7 @@ export default function LoginBody() {
           </Card.Body>
         </Card>
         <div className="w-100 text-center mt-2">
-          Do not have an account? <Link to="/signup">Register</Link>
+          Do not have an account? <Link to="/register">Register</Link>
           <br></br>
           <br></br>
           Or

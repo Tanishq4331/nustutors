@@ -5,16 +5,13 @@ import styles from "./NavBar.module.css";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 
 export default function NavBar() {
-  const { currentUser, logout, userData } = useAuth();
-
-  const [error, setError] = useState("");
+  const { currentUser, logout, userData, setAlert } = useAuth();
 
   async function handleLogout() {
-    setError("");
     try {
       logout();
     } catch {
-      setError("Failed to log out");
+      setAlert({ message: "Failed to log out", success: false });
     }
   }
 
@@ -25,7 +22,7 @@ export default function NavBar() {
           <Nav.Link href="/home">Home</Nav.Link>
         </Nav>
         <Nav>
-          {currentUser && <Nav.Link href="/dashboard">Dashboard</Nav.Link>}
+          {userData && <Nav.Link href="/dashboard">Dashboard</Nav.Link>}
         </Nav>
       </>
     );
@@ -58,15 +55,21 @@ export default function NavBar() {
           </NavDropdown>
         </Nav>
       );
-    } else {
+    } else if (!currentUser) {
       return (
         <Nav>
           <Nav className="mr-auto">
             <Nav.Link href="/login">Login</Nav.Link>
           </Nav>
           <Nav>
-            <Nav.Link href="/signup">Register</Nav.Link>
+            <Nav.Link href="/register">Register</Nav.Link>
           </Nav>
+        </Nav>
+      );
+    } else {
+      return (
+        <Nav>
+          <Nav.Link onClick={handleLogout}>Log out</Nav.Link>
         </Nav>
       );
     }
@@ -74,7 +77,6 @@ export default function NavBar() {
 
   return (
     <>
-      {error && <Alert variant="danger">{error}</Alert>}
       <Navbar collapseOnSelect expand="lg" bg="primary" variant="dark">
         <Navbar.Brand href="/home">NUSTutors</Navbar.Brand>
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
