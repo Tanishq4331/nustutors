@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 // import { css } from "emotion";
 import { css } from "@emotion/css";
 
-function LocationPreferences({ formState, handleCheckboxChange }) {
+function LocationPreferences({ formState, handleCheckboxChange, errors }) {
   const locations = [
     { name: "On Campus", desc: "NUS Kent Ridge" },
     { name: "North", desc: "Woodlands, Sembawang, Admiralty, Yishun, Khatib" },
@@ -36,16 +36,20 @@ function LocationPreferences({ formState, handleCheckboxChange }) {
         <strong>Location Preferences</strong>
       </Card.Header>
       <Card.Body>
-        <Form.Check
-          custom
-          name="availableForOnline"
-          type="checkbox"
-          className="mb-3 "
-          id="online"
-          onChange={handleCheckboxChange}
-          value={formState.availableForOnline}
-          label={`I am available for online sessions`}
-        />
+        <Form.Group>
+          <Form.Check
+            custom
+            name="availableForOnline"
+            type="checkbox"
+            className="mb-3 "
+            id="online"
+            onChange={handleCheckboxChange}
+            value={formState.availableForOnline}
+            label={`I am available for online sessions`}
+            isInvalid={!!errors.availableForOnline}
+            feedback={errors.availableForOnline}
+          />
+        </Form.Group>
         You may also select multiple physical locations.
         <section className="basic-grid mt-3">
           {locations.map((item, i) => {
@@ -162,6 +166,7 @@ export default function PersonalDetails({
       <LocationPreferences
         handleCheckboxChange={handleCheckboxChange}
         formState={formState}
+        errors={errors}
       />
     </>
   );

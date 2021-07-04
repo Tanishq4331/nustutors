@@ -41,6 +41,7 @@ export default function Registration() {
     availableForOnline: false,
     tutor: null,
     locations: [false, false, false, false, false, false, false, false],
+    yearOfStudy: "Year 1",
   });
 
   const steps = [
@@ -89,7 +90,9 @@ export default function Registration() {
         return personalValidation(
           formState.name,
           formState.phone,
-          formState.dateOfBirth
+          formState.dateOfBirth,
+          formState.availableForOnline,
+          formState.locations
         );
       case "Login Details":
         return accountValidation(
@@ -98,6 +101,8 @@ export default function Registration() {
           formState.passwordConfirm
         );
       case "Confirmation":
+        return "";
+      default:
         return "";
     }
   };

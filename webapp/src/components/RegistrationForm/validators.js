@@ -74,11 +74,21 @@ export const passwordValidator = (value) =>
 export const addressValidator = (value) =>
   value ? "" : "Address is required.";
 
-export function personalValidation(name, phone, dateOfBirth) {
+export function personalValidation(
+  name,
+  phone,
+  dateOfBirth,
+  availableForOnline,
+  locations
+) {
   return {
     name: nameValidator(name),
     phone: phoneValidator(phone),
     dateOfBirth: birthDateValidator(dateOfBirth),
+    availableForOnline:
+      availableForOnline || locations.some((x) => x)
+        ? ""
+        : "You need to select at least one location",
   };
 }
 

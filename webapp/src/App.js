@@ -24,19 +24,27 @@ export default function App() {
         <AlertMessage />
         <main>
           <Switch>
-            <PrivateRoute exact path="/" component={Dashboard} />
             <PrivateRoute exact path="/dashboard" component={Dashboard} />
             <PrivateRoute exact path="/profile" component={Profile} />
             <PrivateRoute path="/update-profile" component={UpdateProfile} />
-            <PublicRoute restricted={false} path="/register" component={Registration} />
+            <PublicRoute
+              restricted={false}
+              path="/register"
+              component={Registration}
+            />
             <PublicRoute restricted={true} path="/login" component={Login} />
             <PublicRoute
               restricted={true}
               path="/forgot-password"
               component={ForgotPassword}
             />
-            <PublicRoute restricted={false} path="/home" component={Home} />
-            <PublicRoute restricted={false} path="/" component={Home} />
+            <PublicRoute
+              restricted={false}
+              exact
+              path="/home"
+              component={Home}
+            />
+            <PublicRoute restricted={false} exact path="/" component={Home} />
             <PublicRoute restricted={false} path="*" component={NoMatch} />
           </Switch>
         </main>
