@@ -100,3 +100,42 @@ export async function accountValidation(email, password, passwordConfirm) {
       password === passwordConfirm ? "" : "Passwords do not match",
   };
 }
+
+export async function moduleValidation(modules) {
+  return {
+    modules:
+      !Array.isArray(modules) || !modules.length
+        ? "Please seleact at least 1 module"
+        : "",
+  };
+}
+
+//returns an error object
+export function validatePage(label, formState) {
+  switch (label) {
+    case "Personal Details":
+      return personalValidation(
+        formState.name,
+        formState.phone,
+        formState.dateOfBirth,
+        formState.availableForOnline,
+        formState.locations
+      );
+    case "Login Details":
+      return accountValidation(
+        formState.email,
+        formState.password,
+        formState.passwordConfirm
+      );
+    case "Confirmation":
+      return "";
+    case "Qualifications":
+      return moduleValidation(formState.modules);
+    default:
+      return "";
+  }
+}
+
+export function errorPresent(errors) {
+  return Object.values(errors).some((x) => x !== "");
+}

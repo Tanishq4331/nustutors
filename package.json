@@ -12,7 +12,8 @@
     "headlessui": "*",
     "heroicons": "^1.0.1",
     "react-bootstrap": "^1.6.1",
-    "react-router-dom": "^5.2.0"
+    "react-router-dom": "^5.2.0",
+    "react-select": "^4.3.1"
   },
   "devDependencies": {
     "autoprefixer": "^10.2.6",

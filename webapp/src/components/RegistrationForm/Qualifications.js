@@ -1,8 +1,16 @@
 import { Form, Card } from "react-bootstrap";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useAuth } from "../../contexts/AuthContext";
+import { css } from "@emotion/css";
+import React, { Component } from "react";
+import ModuleSelect from "./ModuleSelect";
 
-export default function Qualifications({ formState, handleChange, errors }) {
+export default function Qualifications({
+  formState,
+  handleChange,
+  errors,
+  setFormState,
+}) {
   const options = [
     { value: "Year 1" },
     { value: "Year 2" },
@@ -10,6 +18,12 @@ export default function Qualifications({ formState, handleChange, errors }) {
     { value: "Year 4" },
     { value: "Graduate" },
   ];
+
+  const [selectedMods, setSelectedMods] = useState(null);
+
+  useEffect(() => {
+    setFormState({ ...formState, modules: selectedMods });
+  }, [selectedMods]);
 
   return (
     <>
@@ -38,17 +52,7 @@ export default function Qualifications({ formState, handleChange, errors }) {
           </Form.Group>
         </Card.Body>
       </Card>
-
-      <Card className="mb-5">
-        <Card.Header>
-          <strong> Relevant Modules and Grades </strong>
-        </Card.Header>
-        <Card.Body>
-          Please select the relevant modules you have completed along with your
-          grade for each module.
-          <Form.Group></Form.Group>
-        </Card.Body>
-      </Card>
+      <ModuleSelect setSelectedMods={setSelectedMods} errors={errors} />
     </>
   );
 }

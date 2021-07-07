@@ -1,21 +1,19 @@
 import * as React from "react";
 import { useState, useEffect } from "react";
-import { Form, Button, Container, Row, Col } from "react-bootstrap";
-
+import { Form, Container } from "react-bootstrap";
 import LoginDetails from "../components/RegistrationForm/LoginDetails";
 import PersonalDetails from "../components/RegistrationForm/PersonalDetails";
 import { useAuth } from "../contexts/AuthContext";
 import Stepper from "@material-ui/core/Stepper";
 import Step from "@material-ui/core/Step";
 import StepLabel from "@material-ui/core/StepLabel";
-import {
-  accountValidation,
-  personalValidation,
-} from "../components/RegistrationForm/validators";
+
 import Qualifications from "../components/RegistrationForm/Qualifications";
 import TutoringPreferences from "../components/RegistrationForm/TutoringPreferences";
 import Confirmation from "../components/RegistrationForm/Confirmation";
 import { useHistory } from "react-router-dom";
+import Navigation from "../components/RegistrationForm/Navigation";
+import { validatePage, errorPresent } from "../components/RegistrationForm/validation";
 
 export default function Registration() {
   const { register, setAlert, currentUser, userData } = useAuth();
@@ -42,6 +40,7 @@ export default function Registration() {
     tutor: null,
     locations: [false, false, false, false, false, false, false, false],
     yearOfStudy: "Year 1",
+    modules: [],
   });
 
   const steps = [
@@ -56,8 +55,7 @@ export default function Registration() {
     steps.unshift({ label: "Login Details", form: LoginDetails });
   }
 
-  const lastStepIndex = steps.length - 1;
-  const isLastStep = lastStepIndex === activeStep;
+  const isLastStep =  steps.length - 1 === activeStep;
 
   const handleChange = (e) => {
     const name = e.target.name;
@@ -83,43 +81,19 @@ export default function Registration() {
     }
   };
 
-  //returns an error object
-  const validatePage = () => {
-    switch (steps[activeStep].label) {
-      case "Personal Details":
-        return personalValidation(
-          formState.name,
-          formState.phone,
-          formState.dateOfBirth,
-          formState.availableForOnline,
-          formState.locations
-        );
-      case "Login Details":
-        return accountValidation(
-          formState.email,
-          formState.password,
-          formState.passwordConfirm
-        );
-      case "Confirmation":
-        return "";
-      default:
-        return "";
-    }
-  };
 
-  const errorPresent = (errors) => Object.values(errors).some((x) => x !== "");
-
+  //start actively validating the whole form when there are already errors
   useEffect(async () => {
-    //only actively validate the whole form where there are already errors
     if (errorPresent(errors)) {
-      const newErrors = await validatePage();
+      const newErrors = await validatePage(steps[activeStep].label, formState);
       setErrors(newErrors);
     }
   }, [formState]);
+  
 
   const onStepSubmit = async () => {
     setLoading(true);
-    const newErrors = await validatePage();
+    const newErrors = await validatePage(steps[activeStep].label, formState);
     setErrors(newErrors);
 
     //if the current page is not valid do nothing;
@@ -129,7 +103,7 @@ export default function Registration() {
     }
 
     //move to next step
-    setActiveStep(() => Math.min(activeStep + 1, lastStepIndex));
+    setActiveStep(() => Math.min(activeStep + 1, steps.length - 1));
 
     //submit at the final page
     if (isLastStep && !errorPresent(newErrors)) {
@@ -147,88 +121,23 @@ export default function Registration() {
     setLoading(false);
   };
 
-  const onPrevClick = React.useCallback(
-    (event) => {
-      event.preventDefault();
-      setActiveStep(() => Math.max(activeStep - 1, 0));
-    },
-    [activeStep, setActiveStep]
-  );
-
-  const onSkipClick = React.useCallback(
-    (event) => {
-      event.preventDefault();
-      setActiveStep(() => steps.length - 1);
-    },
-    [steps, setActiveStep]
-  );
-
-  const FormPage = steps[activeStep].form;
-
-  const BackButton = () => {
-    if (activeStep !== 0) {
-      return (
-        <Button style={{ marginRight: "16px" }} onClick={onPrevClick}>
-          Previous
-        </Button>
-      );
-    } else {
-      return null;
-    }
-  };
-
-  const NextButton = () => {
-    return (
-      <Button primary={true} disabled={loading} onClick={onStepSubmit}>
-        {isLastStep ? "Submit" : "Next"}
-      </Button>
-    );
-  };
-
-  const SkipButton = () => {
-    const label = steps[activeStep].label;
-    if (label == "Qualifications" || label == "Tutoring Preferences") {
-      return (
-        <Button style={{ marginRight: "16px" }} onClick={onSkipClick}>
-          Skip Tutor Registration
-        </Button>
-      );
-    } else {
-      return null;
-    }
-  };
-
   const Progress = () => {
     return (
-      <Stepper activeStep={activeStep} alternativeLabel>
-        {steps.map((step) => (
-          <Step key={step.label}>
-            <StepLabel>{step.label}</StepLabel>
-          </Step>
-        ))}
-      </Stepper>
+      <Container className="d-flex align-items-center justify-content-center">
+        <div className="w-100" style={{ maxWidth: "1000px" }}>
+          <Stepper activeStep={activeStep} alternativeLabel>
+            {steps.map((step) => (
+              <Step key={step.label}>
+                <StepLabel>{step.label}</StepLabel>
+              </Step>
+            ))}
+          </Stepper>
+        </div>
+      </Container>
     );
   };
 
-  const Navigation = () => {
-    return (
-      <div>
-        <Row>
-          <Col>
-            <BackButton />
-          </Col>
-          <Col>
-            <SkipButton />
-          </Col>
-          <Col>
-            <div style={{ float: "right" }}>
-              <NextButton />
-            </div>
-          </Col>
-        </Row>
-      </div>
-    );
-  };
+  const FormPage = steps[activeStep].form;
 
   return (
     <>
@@ -238,11 +147,7 @@ export default function Registration() {
         </h2>
       </div>
 
-      <Container className="d-flex align-items-center justify-content-center">
-        <div className="w-100" style={{ maxWidth: "1000px" }}>
-          <Progress />
-        </div>
-      </Container>
+      <Progress />
 
       <Container
         className="d-flex justify-content-center mt-4"
@@ -253,13 +158,20 @@ export default function Registration() {
           <Form className="mb-5">
             <FormPage
               formState={formState}
+              setFormState={setFormState}
               handleChange={handleChange}
               errors={errors}
               handleCheckboxChange={handleCheckboxChange}
             />
           </Form>
           <hr />
-          <Navigation />{" "}
+          <Navigation
+            activeStep={activeStep}
+            setActiveStep={setActiveStep}
+            steps={steps}
+            isLastStep={isLastStep}
+            onStepSubmit={onStepSubmit}
+          />{" "}
         </div>
       </Container>
     </>

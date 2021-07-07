@@ -1,7 +1,7 @@
 import { Form, Col } from "react-bootstrap";
 import { useAuth } from "../../contexts/AuthContext";
 import { useState, useEffect } from "react";
-import { personalValidation } from "../RegistrationForm/validators";
+import { personalValidation } from "../RegistrationForm/validation";
 
 export default function CustomizeProfileForm() {
   const { userData, setUserData, setAlert } = useAuth();
