@@ -18,7 +18,6 @@ export default function LoginBody() {
     try {
       setLoading(true);
       await login(emailRef.current.value, passwordRef.current.value);
-      history.push("/");
     } catch (error) {
       switch (error.code) {
         case "auth/wrong-password":
@@ -42,7 +41,6 @@ export default function LoginBody() {
     try {
       setLoading(true);
       await loginWithGoogle();
-      history.push("/");
     } catch (error) {
       setAlert({ message: error.message, successs: true });
       console.log(`${error.code}: ${error.message}`);

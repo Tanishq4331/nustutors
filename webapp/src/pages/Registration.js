@@ -13,7 +13,10 @@ import TutoringPreferences from "../components/RegistrationForm/TutoringPreferen
 import Confirmation from "../components/RegistrationForm/Confirmation";
 import { useHistory } from "react-router-dom";
 import Navigation from "../components/RegistrationForm/Navigation";
-import { validatePage, errorPresent } from "../components/RegistrationForm/validation";
+import {
+  validatePage,
+  errorPresent,
+} from "../components/RegistrationForm/validation";
 
 export default function Registration() {
   const { register, setAlert, currentUser, userData } = useAuth();
@@ -41,12 +44,15 @@ export default function Registration() {
     locations: [false, false, false, false, false, false, false, false],
     yearOfStudy: "Year 1",
     modules: [],
+    grades: [],
+    experiences: "",
+    documents: [],
   });
 
   const steps = [
     { label: "Personal Details", form: PersonalDetails },
-    { label: "Qualifications", form: Qualifications },
     { label: "Tutoring Preferences", form: TutoringPreferences },
+    { label: "Qualifications", form: Qualifications },
     { label: "Confirmation", form: Confirmation },
   ];
 
@@ -55,13 +61,17 @@ export default function Registration() {
     steps.unshift({ label: "Login Details", form: LoginDetails });
   }
 
-  const isLastStep =  steps.length - 1 === activeStep;
+  const isLastStep = steps.length - 1 === activeStep;
 
   const handleChange = (e) => {
     const name = e.target.name;
     const value = e.target.value;
     setFormState({ ...formState, [name]: value });
   };
+
+  // const handleRadioChange = (e) => {
+  //   const name =
+  // }
 
   const handleCheckboxChange = (e) => {
     let index = e.target.name;
@@ -81,7 +91,6 @@ export default function Registration() {
     }
   };
 
-
   //start actively validating the whole form when there are already errors
   useEffect(async () => {
     if (errorPresent(errors)) {
@@ -89,13 +98,11 @@ export default function Registration() {
       setErrors(newErrors);
     }
   }, [formState]);
-  
 
   const onStepSubmit = async () => {
     setLoading(true);
     const newErrors = await validatePage(steps[activeStep].label, formState);
     setErrors(newErrors);
-
     //if the current page is not valid do nothing;
     if (errorPresent(newErrors)) {
       setLoading(false);
@@ -155,7 +162,7 @@ export default function Registration() {
       >
         {" "}
         <div className="w-100" style={{ maxWidth: "800px" }}>
-          <Form className="mb-5">
+          <Form onSubmit={(e) => e.preventDefault()} className="mb-5">
             <FormPage
               formState={formState}
               setFormState={setFormState}

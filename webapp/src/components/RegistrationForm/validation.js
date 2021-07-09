@@ -129,7 +129,7 @@ export function validatePage(label, formState) {
       );
     case "Confirmation":
       return "";
-    case "Qualifications":
+    case "Tutoring Preferences":
       return moduleValidation(formState.modules);
     default:
       return "";

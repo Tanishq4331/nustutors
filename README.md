@@ -39,7 +39,6 @@
 **TODO**
 
 - Sidebar instead of dropdown for narrow viewports
-- Emotion to make dynamic location selection buttons
-- MUI chips for module selection
+- https://freefrontend.com/
 - MUI Snackbar for alerts
 - MUI Backdrop for loading

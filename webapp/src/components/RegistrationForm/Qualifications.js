@@ -1,58 +1,54 @@
 import { Form, Card } from "react-bootstrap";
-import { useState, useEffect, useMemo } from "react";
-import { useAuth } from "../../contexts/AuthContext";
-import { css } from "@emotion/css";
-import React, { Component } from "react";
-import ModuleSelect from "./ModuleSelect";
+import UploadDocuments from "./UploadDocuments";
+import React from "react";
+import ChooseGrades from "./ChooseGrades";
+import "antd/dist/antd.css";
 
 export default function Qualifications({
   formState,
   handleChange,
-  errors,
   setFormState,
 }) {
-  const options = [
-    { value: "Year 1" },
-    { value: "Year 2" },
-    { value: "Year 3" },
-    { value: "Year 4" },
-    { value: "Graduate" },
-  ];
-
-  const [selectedMods, setSelectedMods] = useState(null);
-
-  useEffect(() => {
-    setFormState({ ...formState, modules: selectedMods });
-  }, [selectedMods]);
-
   return (
     <>
-      <Card className="mb-5">
-        <Card.Header>
-          <strong> Academic Qualifications </strong>
-        </Card.Header>
-        <Card.Body>
-          <Form.Group controlId="yearOfStudy">
-            <Form.Label>Year of Study</Form.Label>
-            <Form.Control
-              required
-              as="select"
-              name="yearOfStudy"
-              placeholder="Type"
-              onChange={handleChange}
-            >
-              {options.map((option, index) => {
-                return (
-                  <option key={index} value={option.value}>
-                    {option.value}
-                  </option>
-                );
-              })}
-            </Form.Control>
-          </Form.Group>
-        </Card.Body>
-      </Card>
-      <ModuleSelect setSelectedMods={setSelectedMods} errors={errors} />
+      <Experiences formState={formState} handleChange={handleChange} />
+      <ChooseGrades formState={formState} setFormState={setFormState} />
+      <UploadDocuments formState={formState} setFormState={setFormState} />
     </>
+  );
+}
+
+function Experiences({ handleChange, formState }) {
+  return (
+    <Card className="mb-5">
+      <Card.Header>
+        <strong> Experiences </strong>
+      </Card.Header>
+      <Card.Body>
+        A better portfolio will increase your chances of getting assignments.
+        Please include:
+        <ul>
+          <li>Any T.A experience at NUS, with the modules taught </li>
+          <li>
+            Other tutoring experiences, number of students taught & their
+            improvements
+          </li>
+          <li>
+            Other teaching experiences or academic achievements (tuition centre,
+            relief teaching, Dean&apos;s list, scholarship etc.)
+          </li>
+        </ul>
+        <Form.Group>
+          {/* <Form.Label>Example textarea</Form.Label> */}
+          <Form.Control
+            as="textarea"
+            name="experiences"
+            value={formState.experiences}
+            onChange={handleChange}
+            rows="3"
+          />
+        </Form.Group>
+      </Card.Body>
+    </Card>
   );
 }

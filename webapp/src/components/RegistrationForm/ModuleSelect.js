@@ -5,7 +5,11 @@ import escapeRegExp from "lodash/escapeRegExp";
 
 const MAX_DISPLAYED_OPTIONS = 500;
 
-export default function ModuleSelect({ setSelectedMods, errors }) {
+export default function ModuleSelect({
+  selectedMods,
+  setSelectedMods,
+  errors,
+}) {
   const [modules, setModules] = useState([]);
   const [inputValue, setInputValue] = useState("");
 
@@ -48,7 +52,7 @@ export default function ModuleSelect({ setSelectedMods, errors }) {
     }
 
     return [...matchByStart, ...matchByInclusion];
-  }, [inputValue]);
+  }, [inputValue, modules]);
 
   const slicedOptions = useMemo(
     () => filteredOptions.slice(0, MAX_DISPLAYED_OPTIONS),
@@ -66,12 +70,12 @@ export default function ModuleSelect({ setSelectedMods, errors }) {
           grade for each module.
         </div>
         <Select
-          // defaultValue={selectedOption}
           onChange={setSelectedMods}
           isMulti
           filterOption={() => true} // disable native filter
-          onInputChange={setInputValue}
+          onInputChange={(value) => setInputValue(value)}
           options={slicedOptions}
+          defaultValue={selectedMods}
           placeholder={"Select your preferred modules"}
           styles={{
             control: (provided, state) =>

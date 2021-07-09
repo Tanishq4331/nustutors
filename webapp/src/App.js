@@ -5,7 +5,6 @@ import { AuthProvider } from "./contexts/AuthContext";
 import { BrowserRouter, Switch } from "react-router-dom";
 import ForgotPassword from "./pages/ForgotPassword";
 import Login from "./pages/Login";
-import UpdateProfile from "./pages/UpdateProfile";
 import Home from "./pages/Home";
 import NoMatch from "./pages/NoMatch";
 import React from "react";
@@ -26,7 +25,6 @@ export default function App() {
           <Switch>
             <PrivateRoute exact path="/dashboard" component={Dashboard} />
             <PrivateRoute exact path="/profile" component={Profile} />
-            <PrivateRoute path="/update-profile" component={UpdateProfile} />
             <PublicRoute
               restricted={false}
               path="/register"

@@ -43,21 +43,40 @@ export function AuthProvider({ children }) {
     return auth.createUserWithEmailAndPassword(email, password);
   }
 
-  function register(formState) {
-    const { password, passwordConfirm, ...data } = formState;
+  function uploadDocuments(documents, uid) {
+    // Create a storage reference from our storage service
+    const userRef = storage.ref().child(`${uid}`);
+
+    try {
+      documents.forEach((doc) => {
+        const docRef = userRef.child(doc.name);
+        //upload doc to ref
+        docRef.put(doc);
+      });
+    } catch (error) {
+      console.log(`${error.code}: ${error.message}`);
+    }
+  }
+
+  async function register(formState) {
+    const { password, passwordConfirm, documents, ...data } = formState;
+    let uid;
 
     //if user is already authenticated through google, do not sign up
     if (currentUser) {
-      return db
+      uid = currentUser.uid;
+      await db
         .collection("users")
-        .doc(currentUser.uid)
-        .set(formState)
+        .doc(uid)
+        .set(data)
         .then(() => history.push("/"));
     } else {
-      return signup(formState.email, formState.password).then((response) => {
-        db.collection("users").doc(response.user.uid).set(data);
+      await signup(formState.email, password).then((response) => {
+        uid = response.user.uid;
+        db.collection("users").doc(uid).set(data);
       });
     }
+    uploadDocuments(documents, uid);
   }
 
   function login(email, password) {
@@ -158,7 +177,7 @@ export function AuthProvider({ children }) {
             //user isn't registered yet
             if (!doc.exists) {
               setCurrentUser(user);
-              history.push("/signup");
+              history.push("/register");
               setAlert({
                 message:
                   "You have been logged in. Please complete the registration to use the app",

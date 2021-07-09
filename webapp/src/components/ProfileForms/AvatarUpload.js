@@ -5,7 +5,7 @@ import EditIcon from "@material-ui/icons/Edit";
 import styles from "./ProfileForms.module.css";
 
 export default function AvatarUpload() {
-  const { setUserData, userData, setAlert } = useAuth();
+  const { setUserData, userData, setAlert, currentUser } = useAuth();
 
   const types = ["image/png", "image/jpeg"];
 
@@ -31,7 +31,7 @@ export default function AvatarUpload() {
 
     const uploadFile = () => {
       //generate ref to new img in database
-      const storageRef = storage.ref(file.name);
+      const storageRef = storage.ref(`${currentUser.uid}/${file.name}`);
 
       //upload img to ref
       storageRef
