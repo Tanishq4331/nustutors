@@ -4,9 +4,9 @@ import * as React from "react";
 export default function Navigation({
   activeStep,
   setActiveStep,
-  steps,
   onStepSubmit,
-  isLastStep,
+  isLastTutorStep,
+  isLastUserStep,
 }) {
   const onPrevClick = React.useCallback(
     (event) => {
@@ -16,61 +16,59 @@ export default function Navigation({
     [activeStep, setActiveStep]
   );
 
-  const onSkipClick = React.useCallback(
-    (event) => {
-      event.preventDefault();
-      setActiveStep(() => steps.length - 1);
-    },
-    [steps, setActiveStep]
-  );
-
   const BackButton = () => {
-    if (activeStep !== 0) {
-      return (
+    return (
+      <Col>
         <Button style={{ marginRight: "16px" }} onClick={onPrevClick}>
           Previous
         </Button>
-      );
-    } else {
-      return null;
-    }
+      </Col>
+    );
+  };
+
+  const TutorSubmit = () => {
+    return (
+      <Col>
+        <div style={{ float: "right" }}>
+          <Button primary={true} onClick={() => onStepSubmit("TutorSubmit")}>
+            Submit
+          </Button>
+        </div>
+      </Col>
+    );
   };
 
   const NextButton = () => {
     return (
-      <Button primary={true} onClick={onStepSubmit}>
-        {isLastStep ? "Submit" : "Next"}
-      </Button>
+      <Col>
+        <div style={{ float: "right" }}>
+          <Button primary={true} onClick={() => onStepSubmit("Next")}>
+            {isLastUserStep ? "Continue to Tutor Registration" : "Next"}
+          </Button>
+        </div>
+      </Col>
     );
   };
 
-  const SkipButton = () => {
-    const label = steps[activeStep].label;
-    if (label == "Qualifications" || label == "Tutoring Preferences") {
-      return (
-        <Button style={{ marginRight: "16px" }} onClick={onSkipClick}>
-          Skip Tutor Registration
+  const UserSubmit = () => {
+    return (
+      <Col>
+        <Button
+          style={{ marginRight: "16px" }}
+          onClick={() => onStepSubmit("UserSubmit")}
+        >
+          Submit
         </Button>
-      );
-    } else {
-      return null;
-    }
+      </Col>
+    );
   };
 
   return (
     <div>
       <Row>
-        <Col>
-          <BackButton />
-        </Col>
-        <Col>
-          <SkipButton />
-        </Col>
-        <Col>
-          <div style={{ float: "right" }}>
-            <NextButton />
-          </div>
-        </Col>
+        {activeStep !== 0 && <BackButton />}
+        {isLastUserStep && <UserSubmit />}
+        {isLastTutorStep ? <TutorSubmit /> : <NextButton />}
       </Row>
     </div>
   );

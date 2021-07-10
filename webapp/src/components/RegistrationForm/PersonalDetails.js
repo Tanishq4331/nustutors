@@ -89,6 +89,7 @@ export default function PersonalDetails({
         formState={formState}
         errors={errors}
       />
+      <div>You may submit the form now, or continue to Tutor Regsitration</div>{" "}
     </>
   );
 }

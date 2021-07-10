@@ -58,25 +58,30 @@ export function AuthProvider({ children }) {
     }
   }
 
-  async function register(formState) {
-    const { password, passwordConfirm, documents, ...data } = formState;
+  //adds additional tutor attributes to user object in firestore;
+  //userData should already be stored at this point
+  function registerTutor(tutorFormState) {
+    const { documents, ...data } = tutorFormState;
+    const uid = currentUser.uid;
+    setUserData({ ...userData, registeredTutor: true, data });
+    uploadDocuments(documents, uid);
+    history.push("/");
+  }
+
+  async function registerUser(userFormState) {
+    const { password, passwordConfirm, ...data } = userFormState;
     let uid;
 
     //if user is already authenticated through google, do not sign up
     if (currentUser) {
       uid = currentUser.uid;
-      await db
-        .collection("users")
-        .doc(uid)
-        .set(data)
-        .then(() => history.push("/"));
+      await db.collection("users").doc(uid).set(data);
     } else {
-      await signup(formState.email, password).then((response) => {
+      await signup(userFormState.email, password).then((response) => {
         uid = response.user.uid;
         db.collection("users").doc(uid).set(data);
       });
     }
-    uploadDocuments(documents, uid);
   }
 
   function login(email, password) {
@@ -211,7 +216,8 @@ export function AuthProvider({ children }) {
     loginWithGoogle,
     login,
     userData,
-    register,
+    registerUser,
+    registerTutor,
     logout,
     resetPassword,
     updateEmail,
