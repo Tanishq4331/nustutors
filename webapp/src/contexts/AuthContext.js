@@ -2,20 +2,12 @@ import React, { useContext, useState, useEffect } from "react";
 import { auth, db, storage } from "../config/firebase";
 import { firebase } from "@firebase/app";
 import { useHistory } from "react-router-dom";
-import { makeStyles } from '@material-ui/core/styles';
 
 const AuthContext = React.createContext();
 
 export function useAuth() {
   return useContext(AuthContext);
 }
-
-const useStyles = makeStyles((theme) => ({
-  backdrop: {
-    zIndex: theme.zIndex.drawer + 1,
-    color: '#fff',
-  },
-}));
 
 export async function emailAlreadyExists(email) {
   const snapshot = await db
@@ -46,8 +38,6 @@ export function AuthProvider({ children }) {
   //     //remember to unsubscribe from your realtime listener on unmount or you will create a memory leak
   //     return () => unsubscribe()
   // }, []);
-
-  const classes = useStyles();
 
   function signup(email, password) {
     return auth.createUserWithEmailAndPassword(email, password);
@@ -100,7 +90,7 @@ export function AuthProvider({ children }) {
 
   function logout() {
     return auth.signOut().then(() => {
-      setCurrentUser(null)
+      setCurrentUser(null);
       history.push("/login");
     });
   }
@@ -133,43 +123,21 @@ export function AuthProvider({ children }) {
   function loginWithGoogle() {
     const googleAuthProvider = new firebase.auth.GoogleAuthProvider();
 
-    const loggedIn = auth
-      .signInWithPopup(googleAuthProvider)
-      .then((result) => {
-        /** @type {firebase.auth.OAuthCredential} */
-        var credential = result.credential;
+    const loggedIn = auth.signInWithPopup(googleAuthProvider).then((result) => {
+      /** @type {firebase.auth.OAuthCredential} */
+      var credential = result.credential;
 
-        // This gives you a Google Access Token. You can use it to access the Google API.
-        var token = credential.accessToken;
-        // The signed-in user info.P
-        var user = result.user;
-        // signedin = firebase.auth().currentUser != null;
-        // ...
-      })
-      .catch((error) => {
-        // Handle Errors here.
-        setAlert({ message: "Unable to login", success: false });
-        console.log(`${error.code}: ${error.message}`);
-        // The firebase.auth.AuthCredential type that was used.
-        var credential = error.credential;
-        // ...
-      });
+      // This gives you a Google Access Token. You can use it to access the Google API.
+      var token = credential.accessToken;
+      // The signed-in user info.P
+      var user = result.user;
+      // signedin = firebase.auth().currentUser != null;
+      // ...
+    });
 
     return loggedIn;
   }
 
-  //display any alert for 8 seconds
-  useEffect(() => {
-    let timer1 = setTimeout(
-      () => setAlert({ message: "", successs: true }),
-      8000
-    );
-
-    // this will clear Timeout once component unmounts
-    return () => {
-      clearTimeout(timer1);
-    };
-  }, [alert]);
 
   //if there is a change in user data update the database
   useEffect(() => {
@@ -216,7 +184,6 @@ export function AuthProvider({ children }) {
     emailAlreadyExists,
     setUserData,
     alert,
-    classes,
     setAlert,
     loginWithGoogle,
     login,

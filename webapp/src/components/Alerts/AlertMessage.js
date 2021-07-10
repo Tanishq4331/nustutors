@@ -25,25 +25,11 @@ export default function AlertMessage() {
     setOpen(false);
   };
 
-  const Message = () => {
-    if (success) {
-      return (
-        <Snackbar open={open} autoHideDuration={DURATION} onClose={handleClose}>
-          <Alert onClose={handleClose} severity="success">
-            {message}
-          </Alert>
-        </Snackbar>
-      );
-    } else {
-      return (
-        <Snackbar open={open} autoHideDuration={DURATION} onClose={handleClose}>
-          <Alert onClose={handleClose} severity="error">
-            {message}
-          </Alert>
-        </Snackbar>
-      );
-    }
-  };
-
-  return <Message />;
+  return (
+    <Snackbar open={open} autoHideDuration={DURATION} onClose={handleClose}>
+      <Alert onClose={handleClose} severity={success ? "success" : "error"}>
+        {message}
+      </Alert>
+    </Snackbar>
+  );
 }

@@ -1,19 +1,16 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useRef, useState } from "react";
-import Backdrop from "@material-ui/core/Backdrop";
-import CircularProgress from "@material-ui/core/CircularProgress";
 import { Form, Card, Alert, Button } from "react-bootstrap";
 import { useAuth } from "../contexts/AuthContext";
 import { Container } from "react-bootstrap";
 import { Link, useHistory } from "react-router-dom";
-
-
+import Loading from "../components/Loading/Loading";
 
 export default function LoginBody() {
   const emailRef = useRef();
   const passwordRef = useRef();
-  const { loginWithGoogle, login, setAlert, classes } = useAuth();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState();
+  const { loginWithGoogle, login, setAlert } = useAuth();
 
   async function handleLogin(e) {
     e.preventDefault();
@@ -40,16 +37,16 @@ export default function LoginBody() {
     setLoading(false);
   }
 
-  async function handleLoginWithGoogle() {
-    try {
-      setLoading(true);
-      await loginWithGoogle();
-    } catch (error) {
-      setAlert({ message: error.message, successs: true });
-      console.log(`${error.code}: ${error.message}`);
-    }
+  function handleLoginWithGoogle() {
+    setLoading(true);
 
-    setLoading(false);
+    loginWithGoogle()
+      .then(() => setLoading(false))
+      .catch((error) => {
+        setLoading(false);
+        setAlert({ message: "Unable to login", successs: false });
+        console.log(`${error.code}: ${error.message}`);
+      });
   }
 
   return (
@@ -57,9 +54,7 @@ export default function LoginBody() {
       className="d-flex align-items-center justify-content-center"
       style={{ minHeight: "90vh" }}
     >
-      <Backdrop  className={classes.backdrop} open={loading}>
-        <CircularProgress color="inherit" />
-      </Backdrop>
+      <Loading loading={loading} />
       <div className="w-100" style={{ maxWidth: "450px" }}>
         <Card>
           <Card.Body>
@@ -73,7 +68,7 @@ export default function LoginBody() {
                 <Form.Label>Password</Form.Label>
                 <Form.Control type="password" ref={passwordRef} required />
               </Form.Group>
-              <Button disabled={loading} className="w-100 mt-2" type="submit">
+              <Button className="w-100 mt-2" type="submit">
                 Log In
               </Button>
             </Form>
