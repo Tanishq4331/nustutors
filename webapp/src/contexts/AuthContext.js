@@ -89,7 +89,10 @@ export function AuthProvider({ children }) {
   }
 
   function logout() {
-    return auth.signOut().then(history.push("/login"));
+    return auth.signOut().then(() => {
+      setCurrentUser(null)
+      history.push("/login");
+    });
   }
 
   function resetPassword(email) {
@@ -179,19 +182,10 @@ export function AuthProvider({ children }) {
           .doc(user.uid)
           .get()
           .then((doc) => {
-            //user isn't registered yet
-            if (!doc.exists) {
-              setCurrentUser(user);
-              history.push("/register");
-              setAlert({
-                message:
-                  "You have been logged in. Please complete the registration to use the app",
-                success: true,
-              });
-            } else {
+            if (doc.exists) {
               setUserData(doc.data());
-              setCurrentUser(user);
             }
+            setCurrentUser(user);
           })
           .catch((error) => {
             console.log(`${error.code}: ${error.message}`);

@@ -68,9 +68,14 @@ export default function NavBar() {
       );
     } else {
       return (
-        <Nav>
-          <Nav.Link onClick={handleLogout}>Log out</Nav.Link>
-        </Nav>
+        <>
+          <Nav>
+            <Nav.Link href="/register">Continue Registration</Nav.Link>
+          </Nav>
+          <Nav>
+            <Nav.Link onClick={handleLogout}>Log out</Nav.Link>
+          </Nav>
+        </>
       );
     }
   };
