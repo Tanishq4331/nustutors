@@ -1,11 +1,13 @@
 import { Form, Card } from "react-bootstrap";
 import { useState, useEffect } from "react";
 import LocationPreferences from "./LocationPreferences";
+import Alert from "@material-ui/lab/Alert";
 
 export default function PersonalDetails({
   formState,
   handleChange,
   handleCheckboxChange,
+  setFormState,
   errors,
 }) {
   const options = [
@@ -87,9 +89,12 @@ export default function PersonalDetails({
       <LocationPreferences
         handleCheckboxChange={handleCheckboxChange}
         formState={formState}
+        setFormState={setFormState}
         errors={errors}
       />
-      <div>You may submit the form now, or continue to Tutor Regsitration</div>{" "}
+      <Alert severity="info" color="info">
+        You may submit the form now, or continue to Tutor Regsitration
+      </Alert>
     </>
   );
 }

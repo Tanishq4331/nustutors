@@ -21,7 +21,7 @@ export default function App() {
       <AuthProvider>
         <NavBar />
         <AlertMessage />
-        <main>
+        <main className="mt-4">
           <Switch>
             <PrivateRoute exact path="/dashboard" component={Dashboard} />
             <PrivateRoute exact path="/profile" component={Profile} />

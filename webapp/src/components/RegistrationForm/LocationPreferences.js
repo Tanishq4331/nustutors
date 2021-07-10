@@ -3,6 +3,7 @@ import { css } from "@emotion/css";
 
 export default function LocationPreferences({
   formState,
+  setFormState,
   handleCheckboxChange,
   errors,
 }) {
@@ -31,6 +32,19 @@ export default function LocationPreferences({
       desc: "Tanjong Pagar, Marina South, Harbourfront, Telok Blangah",
     },
   ];
+
+  const handleLocationChecks = (e) => {
+    let index = parseInt(e.target.name);
+    const checked = e.target.checked;
+    setFormState((prev) => {
+      const newLocations = [
+        ...prev.locations.slice(0, index),
+        checked,
+        ...prev.locations.slice(index + 1),
+      ];
+      return { ...prev, locations: newLocations };
+    });
+  };
 
   return (
     <Card className="mb-5">
@@ -76,7 +90,7 @@ export default function LocationPreferences({
               &:hover {
                 box-shadow: rgba(2, 8, 20, 0.1) 0px 0.35em 1.175em,
                   rgba(2, 8, 20, 0.08) 0px 0.175em 0.5em;
-                transform: translateY(-3px) scale(1.1);
+                transform: translateY(-3px) scale(1.05);
               }
             `;
 
@@ -96,7 +110,7 @@ export default function LocationPreferences({
                   name={i}
                   value={formState.locations[i]}
                   className="hide"
-                  onChange={handleCheckboxChange}
+                  onChange={handleLocationChecks}
                 ></input>
               </div>
             );

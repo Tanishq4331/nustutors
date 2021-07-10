@@ -5,6 +5,7 @@
     "@firebase/firestore": "^2.3.4",
     "@headlessui/react": "^1.2.0",
     "@heroicons/react": "^1.0.1",
+    "@material-ui/lab": "*",
     "antd": "^4.16.6",
     "bootstrap": "^5.0.1",
     "emotion": "^11.0.0",

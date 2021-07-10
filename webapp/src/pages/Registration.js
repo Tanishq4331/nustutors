@@ -10,7 +10,6 @@ import StepLabel from "@material-ui/core/StepLabel";
 
 import Qualifications from "../components/RegistrationForm/Qualifications";
 import TutoringPreferences from "../components/RegistrationForm/TutoringPreferences";
-import Confirmation from "../components/RegistrationForm/Confirmation";
 import { useHistory } from "react-router-dom";
 import Navigation from "../components/RegistrationForm/Navigation";
 import {
@@ -68,19 +67,19 @@ export default function Registration() {
     { label: "Qualifications", form: Qualifications },
   ];
 
-  const steps = userRegistrationComplete
+  const displayedSteps = userRegistrationComplete
     ? tutorSteps
     : userSteps.concat(tutorSteps);
 
   const isLastUserStep = userSteps.length - 1 === activeStep;
-  const isLastTutorStep = steps.length - 1 === activeStep;
-  const isUserStep = userSteps.includes(steps[activeStep]);
+  const isLastTutorStep = displayedSteps.length - 1 === activeStep;
+  const isUserStep = userSteps.includes(displayedSteps[activeStep]);
 
   const handleChange = (e) => {
     const name = e.target.name;
     const value = e.target.value;
+    const checked = e.target.checked;
 
-    //check which form the field belongs to determine which form to update
     if (isUserStep) {
       setUserFormState({ ...userFormState, [name]: value });
     } else {
@@ -88,21 +87,15 @@ export default function Registration() {
     }
   };
 
+  //only user registration steps use checkboxes so far
   const handleCheckboxChange = (e) => {
-    let index = e.target.name;
+    let name = e.target.name;
     const checked = e.target.checked;
-    if (index == "availableForOnline") {
-      setUserFormState({ ...userFormState, availableForOnline: checked });
+
+    if (isUserStep) {
+      setUserFormState({ ...userFormState, [name]: checked });
     } else {
-      index = parseInt(index);
-      setUserFormState((prev) => {
-        const newLocations = [
-          ...prev.locations.slice(0, index),
-          checked,
-          ...prev.locations.slice(index + 1),
-        ];
-        return { ...prev, locations: newLocations };
-      });
+      setTutorFormState({ ...tutorFormState, [name]: checked });
     }
   };
 
@@ -110,7 +103,7 @@ export default function Registration() {
   useEffect(async () => {
     if (errorPresent(errors)) {
       const newErrors = await validatePage(
-        steps[activeStep].label,
+        displayedSteps[activeStep].label,
         userFormState
       );
       setErrors(newErrors);
@@ -123,7 +116,7 @@ export default function Registration() {
     const combinedFormState = { ...userFormState, ...tutorFormState };
 
     const newErrors = await validatePage(
-      steps[activeStep].label,
+      displayedSteps[activeStep].label,
       combinedFormState
     );
     setErrors(newErrors);
@@ -132,6 +125,7 @@ export default function Registration() {
       setLoading(false);
       return;
     }
+
     try {
       switch (action) {
         case "Next":
@@ -168,7 +162,7 @@ export default function Registration() {
       <Container className="d-flex align-items-center justify-content-center">
         <div className="w-100" style={{ maxWidth: "1000px" }}>
           <Stepper activeStep={activeStep} alternativeLabel>
-            {steps.map((step) => (
+            {displayedSteps.map((step) => (
               <Step key={step.label}>
                 <StepLabel>{step.label}</StepLabel>
               </Step>
@@ -179,7 +173,7 @@ export default function Registration() {
     );
   };
 
-  const FormPage = steps[activeStep].form;
+  const FormPage = displayedSteps[activeStep].form;
 
   return (
     <>
@@ -210,7 +204,7 @@ export default function Registration() {
           <Navigation
             activeStep={activeStep}
             setActiveStep={setActiveStep}
-            steps={steps}
+            steps={displayedSteps}
             isLastTutorStep={isLastTutorStep}
             isLastUserStep={isLastUserStep}
             onStepSubmit={onStepSubmit}

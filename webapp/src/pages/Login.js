@@ -1,16 +1,19 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useRef, useState } from "react";
+import Backdrop from "@material-ui/core/Backdrop";
+import CircularProgress from "@material-ui/core/CircularProgress";
 import { Form, Card, Alert, Button } from "react-bootstrap";
 import { useAuth } from "../contexts/AuthContext";
 import { Container } from "react-bootstrap";
 import { Link, useHistory } from "react-router-dom";
 
+
+
 export default function LoginBody() {
   const emailRef = useRef();
   const passwordRef = useRef();
-  const { loginWithGoogle, login, setAlert } = useAuth();
+  const { loginWithGoogle, login, setAlert, classes } = useAuth();
   const [loading, setLoading] = useState(false);
-  const history = useHistory();
 
   async function handleLogin(e) {
     e.preventDefault();
@@ -54,6 +57,9 @@ export default function LoginBody() {
       className="d-flex align-items-center justify-content-center"
       style={{ minHeight: "90vh" }}
     >
+      <Backdrop  className={classes.backdrop} open={loading}>
+        <CircularProgress color="inherit" />
+      </Backdrop>
       <div className="w-100" style={{ maxWidth: "450px" }}>
         <Card>
           <Card.Body>

@@ -2,12 +2,20 @@ import React, { useContext, useState, useEffect } from "react";
 import { auth, db, storage } from "../config/firebase";
 import { firebase } from "@firebase/app";
 import { useHistory } from "react-router-dom";
+import { makeStyles } from '@material-ui/core/styles';
 
 const AuthContext = React.createContext();
 
 export function useAuth() {
   return useContext(AuthContext);
 }
+
+const useStyles = makeStyles((theme) => ({
+  backdrop: {
+    zIndex: theme.zIndex.drawer + 1,
+    color: '#fff',
+  },
+}));
 
 export async function emailAlreadyExists(email) {
   const snapshot = await db
@@ -38,6 +46,8 @@ export function AuthProvider({ children }) {
   //     //remember to unsubscribe from your realtime listener on unmount or you will create a memory leak
   //     return () => unsubscribe()
   // }, []);
+
+  const classes = useStyles();
 
   function signup(email, password) {
     return auth.createUserWithEmailAndPassword(email, password);
@@ -206,6 +216,7 @@ export function AuthProvider({ children }) {
     emailAlreadyExists,
     setUserData,
     alert,
+    classes,
     setAlert,
     loginWithGoogle,
     login,

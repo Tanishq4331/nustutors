@@ -40,5 +40,3 @@
 
 - Sidebar instead of dropdown for narrow viewports
 - https://freefrontend.com/
-- MUI Snackbar for alerts
-- MUI Backdrop for loading
