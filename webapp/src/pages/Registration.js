@@ -1,4 +1,3 @@
-import * as React from "react";
 import { useState, useEffect } from "react";
 import { Form, Container } from "react-bootstrap";
 import LoginDetails from "../components/RegistrationForm/LoginDetails";
@@ -7,7 +6,7 @@ import { useAuth } from "../contexts/AuthContext";
 import Stepper from "@material-ui/core/Stepper";
 import Step from "@material-ui/core/Step";
 import StepLabel from "@material-ui/core/StepLabel";
-
+import Loading from "../components/Loading/Loading";
 import Qualifications from "../components/RegistrationForm/Qualifications";
 import TutoringPreferences from "../components/RegistrationForm/TutoringPreferences";
 import { useHistory } from "react-router-dom";
@@ -31,7 +30,7 @@ export default function Registration() {
   }
 
   const [activeStep, setActiveStep] = useState(0);
-  const [errors, setErrors] = React.useState("");
+  const [errors, setErrors] = useState("");
   const [loading, setLoading] = useState(false);
 
   const [userFormState, setUserFormState] = useState({
@@ -78,7 +77,6 @@ export default function Registration() {
   const handleChange = (e) => {
     const name = e.target.name;
     const value = e.target.value;
-    const checked = e.target.checked;
 
     if (isUserStep) {
       setUserFormState({ ...userFormState, [name]: value });
@@ -133,9 +131,10 @@ export default function Registration() {
           break;
         case "TutorSubmit":
           if (!userRegistrationComplete) {
-            await registerUser(userFormState);
+            await registerUser(userFormState, tutorFormState);
+          } else {
+            await registerTutor(tutorFormState);
           }
-          await registerTutor(tutorFormState);
           setAlert({ message: "Registration successful", success: true });
           break;
         case "UserSubmit":
@@ -173,10 +172,12 @@ export default function Registration() {
     );
   };
 
-  const FormPage = displayedSteps[activeStep].form;
+  const FormPage =
+    displayedSteps[activeStep] && displayedSteps[activeStep].form;
 
   return (
     <>
+      <Loading loading={loading} />
       <div className="justify-content-center mb-5">
         <h2 className="text-center">
           {currentUser && "Complete"} Registration
@@ -192,13 +193,15 @@ export default function Registration() {
         {" "}
         <div className="w-100" style={{ maxWidth: "800px" }}>
           <Form onSubmit={(e) => e.preventDefault()} className="mb-3">
-            <FormPage
-              formState={isUserStep ? userFormState : tutorFormState}
-              setFormState={isUserStep ? setUserFormState : setTutorFormState}
-              handleChange={handleChange}
-              errors={errors}
-              handleCheckboxChange={handleCheckboxChange}
-            />
+            {FormPage && (
+              <FormPage
+                formState={isUserStep ? userFormState : tutorFormState}
+                setFormState={isUserStep ? setUserFormState : setTutorFormState}
+                handleChange={handleChange}
+                errors={errors}
+                handleCheckboxChange={handleCheckboxChange}
+              />
+            )}
           </Form>
           <hr />
           <Navigation
