@@ -1,13 +1,89 @@
-import { Form, Col } from "react-bootstrap";
+import { Form, Container, Button } from "react-bootstrap";
 import { useAuth } from "../../contexts/AuthContext";
 import { useState, useEffect } from "react";
-import { personalValidation } from "../RegistrationForm/validation";
+import PersonalDetails from "../RegistrationForm/PersonalDetails";
+import Qualifications from "../RegistrationForm/Qualifications";
+import TutoringPreferences from "../RegistrationForm/TutoringPreferences";
+import { validatePage, errorPresent } from "../RegistrationForm/validation";
+import ChangeAccountDetails from "./ChangeAccountDetails";
+import { makeStyles } from "@material-ui/core/styles";
+import { Tabs, Tab } from "@material-ui/core";
+import Alert from "@material-ui/lab/Alert";
 
 export default function CustomizeProfileForm() {
-  const { userData, setUserData, setAlert } = useAuth();
-  const [formErrors, setFormErrors] = useState("");
+  const { userData, setUserData, setAlert, currentUser, uploadDocuments } =
+    useAuth();
+  const [errors, setErrors] = useState("");
+  const [currTab, setCurrTab] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [formState, setFormState] = useState({ ...userData, documents: [] });
+  const [provider, setProvider] = useState("");
   const [noChangesMade, setNoChangesMade] = useState(true);
-  const [formState, setFormState] = useState({ ...userData });
+
+  useEffect(() => {
+    const { documents, ...formData } = formState;
+    
+    //assuming ordering of data is same
+    setNoChangesMade(JSON.stringify(formData) === JSON.stringify(userData) && documents && !documents.length);
+  }, [formState]);
+
+  useEffect(() => setFormState({ ...userData, documents: [] }), []);
+
+  //set the provider state to the sign in provider
+  useEffect(() => {
+    currentUser
+      .getIdTokenResult()
+      .then((idToken) => {
+        setProvider(idToken.signInProvider);
+      })
+      .catch((error) => {
+        console.log(`${error.code}: ${error.message}`);
+      });
+  }, []);
+
+  const tabData = [{ label: "Personal Details", form: PersonalDetails }];
+
+  if (provider === "password") {
+    tabData.unshift({
+      label: "Account Details",
+      form: ChangeAccountDetails,
+    });
+  }
+
+  if (userData.registeredTutor) {
+    tabData.push(
+      ...[
+        { label: "Tutoring Preferences", form: TutoringPreferences },
+        { label: "Qualifications", form: Qualifications },
+      ]
+    );
+  }
+
+  const currTabData = tabData[currTab];
+
+  const handleTabChange = (event, newValue) => {
+    //changing tabs without saving undoes the changes
+    setFormState({ ...userData });
+    setCurrTab(newValue);
+  };
+
+  const Navigation = () => {
+    return (
+      <Tabs
+        value={currTab}
+        indicatorColor="primary"
+        textColor="primary"
+        onChange={handleTabChange}
+        aria-label="disabled tabs example"
+        variant="fullWidth"
+        centered
+      >
+        {tabData.map((tab, index) => {
+          return <Tab key={index} label={tab.label} />;
+        })}
+      </Tabs>
+    );
+  };
 
   const handleChange = (e) => {
     const name = e.target.name;
@@ -15,113 +91,82 @@ export default function CustomizeProfileForm() {
     setFormState({ ...formState, [name]: value });
   };
 
-  useEffect(() => {
-    //assuming ordering of data is same
-    setNoChangesMade(JSON.stringify(formState) === JSON.stringify(userData));
-  });
+  //only user registration steps use checkboxes so far
+  const handleCheckboxChange = (e) => {
+    let name = e.target.name;
+    const checked = e.target.checked;
+    setFormState({ ...formState, [name]: checked });
+  };
 
-  function submit(e) {
-    const label = e.target.name;
+  //start actively validating the whole form when there are already errors
+  useEffect(async () => {
+    if (errorPresent(errors)) {
+      const newErrors = await validatePage(currTabData.label, formState);
+      setErrors(newErrors);
+    }
+  }, [formState]);
 
-    if (noChangesMade) {
+  const onSubmit = async (action) => {
+    setLoading(true);
+
+    const newErrors = await validatePage(currTabData.label, formState);
+    setErrors(newErrors);
+    //if the current page is not valid do nothing;
+    if (errorPresent(newErrors)) {
+      setLoading(false);
       return;
     }
 
-    const newErrors = personalValidation(
-      formState.name,
-      formState.phone,
-      formState.dateOfBirth
-    );
+    const { documents, ...data } = formState;
 
-    setFormErrors(newErrors);
-
-    const errorPresent = Object.values(newErrors).some((x) => x !== "");
-
-    if (errorPresent) {
-      return;
+    if (documents) {
+      console.log("uploading documents");
+      await uploadDocuments(documents, currentUser.uid);
+      setFormState({ ...data, documents: [] });
     }
 
-    setUserData({ ...formState });
-
+    setUserData(data);
     setAlert({
-      message: `${labelToName(label)} successfully updated`,
+      message: `Profile successfully updated`,
       success: true,
     });
-  }
+
+    setLoading(false);
+  };
+
+  const FormPage = currTabData.form;
 
   return (
-    <Form>
-      <Form.Group id="name">
-        <Form.Row>
-          <Col sm={3}>
-            <Form.Label>Name</Form.Label>
-          </Col>
-          <Col sm={9}>
-            <Form.Control
-              type="text"
-              name="name"
-              value={formState.name}
-              onChange={handleChange}
-              onBlur={submit}
-              isInvalid={!!formErrors.name}
-            />
-            <Form.Control.Feedback type="invalid">
-              {formErrors.name}
-            </Form.Control.Feedback>
-          </Col>
-        </Form.Row>
-      </Form.Group>
-      <Form.Group id="dateOfBirth">
-        <Form.Row>
-          <Col sm={3}>
-            <Form.Label>Date of Birth</Form.Label>
-          </Col>
-          <Col sm={9}>
-            <Form.Control
-              type="date"
-              value={formState.dateOfBirth}
-              name="dateOfBirth"
-              onChange={handleChange}
-              onBlur={submit}
-              isInvalid={!!formErrors.dateOfBirth}
-            />
-            <Form.Control.Feedback type="invalid">
-              {formErrors.dateOfBirth}
-            </Form.Control.Feedback>
-          </Col>
-        </Form.Row>
-      </Form.Group>
-      <Form.Group id="phone">
-        <Form.Row>
-          <Col sm={3}>
-            <Form.Label>Phone Number</Form.Label>
-          </Col>
-          <Col sm={9}>
-            <Form.Control
-              type="tel"
-              name="phone"
-              value={formState.phone}
-              onChange={handleChange}
-              onBlur={submit}
-              isInvalid={!!formErrors.phone}
-            />
-            <Form.Control.Feedback type="invalid">
-              {formErrors.phone}
-            </Form.Control.Feedback>
-          </Col>
-        </Form.Row>
-      </Form.Group>
-    </Form>
-  );
-}
+    <>
+      <Container
+        className="d-flex justify-content-center"
+        style={{ minHeight: "50vh" }}
+      >
+        <div className="w-100" style={{ maxWidth: "800px" }}>
+          <Navigation />
 
-function labelToName(label) {
-  switch (label) {
-    case "name":
-      return "Name";
-    case "dateOfBirth":
-      return "Date of Birth";
-    case "phone":
-      return "Phone Number";
-  }
+          <Form onSubmit={(e) => e.preventDefault()} className="mb-3 mt-5">
+            <FormPage
+              formState={formState}
+              setFormState={setFormState}
+              handleChange={handleChange}
+              errors={errors}
+              handleCheckboxChange={handleCheckboxChange}
+            />
+          </Form>
+          {currTabData.label !== "Account Details" && (
+            <>
+              <Alert severity="info" color="info">
+                Please save your changes before moving to another tab.
+              </Alert>
+              <hr />
+              <Button onClick={onSubmit} disabled={noChangesMade}>
+                Save
+              </Button>
+            </>
+          )}
+        </div>
+      </Container>
+    </>
+  );
 }

@@ -55,24 +55,22 @@ export default function ChooseGrades({ formState, setFormState }) {
     );
   };
 
-  return (
-    <Card className="mb-5">
-      <Card.Header>
-        <strong> Module Grades </strong>
-      </Card.Header>
-      <Card.Body>
-        <div className="mb-4">
+  if (formState.modules) {
+    return (
+      <>
+        <div className="mb-4 mt-5">
           Please enter your grades for the modules you have chosen
         </div>
-        {formState.modules &&
-          formState.modules.map((module, index) => {
-            const code = module.value;
-            const label = module.label;
-            const title = label.substr(label.indexOf(" ") + 1);
 
-            return (
-              <Container key={`inline-${index}`}>
-                <Row noGutters={true} className="mb-3">
+        {formState.modules.map((module, index) => {
+          const code = module.value;
+          const label = module.label;
+          const title = label.substr(label.indexOf(" ") + 1);
+
+          return (
+            <>
+              <Container key={`inline-${index}`} className="mb-3">
+                <Row noGutters={true} className="mb-4">
                   <Col style={{ textAlign: "left", marginRight: "15px" }}>
                     <strong>{code}</strong>
                     <div>{title}</div>
@@ -85,9 +83,12 @@ export default function ChooseGrades({ formState, setFormState }) {
                   </Col>
                 </Row>
               </Container>
-            );
-          })}
-      </Card.Body>
-    </Card>
-  );
+            </>
+          );
+        })}
+      </>
+    );
+  } else {
+    return null;
+  }
 }

@@ -58,9 +58,9 @@ export default function LocationPreferences({
             name="availableForOnline"
             type="checkbox"
             className="mb-3 "
-            id="online"
+            id="availableForOnline"
             onChange={handleCheckboxChange}
-            value={formState.availableForOnline}
+            checked={formState.availableForOnline}
             label={`I am available for online sessions`}
             isInvalid={!!errors.availableForOnline}
             feedback={errors.availableForOnline}

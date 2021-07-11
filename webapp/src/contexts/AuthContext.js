@@ -59,29 +59,35 @@ export function AuthProvider({ children }) {
   }
 
   //adds additional tutor attributes to user object in firestore;
-  //userData should already be stored at this point
   function registerTutor(tutorFormState) {
     const { documents, ...data } = tutorFormState;
     const uid = currentUser.uid;
     setUserData({ ...userData, registeredTutor: true, data });
     uploadDocuments(documents, uid);
-    history.push("/");
   }
 
-  async function registerUser(userFormState) {
-    const { password, passwordConfirm, ...data } = userFormState;
+  async function registerUser(userFormState, tutorFormState = null) {
+    const { password, passwordConfirm, ...userData } = userFormState;
     let uid;
+    let combinedData = userData;
 
     //if user is already authenticated through google, do not sign up
     if (currentUser) {
       uid = currentUser.uid;
-      await db.collection("users").doc(uid).set(data);
     } else {
       await signup(userFormState.email, password).then((response) => {
         uid = response.user.uid;
-        db.collection("users").doc(uid).set(data);
       });
     }
+
+    //both user and tutor registration
+    if (tutorFormState) {
+      const { documents, ...tutorData } = tutorFormState;
+      uploadDocuments(documents, uid);
+      combinedData = { ...userData, registeredTutor: true, ...tutorData };
+    }
+    await db.collection("users").doc(uid).set(combinedData);
+    return setUserData(combinedData);
   }
 
   function login(email, password) {
@@ -138,7 +144,6 @@ export function AuthProvider({ children }) {
     return loggedIn;
   }
 
-
   //if there is a change in user data update the database
   useEffect(() => {
     if (currentUser && userData) {
@@ -149,6 +154,17 @@ export function AuthProvider({ children }) {
       return unsubscribe;
     }
   }, [userData]);
+
+  //subscribe to changes in database - does not detect changes in attributes
+  // useEffect(() => {
+  //   if (currentUser && userData) {
+  //     const unsubscribe = db
+  //       .collection("users")
+  //       .doc(currentUser.uid)
+  //       .onSnapshot((snapshot) => setUserData(snapshot.data()));
+  //     return unsubscribe;
+  //   }
+  // }, []);
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(async (user) => {
@@ -189,6 +205,7 @@ export function AuthProvider({ children }) {
     login,
     userData,
     registerUser,
+    uploadDocuments,
     registerTutor,
     logout,
     resetPassword,

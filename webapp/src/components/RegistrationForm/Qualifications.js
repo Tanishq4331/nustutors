@@ -1,7 +1,6 @@
 import { Form, Card } from "react-bootstrap";
 import UploadDocuments from "./UploadDocuments";
 import React from "react";
-import ChooseGrades from "./ChooseGrades";
 import "antd/dist/antd.css";
 
 export default function Qualifications({
@@ -12,7 +11,6 @@ export default function Qualifications({
   return (
     <>
       <Experiences formState={formState} handleChange={handleChange} />
-      <ChooseGrades formState={formState} setFormState={setFormState} />
       <UploadDocuments formState={formState} setFormState={setFormState} />
     </>
   );

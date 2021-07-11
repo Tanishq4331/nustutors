@@ -2,6 +2,7 @@ import { Form, Card } from "react-bootstrap";
 import { useState, useEffect } from "react";
 import LocationPreferences from "./LocationPreferences";
 import Alert from "@material-ui/lab/Alert";
+import { useAuth } from "../../contexts/AuthContext";
 
 export default function PersonalDetails({
   formState,
@@ -17,6 +18,8 @@ export default function PersonalDetails({
     { value: "Year 4" },
     { value: "Graduate" },
   ];
+
+  const { userData } = useAuth();
 
   return (
     <>
@@ -92,9 +95,12 @@ export default function PersonalDetails({
         setFormState={setFormState}
         errors={errors}
       />
-      <Alert severity="info" color="info">
-        You may submit the form now, or continue to Tutor Regsitration
-      </Alert>
+      {/* only show alert when registering */}
+      {!userData && (
+        <Alert severity="info" color="info">
+          You may submit the form now, or continue to Tutor Regsitration
+        </Alert>
+      )}
     </>
   );
 }

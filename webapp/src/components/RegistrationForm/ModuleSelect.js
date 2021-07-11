@@ -1,6 +1,5 @@
 import Select, { createFilter } from "react-select";
 import { useState, useEffect, useMemo } from "react";
-import { Form, Card } from "react-bootstrap";
 import escapeRegExp from "lodash/escapeRegExp";
 
 const MAX_DISPLAYED_OPTIONS = 500;
@@ -60,48 +59,46 @@ export default function ModuleSelect({
   );
 
   return (
-    <Card className="mb-5">
-      <Card.Header>
-        <strong> Relevant Modules and Grades </strong>
-      </Card.Header>
-      <Card.Body>
-        <div className="mb-3">
-          Please select the relevant modules you have completed along with your
-          grade for each module.
-        </div>
-        <Select
-          onChange={setSelectedMods}
-          isMulti
-          filterOption={() => true} // disable native filter
-          onInputChange={(value) => setInputValue(value)}
-          options={slicedOptions}
-          defaultValue={selectedMods}
-          placeholder={"Select your preferred modules"}
-          styles={{
-            control: (provided, state) =>
-              errors.modules
-                ? {
-                    ...provided,
-                    borderColor: "red",
-                  }
-                : provided,
-          }}
-          isClearable={true}
-        />
-        <div>
-          {errors.modules && (
-            <div
-              style={{
-                marginTop: "3px",
-                fontSize: "13px",
-                color: "rgb(244, 67, 54)",
-              }}
-            >
-              {errors.modules}
-            </div>
-          )}
-        </div>
-      </Card.Body>
-    </Card>
+    <>
+      <div className="mb-3">
+        Please select the relevant modules you have completed along with your
+        grade for each module.
+      </div>
+      <Select
+        onChange={setSelectedMods}
+        isMulti
+        filterOption={() => true} // disable native filter
+        onInputChange={(value) => setInputValue(value)}
+        options={slicedOptions}
+        defaultValue={selectedMods}
+        placeholder={"Select your preferred modules"}
+        styles={{
+          control: (provided, state) =>
+            errors.modules
+              ? {
+                  ...provided,
+                  borderColor: "red",
+                }
+              : provided,
+
+          // Fixes the overlapping problem of the component
+          menu: (provided) => ({ ...provided, zIndex: 9999 }),
+        }}
+        isClearable={true}
+      />
+      <div>
+        {errors.modules && (
+          <div
+            style={{
+              marginTop: "3px",
+              fontSize: "13px",
+              color: "rgb(244, 67, 54)",
+            }}
+          >
+            {errors.modules}
+          </div>
+        )}
+      </div>
+    </>
   );
 }

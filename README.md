@@ -40,3 +40,5 @@
 
 - Sidebar instead of dropdown for narrow viewports
 - https://freefrontend.com/
+- limit on document uploads, enforced from storage
+- manage previous uploads
