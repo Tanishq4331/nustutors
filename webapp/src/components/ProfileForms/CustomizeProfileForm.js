@@ -3,12 +3,14 @@ import { useAuth } from "../../contexts/AuthContext";
 import { useState, useEffect } from "react";
 import PersonalDetails from "../RegistrationForm/PersonalDetails";
 import Qualifications from "../RegistrationForm/Qualifications";
+import LocationPreferences from "../RegistrationForm/LocationPreferences";
 import TutoringPreferences from "../RegistrationForm/TutoringPreferences";
 import { validatePage, errorPresent } from "../RegistrationForm/validation";
 import ChangeAccountDetails from "./ChangeAccountDetails";
 import { makeStyles } from "@material-ui/core/styles";
 import { Tabs, Tab } from "@material-ui/core";
 import Alert from "@material-ui/lab/Alert";
+import Loading from "../Loading/Loading";
 
 export default function CustomizeProfileForm() {
   const { userData, setUserData, setAlert, currentUser, uploadDocuments } =
@@ -18,14 +20,19 @@ export default function CustomizeProfileForm() {
   const [loading, setLoading] = useState(false);
   const [formState, setFormState] = useState({ ...userData, documents: [] });
   const [provider, setProvider] = useState("");
-  const [noChangesMade, setNoChangesMade] = useState(true);
+  const [changesMade, setChangesMade] = useState(true);
 
   useEffect(() => {
     const { documents, ...formData } = formState;
-    
-    //assuming ordering of data is same
-    setNoChangesMade(JSON.stringify(formData) === JSON.stringify(userData) && documents && !documents.length);
-  }, [formState]);
+
+    //ordering of data needs to be the same (including ordering of data in arrays, attributes in objects)
+    setChangesMade(
+      Boolean(
+        JSON.stringify(formData) !== JSON.stringify(userData) ||
+          (documents && documents.length)
+      )
+    );
+  }, [formState, userData]);
 
   useEffect(() => setFormState({ ...userData, documents: [] }), []);
 
@@ -41,7 +48,10 @@ export default function CustomizeProfileForm() {
       });
   }, []);
 
-  const tabData = [{ label: "Personal Details", form: PersonalDetails }];
+  const tabData = [
+    { label: "Personal Details", form: PersonalDetails },
+    { label: "Location and Timing Preferences", form: LocationPreferences },
+  ];
 
   if (provider === "password") {
     tabData.unshift({
@@ -65,24 +75,6 @@ export default function CustomizeProfileForm() {
     //changing tabs without saving undoes the changes
     setFormState({ ...userData });
     setCurrTab(newValue);
-  };
-
-  const Navigation = () => {
-    return (
-      <Tabs
-        value={currTab}
-        indicatorColor="primary"
-        textColor="primary"
-        onChange={handleTabChange}
-        aria-label="disabled tabs example"
-        variant="fullWidth"
-        centered
-      >
-        {tabData.map((tab, index) => {
-          return <Tab key={index} label={tab.label} />;
-        })}
-      </Tabs>
-    );
   };
 
   const handleChange = (e) => {
@@ -113,6 +105,13 @@ export default function CustomizeProfileForm() {
     setErrors(newErrors);
     //if the current page is not valid do nothing;
     if (errorPresent(newErrors)) {
+      //error in timings, locations shown as alert
+      if (newErrors.locations) {
+        setAlert({ message: newErrors.locations, success: false });
+      } else if (newErrors.timings) {
+        setAlert({ message: newErrors.timings, success: false });
+      }
+
       setLoading(false);
       return;
     }
@@ -138,12 +137,26 @@ export default function CustomizeProfileForm() {
 
   return (
     <>
+      <Loading loading={loading} />
       <Container
         className="d-flex justify-content-center"
         style={{ minHeight: "50vh" }}
       >
         <div className="w-100" style={{ maxWidth: "800px" }}>
-          <Navigation />
+          {/* navigation */}
+          <Tabs
+            value={currTab}
+            indicatorColor="primary"
+            textColor="primary"
+            onChange={handleTabChange}
+            aria-label="disabled tabs example"
+            variant="fullWidth"
+            centered
+          >
+            {tabData.map((tab, index) => {
+              return <Tab key={index} label={tab.label} />;
+            })}
+          </Tabs>
 
           <Form onSubmit={(e) => e.preventDefault()} className="mb-3 mt-5">
             <FormPage
@@ -156,11 +169,13 @@ export default function CustomizeProfileForm() {
           </Form>
           {currTabData.label !== "Account Details" && (
             <>
-              <Alert severity="info" color="info">
-                Please save your changes before moving to another tab.
-              </Alert>
+              {changesMade && (
+                <Alert severity="info" color="info">
+                  Please save your changes before moving to another tab.
+                </Alert>
+              )}
               <hr />
-              <Button onClick={onSubmit} disabled={noChangesMade}>
+              <Button onClick={onSubmit} disabled={!changesMade}>
                 Save
               </Button>
             </>

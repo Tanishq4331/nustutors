@@ -1,9 +1,5 @@
-import { Button, Row, Col, Card, Container } from "react-bootstrap";
 import AvatarUpload from "../components/ProfileForms/AvatarUpload";
 import CustomizeProfileForm from "../components/ProfileForms/CustomizeProfileForm";
-import ChangeAccountDetails from "../components/ProfileForms/ChangeAccountDetails";
-import { useAuth } from "../contexts/AuthContext";
-import { useState, useEffect } from "react";
 
 export default function Profile() {
   return (
@@ -16,6 +12,6 @@ export default function Profile() {
       </div>
 
       <CustomizeProfileForm />
-    </>
+  </>
   );
 }

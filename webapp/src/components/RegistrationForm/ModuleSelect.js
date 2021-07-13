@@ -20,8 +20,8 @@ export default function ModuleSelect({
     );
     const json = await response.json();
     const modList = json.map((x) => ({
-      value: x.moduleCode,
       label: `${x.moduleCode}: ${x.title}`,
+      value: x.moduleCode
     }));
     setModules(modList);
   };

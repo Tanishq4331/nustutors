@@ -74,21 +74,21 @@ export const passwordValidator = (value) =>
 export const addressValidator = (value) =>
   value ? "" : "Address is required.";
 
-export function personalValidation(
-  name,
-  phone,
-  dateOfBirth,
-  availableForOnline,
-  locations
-) {
+export function personalValidation(name, phone, dateOfBirth) {
   return {
     name: nameValidator(name),
     phone: phoneValidator(phone),
     dateOfBirth: birthDateValidator(dateOfBirth),
-    availableForOnline:
+  };
+}
+
+export function locationValidation(availableForOnline, locations, timings) {
+  return {
+    locations:
       availableForOnline || locations.some((x) => x)
         ? ""
         : "You need to select at least one location",
+    timings: timings.length === 0 ? "Please select at least 1 time slot" : "",
   };
 }
 
@@ -131,6 +131,15 @@ export function validatePage(label, formState) {
       return "";
     case "Tutoring Preferences":
       return moduleValidation(formState.modules);
+    case "Location and Timing Preferences": {
+      const errors = locationValidation(
+        formState.availableForOnline,
+        formState.locations,
+        formState.timings
+      );
+
+      return errors;
+    }
     default:
       return "";
   }

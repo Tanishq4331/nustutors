@@ -176,8 +176,12 @@ export function AuthProvider({ children }) {
           .doc(user.uid)
           .get()
           .then((doc) => {
+            const data = doc.data();
             if (doc.exists) {
-              setUserData(doc.data());
+              setUserData({
+                ...data,
+                timings: data.timings.map((x) => x.toDate()), //convert firebase date to js date object
+              });
             }
             setCurrentUser(user);
           })

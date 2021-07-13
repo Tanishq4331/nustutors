@@ -16,7 +16,7 @@ export default function PrivateRoute({ component: Component, ...rest }) {
             console.log("authenticated but no data")
             setAlert({
               message:
-                "You have been logged in. Please complete the registration to use the app",
+                "You are logged in with google. Please complete the registration to use the app",
               success: true,
             });
             return <Redirect to="/register" />;

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Form, Container } from "react-bootstrap";
+import { Form, Container, Button } from "react-bootstrap";
 import LoginDetails from "../components/RegistrationForm/LoginDetails";
 import PersonalDetails from "../components/RegistrationForm/PersonalDetails";
 import { useAuth } from "../contexts/AuthContext";
@@ -8,6 +8,7 @@ import Step from "@material-ui/core/Step";
 import StepLabel from "@material-ui/core/StepLabel";
 import Loading from "../components/Loading/Loading";
 import Qualifications from "../components/RegistrationForm/Qualifications";
+import LocationPreferences from "../components/RegistrationForm/LocationPreferences";
 import TutoringPreferences from "../components/RegistrationForm/TutoringPreferences";
 import { useHistory } from "react-router-dom";
 import Navigation from "../components/RegistrationForm/Navigation";
@@ -45,6 +46,7 @@ export default function Registration() {
     registeredTutor: false,
     locations: [false, false, false, false, false, false, false, false],
     yearOfStudy: "Year 1",
+    timings: [],
   });
 
   const [tutorFormState, setTutorFormState] = useState({
@@ -54,7 +56,10 @@ export default function Registration() {
     documents: [],
   });
 
-  const userSteps = [{ label: "Personal Details", form: PersonalDetails }];
+  const userSteps = [
+    { label: "Personal Details", form: PersonalDetails },
+    { label: "Location and Timing Preferences", form: LocationPreferences },
+  ];
 
   //prepend the login details step if user is not already authenticated through google
   if (!currentUser) {
@@ -115,11 +120,19 @@ export default function Registration() {
 
     const newErrors = await validatePage(
       displayedSteps[activeStep].label,
-      combinedFormState
+      combinedFormState,
     );
     setErrors(newErrors);
     //if the current page is not valid do nothing;
     if (errorPresent(newErrors)) {
+
+      //error in timings, locations shown as alert
+      if (newErrors.locations) {
+        setAlert({ message: newErrors.locations, success: false });
+      } else if (newErrors.timings) {
+        setAlert({ message: newErrors.timings, success: false });
+      }
+
       setLoading(false);
       return;
     }
