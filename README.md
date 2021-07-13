@@ -36,6 +36,8 @@
 
   This can be resolved by appending `react: path.resolve('./node_modules/react')` to the `alias` property within `resolve` in `/webapp/node_modules/react-scripts/config/webpack.config.js`
 
+- If there are problems with on a page containg timing selection, ensure no JSX components are declared inside each other.
+
 **TODO**
 
 - Sidebar instead of dropdown for narrow viewports
