@@ -1,21 +1,34 @@
 import Select from "react-select";
 import { useState, useEffect, useMemo } from "react";
 import escapeRegExp from "lodash/escapeRegExp";
+import Loading from "../Loading/Loading";
 
 const MAX_DISPLAYED_OPTIONS = 500;
 
-export default function ModuleSelect({ formState, setFormState, errors }) {
+export default function ModuleSelect({
+  formState,
+  setFormState,
+  errors,
+  isSingle, //requestTutor
+  setModules,   //requestTutor
+}) {
   const [allModules, setAllModules] = useState([]);
   const [inputValue, setInputValue] = useState("");
-  const [selectedMods, setSelectedMods] = useState(formState.modules);
+  const [selectedMods, setSelectedMods] = useState(
+    formState && formState.modules
+  );
+  const [loading, setLoading] = useState(false);
 
   //update formState when selectedMods changes
   useEffect(() => {
-    setFormState({ ...formState, modules: selectedMods });
+    setModules
+      ? setModules(selectedMods)
+      : setFormState({ ...formState, modules: selectedMods });
   }, [selectedMods]);
 
   //load modules from NUSMods API
   const loadModules = async () => {
+    setLoading(true);
     const response = await fetch(
       `https://api.nusmods.com/v2/2021-2022/moduleList.json`
     );
@@ -25,6 +38,7 @@ export default function ModuleSelect({ formState, setFormState, errors }) {
       value: x.moduleCode,
     }));
     setAllModules(modList);
+    setLoading(false);
   };
 
   //only load on component mount
@@ -63,13 +77,10 @@ export default function ModuleSelect({ formState, setFormState, errors }) {
 
   return (
     <>
-      <div className="mb-3">
-        Please select the relevant modules you have completed along with your
-        grade for each module.
-      </div>
+      <Loading loading={loading} />
       <Select
         onChange={setSelectedMods}
-        isMulti
+        isMulti={!isSingle}
         filterOption={() => true} // disable native filter
         onInputChange={(value) => setInputValue(value)}
         options={slicedOptions}

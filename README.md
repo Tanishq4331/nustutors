@@ -44,3 +44,5 @@
 - https://freefrontend.com/
 - limit on document uploads, enforced from storage
 - manage previous uploads
+- Consider variations of modules
+- Custom firestore rule -> public, protected fields

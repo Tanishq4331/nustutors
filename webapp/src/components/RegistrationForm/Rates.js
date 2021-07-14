@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { Card } from "react-bootstrap";
 import { Slider } from "@material-ui/core";
 
 const marks = [
@@ -29,12 +28,13 @@ function valuetext(value) {
   return `${value}$`;
 }
 
-export default function Rates({ formState, setFormState }) {
+export default function Rates({ formState, setFormState, setBudget }) {
+  //check if its request or registration/edit
   const [rate, setRate] = useState(formState.rate);
 
   //update formState when rate changes
   useEffect(() => {
-    setFormState({ ...formState, rate: rate });
+    setBudget ? setBudget(rate) : setFormState({ ...formState, rate: rate })   
   }, [rate]);
 
   const onSlide = (event, value) => {
@@ -42,31 +42,23 @@ export default function Rates({ formState, setFormState }) {
   };
 
   return (
-    <Card className="mb-5">
-      <Card.Header>
-        <strong> Rates </strong>
-      </Card.Header>
-      <Card.Body>
-        Only receive assignments that offer this minimum hourly rate
-        <div className="d-flex justify-content-center">
-          <div
-            className="mt-5"
-            style={{
-              width: "80%",
-            }}
-          >
-            <Slider
-              value={rate}
-              getAriaValueText={valuetext}
-              aria-labelledby="discrete-slider-always"
-              step={1}
-              marks={marks}
-              onChange={onSlide}
-              valueLabelDisplay="on"
-            />
-          </div>
-        </div>
-      </Card.Body>
-    </Card>
+    <div className="d-flex justify-content-center">
+      <div
+        className="mt-5"
+        style={{
+          width: "80%",
+        }}
+      >
+        <Slider
+          value={rate}
+          getAriaValueText={valuetext}
+          aria-labelledby="discrete-slider-always"
+          step={1}
+          marks={marks}
+          onChange={onSlide}
+          valueLabelDisplay="on"
+        />
+      </div>
+    </div>
   );
 }

@@ -21,7 +21,12 @@ export default function NavBar() {
           <Nav.Link href="/home">Home</Nav.Link>
         </Nav>
         <Nav>
-          {userData && <Nav.Link href="/dashboard">Dashboard</Nav.Link>}
+          {userData && (
+            <>
+              <Nav.Link href="/dashboard">Dashboard</Nav.Link>
+              <Nav.Link href="/request-tutor">Request a Tutor</Nav.Link>
+            </>
+          )}
         </Nav>
       </>
     );

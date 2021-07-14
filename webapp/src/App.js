@@ -14,6 +14,7 @@ import Profile from "./pages/Profile";
 import Dashboard from "./pages/Dashboard";
 import AlertMessage from "./components/Alerts/AlertMessage";
 import Registration from "./pages/Registration";
+import RequestTutor from "./pages/RequestTutor";
 
 export default function App() {
   return (
@@ -25,6 +26,7 @@ export default function App() {
           <Switch>
             <PrivateRoute exact path="/dashboard" component={Dashboard} />
             <PrivateRoute exact path="/profile" component={Profile} />
+            <PrivateRoute exact path="/request-tutor" component={RequestTutor} />
             <PublicRoute
               restricted={false}
               path="/register"

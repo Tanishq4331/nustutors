@@ -37,7 +37,6 @@ function Experiences({ handleChange, formState }) {
           </li>
         </ul>
         <Form.Group>
-          {/* <Form.Label>Example textarea</Form.Label> */}
           <Form.Control
             as="textarea"
             name="experiences"

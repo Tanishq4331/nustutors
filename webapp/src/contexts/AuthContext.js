@@ -66,6 +66,13 @@ export function AuthProvider({ children }) {
     uploadDocuments(documents, uid);
   }
 
+  async function makeRequest(request) {
+    const combinedRequest = { ...request, by: currentUser.uid };
+    return db
+      .collection("requests")
+      .add(combinedRequest)
+  }
+
   async function registerUser(userFormState, tutorFormState = null) {
     const { password, passwordConfirm, ...userData } = userFormState;
     let uid;
@@ -208,6 +215,7 @@ export function AuthProvider({ children }) {
     loginWithGoogle,
     login,
     userData,
+    makeRequest,
     registerUser,
     uploadDocuments,
     registerTutor,
