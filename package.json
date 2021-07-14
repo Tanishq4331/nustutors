@@ -13,6 +13,7 @@
     "framer-motion": "^4.1.17",
     "headlessui": "*",
     "heroicons": "^1.0.1",
+    "lodash": "^4.17.21",
     "material-ui-dropzone": "^3.5.0",
     "react-bootstrap": "^1.6.1",
     "react-router-dom": "^5.2.0",

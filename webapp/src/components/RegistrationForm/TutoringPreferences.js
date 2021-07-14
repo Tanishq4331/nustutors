@@ -1,30 +1,24 @@
-import { Card } from "react-bootstrap";
-import { useState, useEffect, useMemo } from "react";
+import { Card, Form } from "react-bootstrap";
 import ModuleSelect from "./ModuleSelect";
 import ChooseGrades from "./ChooseGrades";
+import Rates from "./Rates";
 
 export default function TutoringPreferences({
   formState,
-  handleChange,
   errors,
   setFormState,
 }) {
-  const [selectedMods, setSelectedMods] = useState(formState.modules);
-
-  useEffect(() => {
-    setFormState({ ...formState, modules: selectedMods });
-  }, [selectedMods]);
-
   return (
     <>
+      <Rates formState={formState} setFormState={setFormState} />
       <Card className="mb-5">
         <Card.Header>
           <strong> Relevant Modules and Grades </strong>
         </Card.Header>
         <Card.Body>
           <ModuleSelect
-            selectedMods={selectedMods}
-            setSelectedMods={setSelectedMods}
+            formState={formState}
+            setFormState={setFormState}
             errors={errors}
           />
           <ChooseGrades formState={formState} setFormState={setFormState} />

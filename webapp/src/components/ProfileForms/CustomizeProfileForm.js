@@ -7,10 +7,10 @@ import LocationPreferences from "../RegistrationForm/LocationPreferences";
 import TutoringPreferences from "../RegistrationForm/TutoringPreferences";
 import { validatePage, errorPresent } from "../RegistrationForm/validation";
 import ChangeAccountDetails from "./ChangeAccountDetails";
-import { makeStyles } from "@material-ui/core/styles";
 import { Tabs, Tab } from "@material-ui/core";
 import Alert from "@material-ui/lab/Alert";
 import Loading from "../Loading/Loading";
+import _ from "lodash";
 
 export default function CustomizeProfileForm() {
   const { userData, setUserData, setAlert, currentUser, uploadDocuments } =
@@ -25,12 +25,9 @@ export default function CustomizeProfileForm() {
   useEffect(() => {
     const { documents, ...formData } = formState;
 
-    //ordering of data needs to be the same (including ordering of data in arrays, attributes in objects)
+    //lodash allows deep comparison of nested objects (does not work for nested arrays)
     setChangesMade(
-      Boolean(
-        JSON.stringify(formData) !== JSON.stringify(userData) ||
-          (documents && documents.length)
-      )
+      Boolean(!_.isEqual(formData, userData) || (documents && documents.length))
     );
   }, [formState, userData]);
 

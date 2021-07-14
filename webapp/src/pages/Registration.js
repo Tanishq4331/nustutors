@@ -54,6 +54,7 @@ export default function Registration() {
     grades: [],
     experiences: "",
     documents: [],
+    rate: 0,
   });
 
   const userSteps = [

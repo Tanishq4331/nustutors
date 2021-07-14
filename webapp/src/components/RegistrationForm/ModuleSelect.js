@@ -1,20 +1,21 @@
-import Select, { createFilter } from "react-select";
+import Select from "react-select";
 import { useState, useEffect, useMemo } from "react";
 import escapeRegExp from "lodash/escapeRegExp";
 
 const MAX_DISPLAYED_OPTIONS = 500;
 
-export default function ModuleSelect({
-  selectedMods,
-  setSelectedMods,
-  errors,
-}) {
-  const [modules, setModules] = useState([]);
+export default function ModuleSelect({ formState, setFormState, errors }) {
+  const [allModules, setAllModules] = useState([]);
   const [inputValue, setInputValue] = useState("");
+  const [selectedMods, setSelectedMods] = useState(formState.modules);
+
+  //update formState when selectedMods changes
+  useEffect(() => {
+    setFormState({ ...formState, modules: selectedMods });
+  }, [selectedMods]);
 
   //load modules from NUSMods API
   const loadModules = async () => {
-    console.log("loading");
     const response = await fetch(
       `https://api.nusmods.com/v2/2021-2022/moduleList.json`
     );
@@ -23,15 +24,16 @@ export default function ModuleSelect({
       label: `${x.moduleCode}: ${x.title}`,
       value: x.moduleCode,
     }));
-    setModules(modList);
+    setAllModules(modList);
   };
 
   //only load on component mount
   useEffect(loadModules, []);
 
+  //filter modlist based on input
   const filteredOptions = useMemo(() => {
     if (!inputValue) {
-      return modules;
+      return allModules;
     }
 
     const matchByStart = [];
@@ -40,7 +42,7 @@ export default function ModuleSelect({
     const regByInclusion = new RegExp(escapeRegExp(inputValue), "i");
     const regByStart = new RegExp(`^${escapeRegExp(inputValue)}`, "i");
 
-    for (const module of modules) {
+    for (const module of allModules) {
       if (regByInclusion.test(module.label)) {
         if (regByStart.test(module.label)) {
           matchByStart.push(module);
@@ -51,8 +53,9 @@ export default function ModuleSelect({
     }
 
     return [...matchByStart, ...matchByInclusion];
-  }, [inputValue, modules]);
+  }, [inputValue, allModules]);
 
+  //limit results to MAX_DISPLAYED_OPTIONS
   const slicedOptions = useMemo(
     () => filteredOptions.slice(0, MAX_DISPLAYED_OPTIONS),
     [filteredOptions]
@@ -64,41 +67,43 @@ export default function ModuleSelect({
         Please select the relevant modules you have completed along with your
         grade for each module.
       </div>
-        <Select
-          onChange={setSelectedMods}
-          isMulti
-          filterOption={() => true} // disable native filter
-          onInputChange={(value) => setInputValue(value)}
-          options={slicedOptions}
-          defaultValue={selectedMods}
-          placeholder={"Select your preferred modules"}
-          styles={{
-            control: (provided, state) =>
-              errors.modules
-                ? {
-                    ...provided,
-                    borderColor: "red",
-                  }
-                : provided,
+      <Select
+        onChange={setSelectedMods}
+        isMulti
+        filterOption={() => true} // disable native filter
+        onInputChange={(value) => setInputValue(value)}
+        options={slicedOptions}
+        defaultValue={selectedMods}
+        placeholder={"Select your preferred modules"}
+        styles={{
+          //red border around field when error detected
+          control: (provided, state) =>
+            errors.modules
+              ? {
+                  ...provided,
+                  borderColor: "red",
+                }
+              : provided,
 
-            // Fixes the overlapping problem of the component
-            menu: (provided) => ({ ...provided, zIndex: 9999 }),
-          }}
-          isClearable={true}
-        />
-        <div>
-          {errors.modules && (
-            <div
-              style={{
-                marginTop: "3px",
-                fontSize: "13px",
-                color: "rgb(244, 67, 54)",
-              }}
-            >
-              {errors.modules}
-            </div>
-          )}
-        </div>
+          // Fixes the overlapping problem of the dropdown
+          menu: (provided) => ({ ...provided, zIndex: 9999 }),
+        }}
+        isClearable={true}
+      />
+      {/* error message */}
+      <div>
+        {errors.modules && (
+          <div
+            style={{
+              marginTop: "3px",
+              fontSize: "13px",
+              color: "rgb(244, 67, 54)",
+            }}
+          >
+            {errors.modules}
+          </div>
+        )}
+      </div>
     </>
   );
 }

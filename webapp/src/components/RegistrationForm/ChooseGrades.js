@@ -11,6 +11,57 @@ const OPTIONS = [
   { label: "NA", value: "NA" },
 ];
 
+function GradeOptions({ moduleName, grades, setGrades }) {
+  const handleChange = (e) => {
+    const value = e.target.value;
+    setGrades({ ...grades, [moduleName]: value });
+  };
+
+  const value = grades[moduleName];
+
+  return (
+    <Radio.Group
+      options={OPTIONS}
+      onChange={handleChange}
+      name={value}
+      value={value}
+      optionType="button"
+      buttonStyle="solid"
+    />
+  );
+}
+
+function ChosenModules({ modules, grades, setGrades }) {
+  return modules.map((module, index) => {
+    const code = module.value;
+    const label = module.label;
+    const title = label.substr(label.indexOf(" ") + 1);
+
+    return (
+      <>
+        <Container key={`inline-${index}`} className="mb-3">
+          <Row noGutters={true} className="mb-4">
+            <Col style={{ textAlign: "left", marginRight: "15px" }}>
+              <strong>{code}</strong>
+              <div>{title}</div>
+            </Col>
+            <Col
+              xs={6}
+              className={"d-flex align-items-center justify-content-end"}
+            >
+              <GradeOptions
+                moduleName={module.value}
+                grades={grades}
+                setGrades={setGrades}
+              />
+            </Col>
+          </Row>
+        </Container>
+      </>
+    );
+  });
+}
+
 export default function ChooseGrades({ formState, setFormState }) {
   const [grades, setGrades] = useState({});
 
@@ -35,26 +86,6 @@ export default function ChooseGrades({ formState, setFormState }) {
     setFormState({ ...formState, grades: grades });
   }, [grades]);
 
-  const RadioGroup = ({ moduleName }) => {
-    const handleChange = (e) => {
-      const value = e.target.value;
-      setGrades({ ...grades, [moduleName]: value });
-    };
-
-    const value = grades[moduleName];
-
-    return (
-      <Radio.Group
-        options={OPTIONS}
-        onChange={handleChange}
-        name={value}
-        value={value}
-        optionType="button"
-        buttonStyle="solid"
-      />
-    );
-  };
-
   if (formState.modules) {
     return (
       <>
@@ -63,30 +94,11 @@ export default function ChooseGrades({ formState, setFormState }) {
           Please enter your grades for the modules you have chosen
         </div>
 
-        {formState.modules.map((module, index) => {
-          const code = module.value;
-          const label = module.label;
-          const title = label.substr(label.indexOf(" ") + 1);
-
-          return (
-            <>
-              <Container key={`inline-${index}`} className="mb-3">
-                <Row noGutters={true} className="mb-4">
-                  <Col style={{ textAlign: "left", marginRight: "15px" }}>
-                    <strong>{code}</strong>
-                    <div>{title}</div>
-                  </Col>
-                  <Col
-                    xs={6}
-                    className={"d-flex align-items-center justify-content-end"}
-                  >
-                    <RadioGroup moduleName={module.value} />
-                  </Col>
-                </Row>
-              </Container>
-            </>
-          );
-        })}
+        <ChosenModules
+          modules={formState.modules}
+          grades={grades}
+          setGrades={setGrades}
+        />
       </>
     );
   } else {
