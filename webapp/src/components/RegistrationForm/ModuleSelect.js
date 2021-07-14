@@ -21,7 +21,7 @@ export default function ModuleSelect({
     const json = await response.json();
     const modList = json.map((x) => ({
       label: `${x.moduleCode}: ${x.title}`,
-      value: x.moduleCode
+      value: x.moduleCode,
     }));
     setModules(modList);
   };
@@ -64,41 +64,41 @@ export default function ModuleSelect({
         Please select the relevant modules you have completed along with your
         grade for each module.
       </div>
-      <Select
-        onChange={setSelectedMods}
-        isMulti
-        filterOption={() => true} // disable native filter
-        onInputChange={(value) => setInputValue(value)}
-        options={slicedOptions}
-        defaultValue={selectedMods}
-        placeholder={"Select your preferred modules"}
-        styles={{
-          control: (provided, state) =>
-            errors.modules
-              ? {
-                  ...provided,
-                  borderColor: "red",
-                }
-              : provided,
+        <Select
+          onChange={setSelectedMods}
+          isMulti
+          filterOption={() => true} // disable native filter
+          onInputChange={(value) => setInputValue(value)}
+          options={slicedOptions}
+          defaultValue={selectedMods}
+          placeholder={"Select your preferred modules"}
+          styles={{
+            control: (provided, state) =>
+              errors.modules
+                ? {
+                    ...provided,
+                    borderColor: "red",
+                  }
+                : provided,
 
-          // Fixes the overlapping problem of the component
-          menu: (provided) => ({ ...provided, zIndex: 9999 }),
-        }}
-        isClearable={true}
-      />
-      <div>
-        {errors.modules && (
-          <div
-            style={{
-              marginTop: "3px",
-              fontSize: "13px",
-              color: "rgb(244, 67, 54)",
-            }}
-          >
-            {errors.modules}
-          </div>
-        )}
-      </div>
+            // Fixes the overlapping problem of the component
+            menu: (provided) => ({ ...provided, zIndex: 9999 }),
+          }}
+          isClearable={true}
+        />
+        <div>
+          {errors.modules && (
+            <div
+              style={{
+                marginTop: "3px",
+                fontSize: "13px",
+                color: "rgb(244, 67, 54)",
+              }}
+            >
+              {errors.modules}
+            </div>
+          )}
+        </div>
     </>
   );
 }

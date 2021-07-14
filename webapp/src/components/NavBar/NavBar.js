@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { NavDropdown, Nav, Navbar, Alert } from "react-bootstrap";
 import { useAuth } from "../../contexts/AuthContext";
 import styles from "./NavBar.module.css";

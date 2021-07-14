@@ -142,8 +142,7 @@ export default function CustomizeProfileForm() {
         className="d-flex justify-content-center"
         style={{ minHeight: "50vh" }}
       >
-        <div className="w-100" style={{ maxWidth: "800px" }}>
-          {/* navigation */}
+        <div className="w-100" style={{ maxWidth: "900px" }}>
           <Tabs
             value={currTab}
             indicatorColor="primary"
@@ -151,7 +150,6 @@ export default function CustomizeProfileForm() {
             onChange={handleTabChange}
             aria-label="disabled tabs example"
             variant="fullWidth"
-            centered
           >
             {tabData.map((tab, index) => {
               return <Tab key={index} label={tab.label} />;

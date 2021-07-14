@@ -59,6 +59,7 @@ export default function ChooseGrades({ formState, setFormState }) {
     return (
       <>
         <div className="mb-4 mt-5">
+          <hr></hr>
           Please enter your grades for the modules you have chosen
         </div>
 

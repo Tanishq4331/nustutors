@@ -2,7 +2,38 @@ import { Container } from "react-bootstrap";
 import { storage } from "../../config/firebase";
 import { useAuth } from "../../contexts/AuthContext";
 import EditIcon from "@material-ui/icons/Edit";
-import styles from "./ProfileForms.module.css";
+import styled from "styled-components";
+
+const CustomFileUpload = styled.form`
+  label {
+    border-radius: 50%;
+    display: inline-block;
+    position: relative;
+    top: 20px;
+    left: -35px;
+    padding: 6px;
+    cursor: pointer;
+    background: #007bff;
+    margin-bottom: 15px;
+    transition: 0.3s;
+  }
+
+  label:hover {
+    background: #0c66c0;
+    margin-bottom: 15px;
+  }
+`;
+
+const ImageWrap = styled.img`
+  position: relative;
+  left:30px;
+  width: 250px;
+  height: 250px;
+  overflow: hidden;
+  background: #0c66c0;
+  padding: 4px;
+  border-radius: 50%;
+`;
 
 export default function AvatarUpload() {
   const { setUserData, userData, setAlert, currentUser } = useAuth();
@@ -75,8 +106,7 @@ export default function AvatarUpload() {
   return (
     <Container className="d-flex align-items-top justify-content-center">
       <div>
-        <img
-          className={styles["img-wrap"]}
+        <ImageWrap
           htmlFor="photo-upload"
           src={
             userData.url ||
@@ -84,8 +114,8 @@ export default function AvatarUpload() {
           }
         />
       </div>
-      <form>
-        <label className={styles["custom-file-upload"]} htmlFor="photo-upload">
+      <CustomFileUpload>
+        <label htmlFor="photo-upload">
           <EditIcon style={{ fill: "white" }} />
           <input
             id="photo-upload"
@@ -94,7 +124,7 @@ export default function AvatarUpload() {
             onChange={(e) => photoUpload(e)}
           />
         </label>
-      </form>
+      </CustomFileUpload>
     </Container>
   );
 }
