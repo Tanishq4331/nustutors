@@ -67,10 +67,32 @@ export function AuthProvider({ children }) {
   }
 
   async function makeRequest(request) {
-    const combinedRequest = { ...request, by: currentUser.uid };
+    const combinedRequest = {
+      ...request,
+      by: currentUser.uid,
+      createdAt: await firebase.firestore.FieldValue.serverTimestamp(),
+    };
+    return db.collection("requests").add(combinedRequest);
+  }
+
+  async function getRequests() {
     return db
       .collection("requests")
-      .add(combinedRequest)
+      .get()
+      .orderBy("createdAt", "desc")
+      .then((data) => {
+        let requests = [];
+        data.forEach((doc) => {
+          requests.push({
+            id: doc.id,
+            ...doc.data(),
+          });
+        });
+      })
+      .catch((error) => {
+        console.log(`${error.code}: ${error.message}`);
+        setAlert({ message: "Could not contact server", success: false });
+      });
   }
 
   async function registerUser(userFormState, tutorFormState = null) {
