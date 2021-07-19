@@ -1,7 +1,7 @@
 import Select from "react-select";
 import { useState, useEffect, useMemo } from "react";
 import escapeRegExp from "lodash/escapeRegExp";
-import Loading from "../Loading/Loading";
+import Loading from "../../Loading/Loading";
 
 const MAX_DISPLAYED_OPTIONS = 500;
 

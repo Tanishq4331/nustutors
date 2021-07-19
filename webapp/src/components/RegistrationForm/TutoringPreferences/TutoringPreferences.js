@@ -1,6 +1,6 @@
-import { Card, Form } from "react-bootstrap";
+import { Card } from "react-bootstrap";
 import ModuleSelect from "./ModuleSelect";
-import ChooseGrades from "./ChooseGrades";
+import GradeSelect from "./GradeSelect";
 import Rates from "./Rates";
 
 export default function TutoringPreferences({
@@ -33,7 +33,7 @@ export default function TutoringPreferences({
             setFormState={setFormState}
             errors={errors}
           />
-          <ChooseGrades formState={formState} setFormState={setFormState} />
+          <GradeSelect formState={formState} setFormState={setFormState} />
         </Card.Body>
       </Card>
     </>

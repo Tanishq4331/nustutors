@@ -1,9 +1,9 @@
 import { Form, Container, Button } from "react-bootstrap";
 import { useAuth } from "../../contexts/AuthContext";
 import { useState, useEffect } from "react";
-import PersonalDetails from "../RegistrationForm/PersonalDetails";
 import Qualifications from "../RegistrationForm/Qualifications";
-import LocationPreferences from "../RegistrationForm/LocationPreferences";
+import LocationAndTime from "../RegistrationForm/LocationAndTime";
+import PersonalDetails from "../RegistrationForm/PersonalDetails";
 import TutoringPreferences from "../RegistrationForm/TutoringPreferences";
 import { validatePage, errorPresent } from "../RegistrationForm/validation";
 import ChangeAccountDetails from "./ChangeAccountDetails";
@@ -47,7 +47,7 @@ export default function CustomizeProfileForm() {
 
   const tabData = [
     { label: "Personal Details", form: PersonalDetails },
-    { label: "Location and Timing Preferences", form: LocationPreferences },
+    { label: "Locations and Times", form: LocationAndTime },
   ];
 
   if (provider === "password") {

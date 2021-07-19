@@ -169,7 +169,7 @@ export function validatePage(label, formState) {
       return "";
     case "Tutoring Preferences":
       return moduleValidation(formState.modules);
-    case "Location and Timing Preferences": {
+    case "Locations and Times": {
       const errors = locationValidation(
         formState.availableForOnline,
         formState.locations,

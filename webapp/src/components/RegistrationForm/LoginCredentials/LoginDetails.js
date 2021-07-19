@@ -1,6 +1,6 @@
 import { Form, Card } from "react-bootstrap";
 import { Button } from "react-bootstrap";
-import { useAuth } from "../../contexts/AuthContext";
+import { useAuth } from "../../../contexts/AuthContext";
 
 export default function LoginDetails({ formState, handleChange, errors }) {
   const { loginWithGoogle, setAlert } = useAuth();

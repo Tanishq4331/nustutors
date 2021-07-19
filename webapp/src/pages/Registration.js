@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Form, Container, Button } from "react-bootstrap";
-import LoginDetails from "../components/RegistrationForm/LoginDetails";
+import LoginDetails from "../components/RegistrationForm/LoginCredentials";
 import PersonalDetails from "../components/RegistrationForm/PersonalDetails";
 import { useAuth } from "../contexts/AuthContext";
 import Stepper from "@material-ui/core/Stepper";
@@ -8,7 +8,7 @@ import Step from "@material-ui/core/Step";
 import StepLabel from "@material-ui/core/StepLabel";
 import Loading from "../components/Loading/Loading";
 import Qualifications from "../components/RegistrationForm/Qualifications";
-import LocationPreferences from "../components/RegistrationForm/LocationPreferences";
+import LocationAndTime from "../components/RegistrationForm/LocationAndTime";
 import TutoringPreferences from "../components/RegistrationForm/TutoringPreferences";
 import { useHistory } from "react-router-dom";
 import Navigation from "../components/RegistrationForm/Navigation";
@@ -60,7 +60,7 @@ export default function Registration() {
 
   const userSteps = [
     { label: "Personal Details", form: PersonalDetails },
-    { label: "Location and Timing Preferences", form: LocationPreferences },
+    { label: "Locations and Times", form: LocationAndTime },
   ];
 
   //prepend the login details step if user is not already authenticated through google

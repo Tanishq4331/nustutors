@@ -1,5 +1,5 @@
-import ModuleSelect from "../RegistrationForm/ModuleSelect";
-import Rates from "../RegistrationForm/Rates";
+import ModuleSelect from "../RegistrationForm/TutoringPreferences/ModuleSelect";
+import Rates from "../RegistrationForm/TutoringPreferences/Rates";
 import { Form, Button } from "react-bootstrap";
 import Loading from "../Loading/Loading";
 import { useFormikContext } from "formik";

@@ -62,7 +62,7 @@ function ChosenModules({ modules, grades, setGrades }) {
   });
 }
 
-export default function ChooseGrades({ formState, setFormState }) {
+export default function GradeSelect({ formState, setFormState }) {
   const [grades, setGrades] = useState({});
 
   //update grades when modules changes;
