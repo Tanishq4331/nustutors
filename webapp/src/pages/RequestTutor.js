@@ -4,6 +4,7 @@ import * as Yup from "yup";
 import { useAuth } from "../contexts/AuthContext";
 import { useHistory } from "react-router-dom";
 import RequestTutorForm from "../components/RequestTutor/RequestTutorForm";
+import { useData } from "../contexts/AppContext";
 
 const validationSchema = Yup.object().shape({
   duration: Yup.number()
@@ -17,11 +18,11 @@ const validationSchema = Yup.object().shape({
 });
 
 export default function RequestTutor() {
-  const { makeRequest, setAlert } = useAuth();
+  const { setAlert } = useAuth();
+  const { makeRequest } = useData();
   const history = useHistory();
 
   const handleSubmit = (values, { setSubmitting }) => {
-    console.log(values);
     makeRequest(values)
       .then(() => {
         setAlert({
@@ -63,8 +64,9 @@ export default function RequestTutor() {
                 }}
                 validationSchema={validationSchema}
                 onSubmit={handleSubmit}
-                render={RequestTutorForm}
-              />
+              >
+                <RequestTutorForm />
+              </Formik>
             </Card.Body>
           </Card>
           <hr />

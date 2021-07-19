@@ -54,6 +54,7 @@ export default function Registration() {
     grades: [],
     experiences: "",
     documents: [],
+    blacklist: [],
     rate: 0,
   });
 
@@ -121,12 +122,11 @@ export default function Registration() {
 
     const newErrors = await validatePage(
       displayedSteps[activeStep].label,
-      combinedFormState,
+      combinedFormState
     );
     setErrors(newErrors);
     //if the current page is not valid do nothing;
     if (errorPresent(newErrors)) {
-
       //error in timings, locations shown as alert
       if (newErrors.locations) {
         setAlert({ message: newErrors.locations, success: false });

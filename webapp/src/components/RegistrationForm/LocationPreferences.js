@@ -4,8 +4,9 @@ import { useAuth } from "../../contexts/AuthContext";
 import Alert from "@material-ui/lab/Alert";
 import ScheduleSelector from "react-schedule-selector";
 import { useState, useEffect } from "react";
+import { renderDateLabel } from "../Requests/Schedule";
 
-function Timings({ formState, setFormState, errors }) {
+function TimingPreferences({ formState, setFormState, errors }) {
   const [schedule, setSchedule] = useState(formState.timings);
 
   useEffect(() => {
@@ -16,10 +17,6 @@ function Timings({ formState, setFormState, errors }) {
     //ensure dates are sorted to ensure order of selection does not affect the timings array
     setFormState({ ...formState, timings: schedule.sort() });
   }, [schedule]);
-
-  const changeSchedule = (newSchedule) => {
-    setSchedule(newSchedule);
-  };
 
   return (
     <Card className="mb-5">
@@ -35,7 +32,8 @@ function Timings({ formState, setFormState, errors }) {
           dateFormat="ddd"
           maxTime={21}
           hourlyChunks={1}
-          onChange={changeSchedule}
+          onChange={setSchedule}
+          renderDateLabel={renderDateLabel}
         />{" "}
         <div className="text-center mt-1">
           Please input all your available timings to increase your chances of
@@ -167,7 +165,7 @@ export default function LocationPreferences({
         </Card.Body>
       </Card>
 
-      <Timings formState={formState} setFormState={setFormState} />
+      <TimingPreferences formState={formState} setFormState={setFormState} />
 
       {/* only show alert when registering */}
       {!userData && (

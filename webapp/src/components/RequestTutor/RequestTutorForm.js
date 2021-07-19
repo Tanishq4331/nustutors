@@ -2,19 +2,22 @@ import ModuleSelect from "../RegistrationForm/ModuleSelect";
 import Rates from "../RegistrationForm/Rates";
 import { Form, Button } from "react-bootstrap";
 import Loading from "../Loading/Loading";
+import { useFormikContext } from "formik";
 
-export default function RequestTutorForm({
-  values,
-  errors,
-  touched,
-  handleChange,
-  handleBlur,
-  handleSubmit,
-  isSubmitting,
-  setFieldValue,
-}) {
+export default function RequestTutorForm() {
+  const {
+    isSubmitting,
+    setFieldValue,
+    handleSubmit,
+    values,
+    handleBlur,
+    touched,
+    errors,
+    handleChange,
+  } = useFormikContext();
+
   const setBudget = (value) => {
-    setFieldValue("budget", value);
+    setFieldValue("rate", value);
   };
 
   const setModules = (value) => {

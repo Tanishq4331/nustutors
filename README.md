@@ -38,9 +38,12 @@
 
 - If there are problems with on a page containg timing selection, ensure no JSX components are declared inside each other.
 
+- Do NOT use the index parameter of map as the key when rendering a list of components - deleting/adding items will reallocate the keys.
+
 **TODO**
 
 - Sidebar instead of dropdown for narrow viewports
+- MUI theme provider
 - https://freefrontend.com/
 - limit on document uploads, enforced from storage
 - manage previous uploads

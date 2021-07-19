@@ -15,39 +15,46 @@ import Dashboard from "./pages/Dashboard";
 import AlertMessage from "./components/Alerts/AlertMessage";
 import Registration from "./pages/Registration";
 import RequestTutor from "./pages/RequestTutor";
+import { DataProvider } from "./contexts/AppContext";
 
 export default function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
-        <NavBar />
-        <AlertMessage />
-        <main className="mt-4">
-          <Switch>
-            <PrivateRoute exact path="/dashboard" component={Dashboard} />
-            <PrivateRoute exact path="/profile" component={Profile} />
-            <PrivateRoute exact path="/request-tutor" component={RequestTutor} />
-            <PublicRoute
-              restricted={false}
-              path="/register"
-              component={Registration}
-            />
-            <PublicRoute restricted={true} path="/login" component={Login} />
-            <PublicRoute
-              restricted={true}
-              path="/forgot-password"
-              component={ForgotPassword}
-            />
-            <PublicRoute
-              restricted={false}
-              exact
-              path="/home"
-              component={Home}
-            />
-            <PublicRoute restricted={false} exact path="/" component={Home} />
-            <PublicRoute restricted={false} path="*" component={NoMatch} />
-          </Switch>
-        </main>
+        <DataProvider>
+          <NavBar />
+          <AlertMessage />
+          <main className="mt-4">
+            <Switch>
+              <PrivateRoute exact path="/dashboard" component={Dashboard} />
+              <PrivateRoute exact path="/profile" component={Profile} />
+              <PrivateRoute
+                exact
+                path="/request-tutor"
+                component={RequestTutor}
+              />
+              <PublicRoute
+                restricted={false}
+                path="/register"
+                component={Registration}
+              />
+              <PublicRoute restricted={true} path="/login" component={Login} />
+              <PublicRoute
+                restricted={true}
+                path="/forgot-password"
+                component={ForgotPassword}
+              />
+              <PublicRoute
+                restricted={false}
+                exact
+                path="/home"
+                component={Home}
+              />
+              <PublicRoute restricted={false} exact path="/" component={Home} />
+              <PublicRoute restricted={false} path="*" component={NoMatch} />
+            </Switch>
+          </main>
+        </DataProvider>
       </AuthProvider>
     </BrowserRouter>
   );

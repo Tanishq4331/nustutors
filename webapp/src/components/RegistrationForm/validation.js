@@ -1,10 +1,40 @@
 import * as React from "react";
 import { emailAlreadyExists } from "../../contexts/AuthContext";
+import * as Yup from "yup";
 
 const emailRegex = new RegExp(/\S+@\S+\.\S+/);
 const phoneRegex = new RegExp(/^[0-9 ()+-]+$/);
 const ccardRegex = new RegExp(/^[0-9-]+$/);
 const cvcRegex = new RegExp(/^[0-9]+$/);
+
+export const loginValidationSchema = Yup.object().shape({
+  email: Yup.string()
+    .email()
+    .required("Email field is required")
+    .test(
+      "is-taken",
+      "This email has been taken",
+      async (value, testContext) => !emailAlreadyExists(value)
+    ),
+  password: Yup.string()
+    .min(7, "Password should be at least 7 characters long.")
+    .required("Password is required"),
+  passwordConfirm: Yup.string().oneOf(
+    [Yup.ref("password"), null],
+    "Passwords must match"
+  ),
+});
+
+export const personalValidationSchema = Yup.object().shape({
+  name: Yup.string(),
+  phone: Yup.string()
+    .matches(phoneRegex, "Phone number is not valid")
+    .required("Phone number is required"),
+  dateOfBirth: Yup.date()
+    .min(new Date(1950, 12), "Invalid date")
+    .max(new Date(2005, 12), "Invalid Date")
+    .required("Name is required"),
+});
 
 export const termsValidator = (value) =>
   value ? "" : "It's required to agree with Terms and Conditions.";
@@ -64,8 +94,16 @@ export const guestsValidator = (value) =>
   !value ? "Number of guests is required" : value < 5 ? "" : "Maximum 5 guests";
 export const nightsValidator = (value) =>
   value ? "" : "Number of Nights is required.";
-export const birthDateValidator = (value) =>
-  value ? "" : "Date of Birth is required.";
+
+export const birthDateValidator = (value) => {
+  const date = new Date(value).getTime();
+  return value
+    ? date < new Date(1950, 12).getTime() || date > new Date(2005, 12).getTime()
+      ? "Invalid date"
+      : ""
+    : "Date of Birth is required.";
+};
+
 export const colorValidator = (value) => (value ? "" : "Color is required.");
 export const requiredValidator = (value) =>
   value ? "" : "Error: This field is required.";
