@@ -1,14 +1,14 @@
 import { Modal } from "react-bootstrap";
 import { Button, Image, Header, Segment } from "semantic-ui-react";
 import { Row, Col, Container } from "react-bootstrap";
-import Schedule from "./Schedule";
+import Schedule from "../Schedule";
 import moment from "moment";
-import { useData } from "../../contexts/AppContext";
-import Loading from "../Loading/Loading";
+import { useData } from "../../../contexts/AppContext";
+import Loading from "../../Loading/Loading";
 import { useState } from "react";
-import { useAuth } from "../../contexts/AuthContext";
+import { useAuth } from "../../../contexts/AuthContext";
 
-export function RequestModal({ request, setOpen, open }) {
+export function TutorRequestModal({ request, setOpen, open }) {
   const { setAlert } = useAuth();
   const { apply } = useData();
   const [loading, setLoading] = useState(false);

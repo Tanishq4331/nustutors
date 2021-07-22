@@ -1,14 +1,14 @@
 import { Header, Segment } from "semantic-ui-react";
 import { useState, useEffect } from "react";
-import { db } from "../../config/firebase";
-import { useAuth } from "../../contexts/AuthContext";
+import { db } from "../../../config/firebase";
+import { useAuth } from "../../../contexts/AuthContext";
 import { motion, AnimatePresence } from "framer-motion";
-import RequestCard from "./RequestCard";
-import { readIds } from "../../contexts/AppContext";
+import TutorRequestCard from "./TutorRequestCard";
+import { readIds } from "../../../contexts/AppContext";
 
 const MAX_REQUESTS = 12;
 
-export default function Requests() {
+export default function TutorRequests() {
   const { currentUser, userData, setUserData, setAlert } = useAuth();
 
   const [relevantRequests, setRelevantRequests] = useState([]);
@@ -81,7 +81,7 @@ export default function Requests() {
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                   >
-                    <RequestCard
+                    <TutorRequestCard
                       request={request}
                       addToBlacklist={addToBlacklist}
                     />

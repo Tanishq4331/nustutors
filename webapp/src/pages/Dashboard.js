@@ -1,7 +1,7 @@
-import Requests from "../components/Requests/Requests";
 import { Container, Row, Col } from "react-bootstrap";
-import UserRequests from "../components/Requests/UserRequests";
+import UserRequests from "../components/Requests/User/UserRequests";
 import { Header, Segment, Card } from "semantic-ui-react";
+import TutorRequests from "../components/Requests/TutorRequests";
 
 export default function Dashboard() {
   return (
@@ -13,7 +13,7 @@ export default function Dashboard() {
       <Container fluid>
         <Row className="d-flex justify-content-center">
           <Col style={{ maxWidth: "1000px" }}>
-            <Requests />
+            <TutorRequests />
           </Col>
           <Col style={{ maxWidth: "500px" }}>
             <UserRequests />

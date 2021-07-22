@@ -1,9 +1,9 @@
 import { Button, Card, Image, Statistic } from "semantic-ui-react";
 import { useState } from "react";
 import moment from "moment";
-import { RequestModal } from "./RequestModal";
+import { TutorRequestModal } from "./TutorRequestModal";
 
-export default function RequestCard({ request, addToBlacklist }) {
+export default function TutorRequestCard({ request, addToBlacklist }) {
   const startDate = moment(request.startDate).format("D MMM");
   const [open, setOpen] = useState(false);
   const [pop, setPop] = useState(false);
@@ -15,7 +15,7 @@ export default function RequestCard({ request, addToBlacklist }) {
 
   return (
     <>
-      <RequestModal request={request} open={open} setOpen={setOpen} />{" "}
+      <TutorRequestModal request={request} open={open} setOpen={setOpen} />{" "}
       <div
         style={{
           display: "inline-block",

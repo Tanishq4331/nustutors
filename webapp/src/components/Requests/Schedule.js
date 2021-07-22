@@ -37,7 +37,7 @@ export function renderDateLabel(date) {
   return <Day>{formatted}</Day>;
 }
 
-export default function Schedule({ tuteeTimes }) {
+export default function Schedule({ tuteeTimes, switcheroo }) {
   const { userData } = useAuth();
   const tutorSchedule = userData.timings;
   const tuteeSchedule = tuteeTimes.map((x) => x.getTime());
@@ -82,7 +82,7 @@ export default function Schedule({ tuteeTimes }) {
       </OverlapWrapper>
       <div className="d-flex mt-1 justify-content-center">
         <Label color={"teal"}>You</Label>
-        <Label color={"yellow"}>Tutee</Label>
+        <Label color={"yellow"}>{switcheroo ? "Tutor" : "Tutee"}</Label>
         <Label color={"olive"}>Common</Label>
       </div>
     </div>
