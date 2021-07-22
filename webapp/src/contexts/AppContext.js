@@ -6,25 +6,44 @@ import firebase from "firebase";
 
 const AppContext = React.createContext();
 
+export async function readIds(collection, ids) {
+  const reads = ids.map((id) => collection.doc(id).get());
+  const result = await Promise.all(reads);
+  return result.map((v) => v.data());
+}
+
 export function useData() {
   return useContext(AppContext);
 }
 
 export function DataProvider({ children }) {
-  const { currentUser, setAlert, userData } = useAuth();
+  const { currentUser, setAlert, userData, setUserData } = useAuth();
 
   async function makeRequest(request) {
-    var newDocRef = db.collection('requests').doc();
+    var newDocRef = db.collection("requests").doc();
     const combinedRequest = {
       ...request,
       uid: currentUser.uid,
       rid: newDocRef.id,
-      name: userData.name,
-      url: userData.url,
       createdAt: await firebase.firestore.FieldValue.serverTimestamp(),
-      schedule: userData.timings,
     };
     return newDocRef.set(combinedRequest);
+  }
+
+  async function apply(request) {
+    var newDocRef = db.collection("applications").doc();
+    const grade = userData.grades[request.module.value] || null;
+    const combinedApplication = {
+      uid: currentUser.uid,
+      rid: request.rid,
+      aid: newDocRef.id,
+      createdAt: await firebase.firestore.FieldValue.serverTimestamp(),
+    };
+    setUserData((prev) => {
+      const newApplications = [...prev.applications, request.rid];
+      return { ...prev, applications: newApplications };
+    });
+    return newDocRef.set(combinedApplication);
   }
 
   async function getAllRequests() {
@@ -60,6 +79,7 @@ export function DataProvider({ children }) {
   const value = {
     makeRequest,
     getAllRequests,
+    apply,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

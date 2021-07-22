@@ -6,7 +6,7 @@ import LocationAndTime from "../RegistrationForm/LocationAndTime";
 import PersonalDetails from "../RegistrationForm/PersonalDetails";
 import TutoringPreferences from "../RegistrationForm/TutoringPreferences";
 import { validatePage, errorPresent } from "../RegistrationForm/validation";
-import ChangeAccountDetails from "./ChangeAccountDetails";
+import ChangeAccountDetails from "./LoginCredentials/ChangeAccountDetails";
 import { Tabs, Tab } from "@material-ui/core";
 import Alert from "@material-ui/lab/Alert";
 import Loading from "../Loading/Loading";
@@ -27,7 +27,10 @@ export default function CustomizeProfileForm() {
 
     //lodash allows deep comparison of nested objects (does not work for nested arrays)
     setChangesMade(
-      Boolean(!_.isEqual(formData, userData) || (documents && documents.length))
+      Boolean(
+        !_.isEqual(_.omit(formData, ["url"]), _.omit(userData, ["url"])) || //ignore avatar url
+          (documents && documents.length) //documents pending upload exist
+      )
     );
   }, [formState, userData]);
 

@@ -10,7 +10,7 @@ export default function ModuleSelect({
   setFormState,
   errors,
   isSingle, //requestTutor
-  setModules,   //requestTutor
+  setModule,   //requestTutor
 }) {
   const [allModules, setAllModules] = useState([]);
   const [inputValue, setInputValue] = useState("");
@@ -21,8 +21,8 @@ export default function ModuleSelect({
 
   //update formState when selectedMods changes
   useEffect(() => {
-    setModules
-      ? setModules(selectedMods)
+    setModule
+      ? setModule(selectedMods)
       : setFormState({ ...formState, modules: selectedMods });
   }, [selectedMods]);
 

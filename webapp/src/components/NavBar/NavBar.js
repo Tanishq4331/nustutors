@@ -1,7 +1,7 @@
 import { NavDropdown, Nav, Navbar, Alert } from "react-bootstrap";
 import { useAuth } from "../../contexts/AuthContext";
 import styles from "./NavBar.module.css";
-import AccountCircleIcon from "@material-ui/icons/AccountCircle";
+import AvatarIcon from "../AvatarIcon/AvatarIcon";
 
 export default function NavBar() {
   const { currentUser, logout, userData, setAlert } = useAuth();
@@ -39,17 +39,7 @@ export default function NavBar() {
           <NavDropdown
             alignRight
             flip
-            title={
-              userData.url ? (
-                <img
-                  className={styles["avatar"]}
-                  alt={userData.name}
-                  src={userData.url}
-                />
-              ) : (
-                <AccountCircleIcon style={{ fontSize: 40 }} />
-              )
-            }
+            title={<AvatarIcon userData={userData} />}
             id={styles["collasible-nav-dropdown"]}
             class={styles["dropdown-menu"]}
           >

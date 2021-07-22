@@ -1,6 +1,7 @@
 import Requests from "../components/Requests/Requests";
 import { Container, Row, Col } from "react-bootstrap";
-import { Header, Segment } from "semantic-ui-react";
+import UserRequests from "../components/Requests/UserRequests";
+import { Header, Segment, Card } from "semantic-ui-react";
 
 export default function Dashboard() {
   return (
@@ -15,10 +16,7 @@ export default function Dashboard() {
             <Requests />
           </Col>
           <Col style={{ maxWidth: "500px" }}>
-            <Segment color="blue" secondary padded>
-              <Header as="h2">Your requests</Header>
-              <hr className="mb-5"></hr>
-            </Segment>
+            <UserRequests />
           </Col>
         </Row>
       </Container>

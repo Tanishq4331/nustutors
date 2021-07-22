@@ -4,47 +4,42 @@ import { db } from "../../config/firebase";
 import { useAuth } from "../../contexts/AuthContext";
 import { motion, AnimatePresence } from "framer-motion";
 import RequestCard from "./RequestCard";
+import { readIds } from "../../contexts/AppContext";
 
 const MAX_REQUESTS = 12;
 
 export default function Requests() {
-  const { currentUser, userData, setUserData } = useAuth();
-  const [allRequests, setAllRequests] = useState([]);
+  const { currentUser, userData, setUserData, setAlert } = useAuth();
+
   const [relevantRequests, setRelevantRequests] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [myRequests, setMyRequests] = useState([]);
 
   const blacklist = userData.blacklist;
+  const applications = userData.applications;
 
+  //retrieve user details from the uid of each request and add them to the request
+  async function addRequesterData(rawRequests, uids) {
+    const userDetails = await readIds(db.collection("users"), uids);
+
+    //add to each request the details of its corresponding user
+    const expandedRequests = rawRequests.map((rawRequest, index) => {
+      return { ...rawRequest, user: userDetails[index] };
+    });
+
+    setRelevantRequests(expandedRequests);
+    setLoading(false);
+  }
+
+  //Retrieve relevant requests (for now all requests) excluding those by user
   useEffect(() => {
     const unsubscribe = db
       .collection("requests")
-      .orderBy("createdAt", "desc")
+      .where("uid", "!=", currentUser.uid)
+      .limit(MAX_REQUESTS)
       .onSnapshot((snapshot) => {
-        const requests = snapshot.docs.map((doc) => doc.data());
-
-        //exclude any requests from the tutore 
-        const relevantRequests = requests.filter(
-          (req) => req.uid !== currentUser.uid
-        );
-
-        const myRequests = requests.filter(
-          (req) => req.uid === currentUser.uid
-        );
-
-        //limit relevant requests to MAX_REQUESTS
-        relevantRequests.length = Math.min(
-          relevantRequests.length,
-          MAX_REQUESTS
-        );
-
-        //limit myRequests to MAX_REQUESTS
-        myRequests.length = Math.min(myRequests.length, MAX_REQUESTS);
-
-        setAllRequests(requests);
-        setRelevantRequests(relevantRequests);
-        setMyRequests(myRequests);
-        setLoading(false);
+        const rawRequests = snapshot.docs.map((doc) => doc.data());
+        const uids = rawRequests.map((request) => request.uid);
+        addRequesterData(rawRequests, uids);
       });
 
     //remember to unsubscribe from your realtime listener on unmount or you will create a memory leak
@@ -72,23 +67,26 @@ export default function Requests() {
         >
           <AnimatePresence>
             {relevantRequests.map((request) => {
-              //exclude any requests whose rid is in blacklist
+              //exclude any requests that have been applied to or blacklisted
               return (
-                !blacklist.includes(request.rid) && <motion.div
-                  layout
-                  style={{
-                    display: "inline-block",
-                  }}
-                  key={request.rid}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                >
-                  <RequestCard
-                    request={request}
-                    addToBlacklist={addToBlacklist}
-                  />
-                </motion.div>
+                !blacklist.includes(request.rid) &&
+                !applications.includes(request.rid) && (
+                  <motion.div
+                    layout
+                    style={{
+                      display: "inline-block",
+                    }}
+                    key={request.rid}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                  >
+                    <RequestCard
+                      request={request}
+                      addToBlacklist={addToBlacklist}
+                    />
+                  </motion.div>
+                )
               );
             })}
           </AnimatePresence>

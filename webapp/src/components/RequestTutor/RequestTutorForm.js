@@ -20,8 +20,8 @@ export default function RequestTutorForm() {
     setFieldValue("rate", value);
   };
 
-  const setModules = (value) => {
-    setFieldValue("modules", value);
+  const setModule = (value) => {
+    setFieldValue("module", value);
   };
 
   return (
@@ -32,7 +32,7 @@ export default function RequestTutorForm() {
         formState={values}
         onBlur={handleBlur}
         touched={Boolean(touched.modules)}
-        setModules={setModules}
+        setModule={setModule}
         errors={errors.modules ? { modules: "Please select a module" } : {}}
         isSingle
       />

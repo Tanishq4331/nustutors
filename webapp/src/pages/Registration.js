@@ -55,6 +55,7 @@ export default function Registration() {
     experiences: "",
     documents: [],
     blacklist: [],
+    applications: [],
     rate: 0,
   });
 

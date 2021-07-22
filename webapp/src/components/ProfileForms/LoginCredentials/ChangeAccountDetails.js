@@ -1,5 +1,5 @@
 import { Button, Row, Col, Container } from "react-bootstrap";
-import { useAuth } from "../../contexts/AuthContext";
+import { useAuth } from "../../../contexts/AuthContext";
 import { useState } from "react";
 import ChangePasswordModal from "./ChangePasswordModal";
 import ChangeEmailModal from "./ChangeEmailModal";

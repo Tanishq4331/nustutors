@@ -1,10 +1,10 @@
 import { Button, Row, Col, Form, Modal } from "react-bootstrap";
-import { useAuth } from "../../contexts/AuthContext";
-import { useState, setShow, useEffect } from "react";
-import { passwordValidator } from "../RegistrationForm/validation";
+import { useAuth } from "../../../contexts/AuthContext";
+import { useState } from "react";
+import { emailValidator } from "../../RegistrationForm/validation";
 
-export default function ChangePasswordModal(props) {
-  const { updatePassword, setAlert } = useAuth();
+export default function ChangeEmailModal(props) {
+  const { updateEmail, setAlert, userData } = useAuth();
 
   const [loading, setLoading] = useState(false);
 
@@ -14,7 +14,7 @@ export default function ChangePasswordModal(props) {
   const handleChange = (e) => {
     const name = e.target.name;
     const value = e.target.value;
-    setFormState((prev) => ({ ...prev, [name]: value }));
+    setFormState({ ...formState, [name]: value });
   };
 
   async function handleSubmit(e) {
@@ -26,7 +26,7 @@ export default function ChangePasswordModal(props) {
         case "auth/wrong-password":
           props.setFormErrors((prevErrors) => ({
             ...prevErrors,
-            currPassword: "Incorrect Password",
+            password: "Incorrect Password",
           }));
           break;
         default:
@@ -39,15 +39,17 @@ export default function ChangePasswordModal(props) {
       }
     };
 
+    const emailError = () => {
+      if (formState.email === userData.email) {
+        return "You haven't made any changes";
+      } else {
+        return emailValidator(formState.email);
+      }
+    };
+
     const newErrors = {
-      currPassword: formState.currPassword
-        ? ""
-        : "Current password is required",
-      newPassword: passwordValidator(formState.newPassword),
-      passwordConfirm:
-        formState.newPassword === formState.passwordConfirm
-          ? ""
-          : "Passwords do not match",
+      email: await emailError(),
+      password: formState.password ? "" : "Current password is required",
     };
 
     props.setFormErrors(newErrors);
@@ -59,13 +61,11 @@ export default function ChangePasswordModal(props) {
       return;
     }
 
-    await updatePassword(formState.currPassword, formState.newPassword).catch(
-      handleError
-    );
+    await updateEmail(formState.email, formState.password).catch(handleError);
     setLoading(false);
     props.handleClose();
     setAlert({
-      message: "Password sucessfully updated.",
+      message: "Email successfully updated.",
       success: true,
     });
   }
@@ -79,55 +79,43 @@ export default function ChangePasswordModal(props) {
     >
       <Modal.Header closeButton>
         <Modal.Title id="contained-modal-title-vcenter">
-          Change Password
+          Change Email
         </Modal.Title>
       </Modal.Header>
       <Form onSubmit={handleSubmit}>
         <Modal.Body>
-          <p>Update your password below.</p>
-          <Form.Group id="currPassword">
+          <p>Update your email below.</p>
+          <Form.Group id="password">
             <Form.Label>Current Password</Form.Label>
             <Form.Control
               type="password"
-              name="currPassword"
-              value={formState.currPassword}
+              name="password"
+              value={formState.password}
               onChange={handleChange}
-              isInvalid={!!formErrors.currPassword}
+              isInvalid={!!props.formErrors.password}
             />
             <Form.Control.Feedback type="invalid">
-              {formErrors.currPassword}
+              {formErrors.password}
             </Form.Control.Feedback>
           </Form.Group>
-          <Form.Group id="newPassword">
-            <Form.Label>New Password</Form.Label>
+          <Form.Group id="email">
+            <Form.Label>New Email</Form.Label>
             <Form.Control
-              type="password"
-              name="newPassword"
-              value={formState.newPassword}
+              type="email"
+              name="email"
+              value={formState.email}
               onChange={handleChange}
-              isInvalid={!!formErrors.newPassword}
+              isInvalid={!!formErrors.email}
+              required
             />
             <Form.Control.Feedback type="invalid">
-              {props.formErrors.newPassword}
-            </Form.Control.Feedback>
-          </Form.Group>
-          <Form.Group id="passwordConfirm">
-            <Form.Label>Password Confirmation</Form.Label>
-            <Form.Control
-              type="password"
-              name="passwordConfirm"
-              value={formState.passwordConfirm}
-              onChange={handleChange}
-              isInvalid={!!formErrors.passwordConfirm}
-            />
-            <Form.Control.Feedback type="invalid">
-              {formErrors.passwordConfirm}
+              {formErrors.email}
             </Form.Control.Feedback>
           </Form.Group>
         </Modal.Body>
         <Modal.Footer>
           <Button disabled={loading} className="w-100" type="submit">
-            Save Password
+            Save Email
           </Button>
         </Modal.Footer>
       </Form>{" "}

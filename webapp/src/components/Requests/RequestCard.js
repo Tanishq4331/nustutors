@@ -25,11 +25,11 @@ export default function RequestCard({ request, addToBlacklist }) {
       >
         <Card link={pop}>
           <Card.Content>
-            {request.url && (
-              <Image floated="right" size="mini" src={request.url} />
+            {request.user.url && (
+              <Image floated="right" size="big" src={request.user.url} avatar />
             )}
-            <Card.Header>{request.name}</Card.Header>
-            {request.modules.value}
+            <Card.Header>{request.user.name}</Card.Header>
+            {request.module.value}
             <Card.Description>
               <Statistic.Group
                 size="mini"

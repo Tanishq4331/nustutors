@@ -3,10 +3,35 @@ import { Button, Image, Header, Segment } from "semantic-ui-react";
 import { Row, Col, Container } from "react-bootstrap";
 import Schedule from "./Schedule";
 import moment from "moment";
+import { useData } from "../../contexts/AppContext";
+import Loading from "../Loading/Loading";
+import { useState } from "react";
+import { useAuth } from "../../contexts/AuthContext";
 
 export function RequestModal({ request, setOpen, open }) {
+  const { setAlert } = useAuth();
+  const { apply } = useData();
+  const [loading, setLoading] = useState(false);
+  
   const startDate = moment(request.startDate).format("MMMM Do YYYY");
-  const tuteeTimes = request.schedule.map((x) => x.toDate()); //convert firebase date to date
+  const tuteeTimes = request.user.timings.map((x) => x.toDate()); //convert firebase date to date
+
+  const onApply = async () => {
+    setLoading(true);
+    try {
+      await apply(request);
+      setLoading(false);
+      setAlert({
+        message: `Application successfully submitted`,
+        success: true,
+      });
+      setOpen(false);
+    } catch (error) {
+      setLoading(false);
+      setAlert({ message: "An unexpected error occurred", success: false });
+      console.log(`${error.code}: ${error.message}`);
+    }
+  };
 
   return (
     <Modal
@@ -16,11 +41,12 @@ export function RequestModal({ request, setOpen, open }) {
       aria-labelledby="contained-modal-title-vcenter"
       centered
     >
+      <Loading loading={loading} />
       <Modal.Header style={{ padding: "3px" }}>
         <div className="d-flex align-items-center justify-content-between w-100">
           <div className="align-items-center">
-            <Header>{request.name}</Header>
-            {request.modules.label}
+            <Header>{request.user.name}</Header>
+            {request.module.label}
           </div>
           <Image
             floated="right"
@@ -61,10 +87,10 @@ export function RequestModal({ request, setOpen, open }) {
           Nope
         </Button>
         <Button
-          content="Yep, that's me"
+          content="Apply"
           labelPosition="right"
           icon="checkmark"
-          onClick={() => setOpen(false)}
+          onClick={onApply}
           positive
         />
       </Modal.Footer>

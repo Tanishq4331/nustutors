@@ -58,7 +58,7 @@ export default function RequestTutor() {
                 initialValues={{
                   description: "",
                   startDate: undefined,
-                  modules: undefined,
+                  module: undefined,
                   duration: undefined,
                   rate: 0,
                 }}

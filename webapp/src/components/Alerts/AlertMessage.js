@@ -11,7 +11,7 @@ export default function AlertMessage() {
   const { alert } = useAuth();
   const { message, success } = alert;
 
-  const [open, setOpen] = useState(message);
+  const [open, setOpen] = useState(Boolean(message));
 
   const DURATION = 6000;
 
