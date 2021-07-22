@@ -4,47 +4,20 @@ import { db } from "../../../config/firebase";
 import { useAuth } from "../../../contexts/AuthContext";
 import { motion, AnimatePresence } from "framer-motion";
 import TutorRequestCard from "./TutorRequestCard";
-import { readIds } from "../../../contexts/AppContext";
+import useRequests from "../../../hooks/useRequests";
 
 const MAX_REQUESTS = 12;
 
 export default function TutorRequests() {
   const { currentUser, userData, setUserData, setAlert } = useAuth();
+  const { blacklist, applications } = userData;
 
-  const [relevantRequests, setRelevantRequests] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  const blacklist = userData.blacklist;
-  const applications = userData.applications;
-
-  //retrieve user details from the uid of each request and add them to the request
-  async function addRequesterData(rawRequests, uids) {
-    const userDetails = await readIds(db.collection("users"), uids);
-
-    //add to each request the details of its corresponding user
-    const expandedRequests = rawRequests.map((rawRequest, index) => {
-      return { ...rawRequest, user: userDetails[index] };
-    });
-
-    setRelevantRequests(expandedRequests);
-    setLoading(false);
-  }
-
-  //Retrieve relevant requests (for now all requests) excluding those by user
-  useEffect(() => {
-    const unsubscribe = db
-      .collection("requests")
-      .where("uid", "!=", currentUser.uid)
-      .limit(MAX_REQUESTS)
-      .onSnapshot((snapshot) => {
-        const rawRequests = snapshot.docs.map((doc) => doc.data());
-        const uids = rawRequests.map((request) => request.uid);
-        addRequesterData(rawRequests, uids);
-      });
-
-    //remember to unsubscribe from your realtime listener on unmount or you will create a memory leak
-    return unsubscribe;
-  }, []);
+  const { requests, loading } = useRequests({
+    limit: 9,
+    exclusions: [...blacklist, ...applications],
+    // rate: userData.rate,
+    // moduleOptions: userData.modules.map((x) => x.value),
+  });
 
   function addToBlacklist(request) {
     setUserData((prev) => {
@@ -66,7 +39,7 @@ export default function TutorRequests() {
           }}
         >
           <AnimatePresence>
-            {relevantRequests.map((request) => {
+            {requests.map((request) => {
               //exclude any requests that have been applied to or blacklisted
               return (
                 !blacklist.includes(request.rid) &&

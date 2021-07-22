@@ -6,12 +6,6 @@ import firebase from "firebase";
 
 const AppContext = React.createContext();
 
-export async function readIds(collection, ids) {
-  const reads = ids.map((id) => collection.doc(id).get());
-  const result = await Promise.all(reads);
-  return result.map((v) => v.data());
-}
-
 export function useData() {
   return useContext(AppContext);
 }
@@ -66,15 +60,15 @@ export function DataProvider({ children }) {
       });
   }
 
-  async function getRequest(requestId) {
-    db.doc("/requests/{requestId}")
-      .get()
-      .then((doc) => {
-        if (!doc.exists) {
-          setAlert("The request does not exist");
-        }
-      });
-  }
+  // async function getRequest(requestId) {
+  //   db.doc("/requests/{requestId}")
+  //     .get()
+  //     .then((doc) => {
+  //       if (!doc.exists) {
+  //         setAlert("The request does not exist");
+  //       }
+  //     });
+  // }
 
   const value = {
     makeRequest,

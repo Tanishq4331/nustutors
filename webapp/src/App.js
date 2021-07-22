@@ -16,6 +16,7 @@ import AlertMessage from "./components/Alerts/AlertMessage";
 import Registration from "./pages/Registration";
 import RequestTutor from "./pages/RequestTutor";
 import { DataProvider } from "./contexts/AppContext";
+import AllRequests from "./pages/AllRequests";
 
 export default function App() {
   return (
@@ -32,6 +33,11 @@ export default function App() {
                 exact
                 path="/request-tutor"
                 component={RequestTutor}
+              />
+              <PrivateRoute
+                exact
+                path="/all-requests"
+                component={AllRequests}
               />
               <PublicRoute
                 restricted={false}

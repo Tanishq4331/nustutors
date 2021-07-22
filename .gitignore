@@ -1,4 +1,5 @@
 .env.local
+.history
 *.swp
 webapp/.eslintrc.json
 node_modules

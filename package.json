@@ -3,8 +3,6 @@
     "@craco/craco": "^6.1.2",
     "@emotion/css": "^11.1.3",
     "@firebase/firestore": "^2.3.4",
-    "@headlessui/react": "^1.2.0",
-    "@heroicons/react": "^1.0.1",
     "@material-ui/lab": "*",
     "antd": "^4.16.6",
     "bootstrap": "^5.0.2",
@@ -12,8 +10,6 @@
     "firebase": "^8.6.5",
     "formik": "^2.2.9",
     "framer-motion": "^4.1.17",
-    "headlessui": "*",
-    "heroicons": "^1.0.1",
     "lodash": "^4.17.21",
     "material-ui-dropzone": "^3.5.0",
     "moment": "^2.29.1",
@@ -21,15 +17,13 @@
     "react-router-dom": "^5.2.0",
     "react-schedule-selector": "^3.0.0",
     "react-select": "^4.3.1",
+    "react-table": "^7.7.0",
     "semantic-ui-css": "^2.4.1",
     "semantic-ui-react": "^2.0.3",
     "styled-components": "^5.3.0",
     "yup": "^0.32.9"
   },
   "devDependencies": {
-    "autoprefixer": "^10.2.6",
-    "postcss": "^8.3.5",
-    "postcss-cli": "^8.3.1",
-    "tailwindcss": "^2.2.2"
+    "autoprefixer": "^10.2.6"
   }
 }
