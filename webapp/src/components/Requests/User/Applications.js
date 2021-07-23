@@ -27,7 +27,7 @@ export default function Applications({ request }) {
   const [loading, setLoading] = useState(true);
   const startDate = moment(request.startDate).format("MMMM Do");
 
-  //retrieve user details from the uid of each request and add them to the request
+  //retrieve user details from the tutorId of each request and add them to the request
   async function addApplicantData(rawApplications, uids, rids) {
     const promise1 = await readIds(db.collection("users"), uids);
     const promise2 = await readIds(db.collection("requests"), rids);
@@ -50,11 +50,11 @@ export default function Applications({ request }) {
   useEffect(() => {
     const unsubscribe = db
       .collection("applications")
-      .where("rid", "==", request.rid)
+      .where("requestId", "==", request.requestId)
       .onSnapshot((snapshot) => {
         const rawApplications = snapshot.docs.map((doc) => doc.data());
-        const uids = rawApplications.map((request) => request.uid);
-        const rids = rawApplications.map((request) => request.rid);
+        const uids = rawApplications.map((request) => request.tutorId);
+        const rids = rawApplications.map((request) => request.requestId);
         addApplicantData(rawApplications, uids, rids);
       });
 
@@ -95,7 +95,10 @@ export default function Applications({ request }) {
             <h4>Applications</h4>
             {applications.map((application) => {
               return (
-                <Application key={application.aid} application={application} />
+                <Application
+                  key={application.applicationId}
+                  application={application}
+                />
               );
             })}
             {!applications.length && (

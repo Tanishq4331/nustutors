@@ -25,7 +25,7 @@ export default function useRequests({
   const { currentUser, userData } = useAuth();
   const LIMIT = limit ? limit : Infinity;
 
-  //retrieve user details from the uid of each request and add them to the request
+  //retrieve user details from the tuteeId of each request and add them to the request
   const addRequesterData = async (rawRequests, uids) => {
     const userDetails = await readIds(db.collection("users"), uids);
 
@@ -40,14 +40,16 @@ export default function useRequests({
 
   //Excluding requests in exlclusion list
   useEffect(() => {
-    var query = db.collection("requests").where("rid", "not-in", exclusions);
+    var query = db
+      .collection("requests")
+      .where("requestId", "not-in", exclusions);
 
     const unsubscribe = query.onSnapshot((snapshot) => {
       var rawRequests = snapshot.docs.map((doc) => doc.data());
 
       //exlude requests by tutor
       rawRequests = rawRequests.filter(
-        (request) => request.uid != currentUser.uid
+        (request) => request.tuteeId != currentUser.uid
       );
 
       //show requests offering more than rate
@@ -65,7 +67,7 @@ export default function useRequests({
       //limit result to LENGTH
       rawRequests.length = Math.min(rawRequests.length, LIMIT);
 
-      const uids = rawRequests.map((request) => request.uid);
+      const uids = rawRequests.map((request) => request.tuteeId);
       addRequesterData(rawRequests, uids);
     });
 

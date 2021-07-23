@@ -17,8 +17,8 @@ export function DataProvider({ children }) {
     var newDocRef = db.collection("requests").doc();
     const combinedRequest = {
       ...request,
-      uid: currentUser.uid,
-      rid: newDocRef.id,
+      tuteeId: currentUser.uid,
+      requestId: newDocRef.id,
       createdAt: await firebase.firestore.FieldValue.serverTimestamp(),
     };
     return newDocRef.set(combinedRequest);
@@ -28,13 +28,13 @@ export function DataProvider({ children }) {
     var newDocRef = db.collection("applications").doc();
     const grade = userData.grades[request.module.value] || null;
     const combinedApplication = {
-      uid: currentUser.uid,
-      rid: request.rid,
-      aid: newDocRef.id,
+      tutorId: currentUser.uid,
+      requestId: request.requestId,
+      applicationId: newDocRef.id,
       createdAt: await firebase.firestore.FieldValue.serverTimestamp(),
     };
     setUserData((prev) => {
-      const newApplications = [...prev.applications, request.rid];
+      const newApplications = [...prev.applications, request.requestId];
       return { ...prev, applications: newApplications };
     });
     return newDocRef.set(combinedApplication);

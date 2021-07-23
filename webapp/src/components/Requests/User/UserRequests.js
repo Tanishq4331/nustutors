@@ -25,7 +25,7 @@ export default function UserRequests() {
   useEffect(() => {
     const unsubscribe = db
       .collection("requests")
-      .where("uid", "==", currentUser.uid)
+      .where("tuteeId", "==", currentUser.uid)
       .limit(MAX_REQUESTS)
       .onSnapshot((snapshot) => {
         setUserRequests(snapshot.docs.map((doc) => doc.data()));
@@ -45,7 +45,7 @@ export default function UserRequests() {
           return (
             <motion.div
               layout
-              key={request.rid}
+              key={request.requestId}
               className={classes.root}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}

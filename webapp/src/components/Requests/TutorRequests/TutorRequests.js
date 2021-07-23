@@ -21,7 +21,7 @@ export default function TutorRequests() {
 
   function addToBlacklist(request) {
     setUserData((prev) => {
-      const newBlacklist = [...prev.blacklist, request.rid];
+      const newBlacklist = [...prev.blacklist, request.requestId];
       return { ...prev, blacklist: newBlacklist };
     });
   }
@@ -42,14 +42,14 @@ export default function TutorRequests() {
             {requests.map((request) => {
               //exclude any requests that have been applied to or blacklisted
               return (
-                !blacklist.includes(request.rid) &&
-                !applications.includes(request.rid) && (
+                !blacklist.includes(request.requestId) &&
+                !applications.includes(request.requestId) && (
                   <motion.div
                     layout
                     style={{
                       display: "inline-block",
                     }}
-                    key={request.rid}
+                    key={request.requestId}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
