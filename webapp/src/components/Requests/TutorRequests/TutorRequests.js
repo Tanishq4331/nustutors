@@ -14,7 +14,6 @@ export default function TutorRequests() {
 
   const { requests, loading } = useRequests({
     limit: 9,
-    exclusions: [...blacklist, ...applications],
     // rate: userData.rate,
     // moduleOptions: userData.modules.map((x) => x.value),
   });

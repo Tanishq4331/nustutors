@@ -18,32 +18,28 @@ export default function useRequests({
   // timings,
   moduleOptions,
   limit,
-  exclusions,
 }) {
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
   const { currentUser, userData } = useAuth();
+
   const LIMIT = limit ? limit : Infinity;
 
   //retrieve user details from the tuteeId of each request and add them to the request
   const addRequesterData = async (rawRequests, uids) => {
     const userDetails = await readIds(db.collection("users"), uids);
-
     //add to each request the details of its corresponding user
     const expandedRequests = rawRequests.map((rawRequest, index) => {
       return { ...rawRequest, user: userDetails[index] };
     });
-
     setRequests(expandedRequests);
     setLoading(false);
   };
 
+  var query = db.collection("requests");
+
   //Excluding requests in exlclusion list
   useEffect(() => {
-    var query = db
-      .collection("requests")
-      .where("requestId", "not-in", exclusions);
-
     const unsubscribe = query.onSnapshot((snapshot) => {
       var rawRequests = snapshot.docs.map((doc) => doc.data());
 
