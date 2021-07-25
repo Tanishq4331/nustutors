@@ -6,21 +6,18 @@
 - Tutee signups with fields for modules/skills to learn, available timings, price quote
 - For You page for relevant requests
 - Mailing List/ Notification system for tutors to find relevant requests
-- Reputation system for tutors - quantitative reviews which contribute to the tutor rating (this is visible to learners)
 
 **Optional:**
 
 - Automatically determine tags/details based on descriptions
+- Reputation system for tutors - quantitative reviews which contribute to the tutor rating (this is visible to learners)
 - An app
 
 **List of Technologies:**
 
-- MERN stack
-  - Node(.js) - the premier JavaScript web server
-  - Express(.js) - Node.js web framework
-  - MongoDB - document database
-  - React(.js) - a client-side JavaScript framework
-- HTML/CSS/Javascript
+- Node(.js)
+- React(.js)
+- Firestore, Firebase Auth, Firebase Storage
 - Git
 - Hosted on Heroku
 
@@ -42,10 +39,7 @@
 
 **TODO**
 
-- Sidebar instead of dropdown for narrow viewports
-- MUI theme provider
-- https://freefrontend.com/
 - limit on document uploads, enforced from storage
 - manage previous uploads
 - Consider variations of modules
-- Custom firestore rule -> public, protected fields
+- Custom firestore rule -> public, protected fields on profile
