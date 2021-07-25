@@ -21,6 +21,10 @@ export function DataProvider({ children }) {
       requestId: newDocRef.id,
       createdAt: await firebase.firestore.FieldValue.serverTimestamp(),
     };
+    setUserData((prev) => {
+      const newRequests = [...prev.requests, request.module.label];
+      return { ...prev, requests: newRequests };
+    });
     return newDocRef.set(combinedRequest);
   }
 

@@ -3,6 +3,7 @@ import Rates from "../RegistrationForm/TutoringPreferences/Rates";
 import { Form, Button } from "react-bootstrap";
 import Loading from "../Loading/Loading";
 import { useFormikContext } from "formik";
+import { useEffect } from "react";
 
 export default function RequestTutorForm() {
   const {
@@ -30,10 +31,9 @@ export default function RequestTutorForm() {
       <div className="mb-3">Please select the module you need help in.</div>
       <ModuleSelect
         formState={values}
-        onBlur={handleBlur}
-        touched={Boolean(touched.modules)}
+        touched={Boolean(touched.module)}
         setModule={setModule}
-        errors={errors.modules ? { modules: "Please select a module" } : {}}
+        errors={errors.module ? { modules: errors.module } : {}}
         isSingle
       />
       <Form.Group className="mt-3">

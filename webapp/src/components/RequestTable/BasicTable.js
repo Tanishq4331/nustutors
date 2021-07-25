@@ -31,12 +31,13 @@ const StyledTableSortLabel = withStyles((theme: Theme) =>
 )(TableSortLabel);
 
 const generateSortingIndicator = (column) => {
-  console.log(column)
   return (
-    column.canSort && <StyledTableSortLabel
-      active={column.isSorted}
-      direction={column.isSortedDesc ? "asc" : "desc"}
-    />
+    column.canSort && (
+      <StyledTableSortLabel
+        active={column.isSorted}
+        direction={column.isSortedDesc ? "asc" : "desc"}
+      />
+    )
   );
 };
 

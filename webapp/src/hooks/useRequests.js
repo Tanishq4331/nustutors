@@ -8,21 +8,10 @@ export async function readIds(collection, ids) {
   return result.map((v) => v.data());
 }
 
-export default function useRequests({
-  // startDate,
-  // modules,
-  rate,
-  // duration,
-  // locations,
-  // availableForOnline,
-  // timings,
-  moduleOptions,
-  limit,
-}) {
+export default function useRequests({ onlyShowRelevant, limit }) {
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
   const { currentUser, userData } = useAuth();
-
   const LIMIT = limit ? limit : Infinity;
 
   //retrieve user details from the tuteeId of each request and add them to the request
@@ -38,6 +27,8 @@ export default function useRequests({
 
   var query = db.collection("requests");
 
+  const userMods = userData.modules.map((mod) => mod.label);
+
   //Excluding requests in exlclusion list
   useEffect(() => {
     const unsubscribe = query.onSnapshot((snapshot) => {
@@ -48,20 +39,21 @@ export default function useRequests({
         (request) => request.tuteeId != currentUser.uid
       );
 
-      //show requests offering more than rate
-      if (rate) {
-        rawRequests = rawRequests.filter((request) => request.rate >= rate);
-      }
-
-      //only show requests for moduleOptions
-      if (moduleOptions) {
-        rawRequests = rawRequests.filter((request) =>
-          moduleOptions.includes(request.module)
+      if (onlyShowRelevant) {
+        // console.log(rawRequests);
+        //show requests offering more than rate
+        rawRequests = rawRequests.filter(
+          (request) => request.rate >= userData.rate
         );
-      }
 
-      //limit result to LENGTH
-      rawRequests.length = Math.min(rawRequests.length, LIMIT);
+        //only show requests for moduleOptions
+        rawRequests = rawRequests.filter((request) =>
+          userMods.includes(request.module.label)
+        );
+
+        //limit result to LENGTH
+        rawRequests.length = Math.min(rawRequests.length, LIMIT);
+      }
 
       const uids = rawRequests.map((request) => request.tuteeId);
       addRequesterData(rawRequests, uids);

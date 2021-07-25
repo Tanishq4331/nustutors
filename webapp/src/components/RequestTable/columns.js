@@ -3,7 +3,7 @@ import AvatarIcon from "../AvatarIcon/AvatarIcon";
 export const COLUMNS = [
   {
     Header: "Module",
-    accessor: "module",
+    accessor: "moduleName",
     // provide custom function to format props
     Cell: (props) => `${props.value} months`,
 

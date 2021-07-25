@@ -9,8 +9,9 @@ export default function ModuleSelect({
   formState,
   setFormState,
   errors,
+  touched,
   isSingle, //requestTutor
-  setModule,   //requestTutor
+  setModule, //requestTutor
 }) {
   const [allModules, setAllModules] = useState([]);
   const [inputValue, setInputValue] = useState("");
@@ -25,6 +26,9 @@ export default function ModuleSelect({
       ? setModule(selectedMods)
       : setFormState({ ...formState, modules: selectedMods });
   }, [selectedMods]);
+
+  const showErrors =
+    touched === undefined ? errors.modules : touched && errors.modules;
 
   //load modules from NUSMods API
   const loadModules = async () => {
@@ -89,7 +93,7 @@ export default function ModuleSelect({
         styles={{
           //red border around field when error detected
           control: (provided, state) =>
-            errors.modules
+            showErrors
               ? {
                   ...provided,
                   borderColor: "red",
@@ -103,7 +107,7 @@ export default function ModuleSelect({
       />
       {/* error message */}
       <div>
-        {errors.modules && (
+        {showErrors && (
           <div
             style={{
               marginTop: "3px",
@@ -111,7 +115,7 @@ export default function ModuleSelect({
               color: "rgb(244, 67, 54)",
             }}
           >
-            {errors.modules}
+            {showErrors}
           </div>
         )}
       </div>

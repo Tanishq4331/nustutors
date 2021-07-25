@@ -12,6 +12,6 @@ export default function AvatarIcon({ userData }) {
   return userData.url ? (
     <StyledAvatar alt={userData.name} src={userData.url} />
   ) : (
-    <AccountCircleIcon style={{ fontSize: 40 }} />
+    <AccountCircleIcon style={{ fontSize: 44 }} />
   );
 }

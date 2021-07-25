@@ -3,6 +3,7 @@ import BeenhereIcon from "@material-ui/icons/Beenhere";
 import { List, Image } from "semantic-ui-react";
 import { ApplicationModal } from "./ApplicationModal";
 import { useState } from "react";
+import AvatarIcon from "../../AvatarIcon/AvatarIcon";
 
 const renderTooltip = (props) => (
   <Tooltip id="button-tooltip" {...props}>
@@ -21,21 +22,26 @@ export default function Application({ application }) {
         application={application}
         open={open}
         setOpen={setOpen}
-      />{" "}
+      />
       <List.Item onClick={() => setOpen(true)}>
-        {application.user.url && <Image avatar src={application.user.url} />}
         <List.Content>
-          <List.Header>{application.user.name}</List.Header>
-        </List.Content>
-        <List.Content floated="right">
-          <OverlayTrigger
-            placement="left"
-            delay={{ show: 250, hide: 400 }}
-            overlay={renderTooltip}
-          >
-            <BeenhereIcon color="inherit" />
-          </OverlayTrigger>
-          {application.user.grades[modName]}
+          <div className="d-flex justify-content-between">
+            <div>
+              <AvatarIcon userData={application.user} />
+              &nbsp;&nbsp;
+              {application.user.name}
+            </div>
+            <div className="d-flex align-items-center">
+              <OverlayTrigger
+                placement="left"
+                delay={{ show: 250, hide: 400 }}
+                overlay={renderTooltip}
+              >
+                <BeenhereIcon color="inherit" />
+              </OverlayTrigger>
+              {application.user.grades[modName]}
+            </div>
+          </div>
         </List.Content>
       </List.Item>
     </>

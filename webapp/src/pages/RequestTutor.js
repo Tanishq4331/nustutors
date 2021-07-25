@@ -5,22 +5,32 @@ import { useAuth } from "../contexts/AuthContext";
 import { useHistory } from "react-router-dom";
 import RequestTutorForm from "../components/RequestTutor/RequestTutorForm";
 import { useData } from "../contexts/AppContext";
-
-const validationSchema = Yup.object().shape({
-  duration: Yup.number()
-    .min(1, "Duration too short")
-    .max(12, "Duration too long")
-    .required("*Duration is required"),
-  startDate: Yup.date()
-    .min(new Date(), "Invalid date")
-    .required("Start date is required"),
-  modules: Yup.object(),
-});
+import { db } from "../config/firebase";
 
 export default function RequestTutor() {
-  const { setAlert } = useAuth();
+  const { setAlert, userData } = useAuth();
   const { makeRequest } = useData();
   const history = useHistory();
+
+  const validationSchema = Yup.object().shape({
+    duration: Yup.number()
+      .min(1, "Duration too short")
+      .max(12, "Duration too long")
+      .required("*Duration is required"),
+    startDate: Yup.date()
+      .min(new Date(), "Invalid date")
+      .required("Start date is required"),
+    module: Yup.object()
+      .required("Please select a module")
+      .nullable()
+      .test(
+        "already-exists",
+        "You have an existing request for this module.",
+        async (value, testContext) => {
+          return value && !userData.requests.includes(value.label);
+        }
+      ),
+  });
 
   const handleSubmit = (values, { setSubmitting }) => {
     makeRequest(values)

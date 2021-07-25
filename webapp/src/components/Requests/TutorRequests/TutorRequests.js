@@ -14,8 +14,7 @@ export default function TutorRequests() {
 
   const { requests, loading } = useRequests({
     limit: 9,
-    // rate: userData.rate,
-    // moduleOptions: userData.modules.map((x) => x.value),
+    onlyShowRelevant: true,
   });
 
   function addToBlacklist(request) {

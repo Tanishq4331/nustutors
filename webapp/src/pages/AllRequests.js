@@ -3,16 +3,33 @@ import Loading from "../components/Loading/Loading";
 import useRequests from "../hooks/useRequests";
 import { Header } from "semantic-ui-react";
 import { Container } from "react-bootstrap";
+import { useState, useEffect } from "react";
+import ModuleSelect from "../components/RegistrationForm/TutoringPreferences/ModuleSelect";
 
 export default function AllRequests() {
-  const { requests, loading } = useRequests({
-    // limit: 9,
-    // rate: userData.rate,
-    // moduleOptions: userData.modules.map((x) => x.value),
+  const [moduleSelectionWrapper, setModuleSelectionWrapper] = useState({
+    modules: [],
   });
+  const [displayedRequests, setDisplayedRequests] = useState([]);
 
-  const toDisplay = requests.map((request) => {
-    return { ...request, module: request.module.label };
+  const { requests, loading } = useRequests({});
+
+  const modOptions = moduleSelectionWrapper.modules.map((mod) => mod.label);
+
+  useEffect(() => {
+    //only display requests for the chosen modules
+    if (modOptions.length) {
+      const filtered = requests.filter((request) =>
+        modOptions.includes(request.module.label)
+      );
+      setDisplayedRequests(filtered);
+    } else {
+      setDisplayedRequests(requests);
+    }
+  }, [moduleSelectionWrapper]);
+
+  const toDisplay = displayedRequests.map((request) => {
+    return { ...request, moduleName: request.module.label };
   });
 
   return (
@@ -24,11 +41,27 @@ export default function AllRequests() {
       </div>
 
       <Container
-        className="d-flex mt-4 container-table100"
-        style={{ minHeight: "50vh", maxWidth: "900px" }}
+        className="d-flex mt-4 "
+        style={{ minHeight: "50vh", maxHeight: "70vh", maxWidth: "900px" }}
       >
         <div className="wrap-table100">
           {toDisplay && <BasicTable data={toDisplay} />}
+        </div>
+      </Container>
+
+      <Container
+        className="mt-4"
+        style={{ minHeight: "10vh", maxWidth: "900px" }}
+      >
+        <div>
+          <div className="mb-3">
+            You may filter the requests by choosing the modules below.
+          </div>
+          <ModuleSelect
+            formState={moduleSelectionWrapper}
+            setFormState={setModuleSelectionWrapper}
+            errors={{}}
+          />
         </div>
       </Container>
     </>
