@@ -72,20 +72,22 @@ function RenderRowSubComponent({ row }) {
   const alreadyApplied = userData.applications.includes(request.requestId);
 
   return (
-    <div className="d-flex justify-content-between">
+    <>
       <TutorRequestModal request={request} open={open} setOpen={setOpen} />
 
-      {alreadyApplied ? (
-        <Button basic color="blue" Disabled>
-          Applied
-        </Button>
-      ) : (
-        <Button basic color="green" onClick={() => setOpen(true)}>
-          Apply
-        </Button>
-      )}
-      <AvatarIcon userData={request.user} />
-    </div>
+      <div className="d-flex justify-content-between">
+        {alreadyApplied ? (
+          <Button basic color="blue" Disabled>
+            Applied
+          </Button>
+        ) : (
+          <Button basic color="green" onClick={() => setOpen(true)}>
+            Apply
+          </Button>
+        )}
+        <AvatarIcon userData={request.user} />
+      </div>
+    </>
   );
 }
 
@@ -109,7 +111,7 @@ export default function BasicTable({ data }) {
     previousPage,
     setPageSize,
     rows,
-    state: { pageIndex, pageSize, rowCount = rows.length },
+    state: { pageIndex, pageSize },
   } = useTable(
     {
       columns,
@@ -192,7 +194,7 @@ export default function BasicTable({ data }) {
       <TablePagination
         rowsPerPageOptions={rowsPerPageOptions}
         component="div"
-        count={rowCount}
+        count={rows.length}
         rowsPerPage={pageSize}
         page={pageIndex}
         SelectProps={{
