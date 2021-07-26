@@ -40,7 +40,6 @@ export default function useRequests({ onlyShowRelevant, limit }) {
       );
 
       if (onlyShowRelevant) {
-        // console.log(rawRequests);
         //show requests offering more than rate
         rawRequests = rawRequests.filter(
           (request) => request.rate >= userData.rate
@@ -50,12 +49,10 @@ export default function useRequests({ onlyShowRelevant, limit }) {
         rawRequests = rawRequests.filter((request) =>
           userMods.includes(request.module.label)
         );
-
-        //limit result to LENGTH
-        rawRequests.length = Math.min(rawRequests.length, LIMIT);
       }
 
       const uids = rawRequests.map((request) => request.tuteeId);
+
       addRequesterData(rawRequests, uids);
     });
 

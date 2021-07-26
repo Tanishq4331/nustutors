@@ -17,6 +17,7 @@ import Registration from "./pages/Registration";
 import RequestTutor from "./pages/RequestTutor";
 import { DataProvider } from "./contexts/AppContext";
 import AllRequests from "./pages/AllRequests";
+import RelevantRequests from "./pages/RelevantRequests";
 
 export default function App() {
   return (
@@ -38,6 +39,11 @@ export default function App() {
                 exact
                 path="/all-requests"
                 component={AllRequests}
+              />
+              <PrivateRoute
+                exact
+                path="/relevant-requests"
+                component={RelevantRequests}
               />
               <PublicRoute
                 restricted={false}

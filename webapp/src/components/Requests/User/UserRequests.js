@@ -6,6 +6,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import Applications from "./Applications";
 import { Container } from "react-bootstrap";
 import { Paper } from "@material-ui/core";
+import { Segment, Header, Icon, Button } from "semantic-ui-react";
+import { Link } from "react-router-dom";
 
 const MAX_REQUESTS = 12;
 
@@ -14,6 +16,21 @@ const useStyles = makeStyles((theme) => ({
     width: "100%",
   },
 }));
+
+function MyPlaceholder() {
+  return (
+    <Segment color="blue" placeholder>
+      <Header icon>
+        <Icon name="book" />
+        You have not made a request yet.
+      </Header>
+      <Link to="/request-tutor">
+        {" "}
+        <Button primary>Make a Request</Button>
+      </Link>
+    </Segment>
+  );
+}
 
 export default function UserRequests() {
   const { currentUser } = useAuth();
@@ -35,7 +52,7 @@ export default function UserRequests() {
     return unsubscribe;
   }, []);
 
-  return (
+  return userRequests.length !== 0 ? (
     <Paper elevation={2}>
       <Container className={"p-3"}>
         <h2>Your requests</h2>
@@ -57,5 +74,7 @@ export default function UserRequests() {
         })}
       </AnimatePresence>
     </Paper>
+  ) : (
+    <MyPlaceholder />
   );
 }

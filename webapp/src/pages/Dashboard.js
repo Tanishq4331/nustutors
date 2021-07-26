@@ -10,12 +10,12 @@ export default function Dashboard() {
         <Header as="h1">Dashboard</Header>
       </div>
 
-      <Container fluid>
-        <Row className="d-flex justify-content-center">
+      <Container fluid className="d-flex justify-content-center">
+        <Row>
           <Col style={{ maxWidth: "1000px" }}>
             <TutorRequests />
           </Col>
-          <Col style={{ maxWidth: "500px" }}>
+          <Col md="auto" style={{ maxWidth: "500px" }}>
             <UserRequests />
           </Col>
         </Row>

@@ -1,19 +1,44 @@
-import { Header, Segment } from "semantic-ui-react";
-import { useState, useEffect } from "react";
-import { db } from "../../../config/firebase";
+import { Header, Segment, Placeholder, Icon, Button } from "semantic-ui-react";
 import { useAuth } from "../../../contexts/AuthContext";
 import { motion, AnimatePresence } from "framer-motion";
 import TutorRequestCard from "./TutorRequestCard";
 import useRequests from "../../../hooks/useRequests";
+import { Link } from "react-router-dom";
+import { Container } from "react-bootstrap";
 
-const MAX_REQUESTS = 12;
+const MAX_REQUESTS = 9;
+
+function MyPlaceholder() {
+  return (
+    <>
+      <Header icon>
+        <Icon name="search" />
+        No relevant requests found.
+      </Header>
+      <Link to="/all-requests">
+        {" "}
+        <Button primary>View All Requests</Button>
+      </Link>
+    </>
+  );
+}
+
+function ViewAllFooter() {
+  return (
+    <div className="ui vertical footer segment form-page mb-3 mr-3">
+      <span style={{ float: "right" }}>
+        {" "}
+        <Link to="/relevant-requests">View More...</Link>
+      </span>
+    </div>
+  );
+}
 
 export default function TutorRequests() {
   const { currentUser, userData, setUserData, setAlert } = useAuth();
   const { blacklist, applications } = userData;
 
   const { requests, loading } = useRequests({
-    limit: 9,
     onlyShowRelevant: true,
   });
 
@@ -24,45 +49,64 @@ export default function TutorRequests() {
     });
   }
 
-  return (
-    <>
-      <Segment color="blue" loading={loading} secondary padded>
-        <Header as="h2">Relevant requests</Header>
-        <hr className="mb-4"></hr>
+  //exclude any requests that have been applied to or blacklisted
+  const filteredList = requests.filter(
+    (request) =>
+      !blacklist.includes(request.requestId) &&
+      !applications.includes(request.requestId)
+  );
 
-        <div
-          style={{
-            display: "inline-block",
-            marginLeft: "5px",
-          }}
-        >
-          <AnimatePresence>
-            {requests.map((request) => {
-              //exclude any requests that have been applied to or blacklisted
-              return (
-                !blacklist.includes(request.requestId) &&
-                !applications.includes(request.requestId) && (
-                  <motion.div
-                    layout
-                    style={{
-                      display: "inline-block",
-                    }}
-                    key={request.requestId}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                  >
-                    <TutorRequestCard
-                      request={request}
-                      addToBlacklist={addToBlacklist}
-                    />
-                  </motion.div>
-                )
-              );
-            })}
-          </AnimatePresence>
+  return (
+    <Segment color="blue" placeholder={!filteredList.length}>
+      {filteredList.length !== 0 ? (
+        <div>
+          <div className="ml-2 mt-2">
+            <Header as="h2">Relevant requests</Header>
+          </div>
+          <hr className="mb-4"></hr>
+
+          {loading ? (
+            <Placeholder>
+              <Placeholder.Image rectangular />
+            </Placeholder>
+          ) : (
+            <div
+              style={{
+                display: "inline-block",
+                marginLeft: "5px",
+              }}
+            >
+              <AnimatePresence>
+                {/* limit items to MAX_REQUESTS */}
+                {filteredList.slice(0, MAX_REQUESTS).map((request) => {
+                  return (
+                    <motion.div
+                      layout
+                      style={{
+                        display: "inline-block",
+                      }}
+                      key={request.requestId}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                    >
+                      <TutorRequestCard
+                        request={request}
+                        addToBlacklist={addToBlacklist}
+                      />
+                    </motion.div>
+                  );
+                })}
+              </AnimatePresence>
+            </div>
+          )}
+
+          {/* if there are more than MAX_REQUESTS show link to relevant-requests route */}
+          {filteredList.length >= MAX_REQUESTS && <ViewAllFooter />}
         </div>
-      </Segment>
-    </>
+      ) : (
+        <MyPlaceholder />
+      )}
+    </Segment>
   );
 }
