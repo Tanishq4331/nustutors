@@ -27,7 +27,6 @@ export default function NavBar() {
               {userData.registeredTutor && (
                 <Nav.Link href="/all-requests">View All Requests</Nav.Link>
               )}
-              <Nav.Link href="/request-tutor">Request a Tutor</Nav.Link>
             </>
           )}
         </Nav>

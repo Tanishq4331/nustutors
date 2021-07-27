@@ -12,7 +12,11 @@ export default function Dashboard() {
 
       <Container fluid className="d-flex justify-content-center">
         <Row>
-          <Col style={{ maxWidth: "1000px" }}>
+          {/* bottom margin provides a gutter when columns are stacked */}
+          <Col
+            className="md-4"
+            style={{ maxWidth: "1000px", marginBottom: "20px" }}
+          >
             <TutorRequests />
           </Col>
           <Col md="auto" style={{ maxWidth: "500px" }}>

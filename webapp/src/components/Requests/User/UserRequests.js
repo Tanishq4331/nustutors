@@ -8,6 +8,9 @@ import { Container } from "react-bootstrap";
 import { Paper } from "@material-ui/core";
 import { Segment, Header, Icon, Button } from "semantic-ui-react";
 import { Link } from "react-router-dom";
+import { RequestTutorModal } from "../../RequestTutor/RequestTutorModal";
+import AddIcon from "@material-ui/icons/Add";
+import { IconButton } from "@material-ui/core";
 
 const MAX_REQUESTS = 12;
 
@@ -17,17 +20,16 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function MyPlaceholder() {
+function MyPlaceholder({ setOpen }) {
   return (
     <Segment color="blue" placeholder>
       <Header icon>
         <Icon name="book" />
         You have not made a request yet.
       </Header>
-      <Link to="/request-tutor">
-        {" "}
-        <Button primary>Make a Request</Button>
-      </Link>
+      <Button color="green" onClick={() => setOpen(true)}>
+        Request a Tutor
+      </Button>
     </Segment>
   );
 }
@@ -35,6 +37,8 @@ function MyPlaceholder() {
 export default function UserRequests() {
   const { currentUser } = useAuth();
   const [loading, setLoading] = useState(true);
+  const [open, setOpen] = useState(false);
+
   const [userRequests, setUserRequests] = useState([]);
   const classes = useStyles();
 
@@ -52,29 +56,41 @@ export default function UserRequests() {
     return unsubscribe;
   }, []);
 
-  return userRequests.length !== 0 ? (
-    <Paper elevation={2}>
-      <Container className={"p-3"}>
-        <h2>Your requests</h2>
-      </Container>
-      <AnimatePresence>
-        {userRequests.map((request) => {
-          return (
-            <motion.div
-              layout
-              key={request.requestId}
-              className={classes.root}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-            >
-              <Applications request={request} />
-            </motion.div>
-          );
-        })}
-      </AnimatePresence>
-    </Paper>
-  ) : (
-    <MyPlaceholder />
+  return (
+    <>
+      <RequestTutorModal open={open} setOpen={setOpen} />{" "}
+      {userRequests.length !== 0 ? (
+        <Paper elevation={2}>
+          <Container
+            className={"d-flex p-3 justify-content-between align-items-center"}
+          >
+            <div>
+              <h2>Your requests</h2>
+            </div>
+            <IconButton onClick={() => setOpen(true)}>
+              <AddIcon />
+            </IconButton>
+          </Container>
+          <AnimatePresence>
+            {userRequests.map((request) => {
+              return (
+                <motion.div
+                  layout
+                  key={request.requestId}
+                  className={classes.root}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                >
+                  <Applications request={request} />
+                </motion.div>
+              );
+            })}
+          </AnimatePresence>
+        </Paper>
+      ) : (
+        <MyPlaceholder setOpen={setOpen} />
+      )}
+    </>
   );
 }
