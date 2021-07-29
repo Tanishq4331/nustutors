@@ -37,7 +37,7 @@ export default function Application({ application }) {
                 delay={{ show: 250, hide: 400 }}
                 overlay={renderTooltip}
               >
-                <BeenhereIcon color="inherit" />
+                <BeenhereIcon />
               </OverlayTrigger>
               {application.user.grades[modName]}
             </div>

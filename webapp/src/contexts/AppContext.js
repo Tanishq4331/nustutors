@@ -10,6 +10,30 @@ export function useData() {
   return useContext(AppContext);
 }
 
+export function alreadyAppliedTo(request) {
+  return useContext(AppContext);
+}
+
+export function deleteRequest(request) {
+  return db
+    .collection("requests")
+    .doc(request.requestId)
+    .delete()
+    .catch((error) => {
+      console.log("Error removing document: ", error);
+    });
+}
+
+export function deleteApplication(application) {
+  return db
+    .collection("applications")
+    .doc(application.applicationId)
+    .delete()
+    .catch((error) => {
+      console.log("Error removing document: ", error);
+    });
+}
+
 export function DataProvider({ children }) {
   const { currentUser, setAlert, userData, setUserData } = useAuth();
 

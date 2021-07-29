@@ -1,4 +1,5 @@
-import AccountCircleIcon from "@material-ui/icons/AccountCircle";
+import InitialsAvatar from "react-initials-avatar";
+import "react-initials-avatar/lib/ReactInitialsAvatar.css";
 import styled from "styled-components";
 
 const StyledAvatar = styled.img`
@@ -12,6 +13,8 @@ export default function AvatarIcon({ userData }) {
   return userData.url ? (
     <StyledAvatar alt={userData.name} src={userData.url} />
   ) : (
-    <AccountCircleIcon style={{ fontSize: 44 }} />
+    <div style={{ display: "inline-block", transform: "scale(0.85)" }}>
+      <InitialsAvatar name={userData.name} />
+    </div>
   );
 }

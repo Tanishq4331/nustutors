@@ -3,7 +3,6 @@ import { makeStyles } from "@material-ui/core";
 import { db } from "../../../config/firebase";
 import { useAuth } from "../../../contexts/AuthContext";
 import { motion, AnimatePresence } from "framer-motion";
-import Applications from "./Applications";
 import { Container } from "react-bootstrap";
 import { Paper } from "@material-ui/core";
 import { Segment, Header, Icon, Button } from "semantic-ui-react";
@@ -11,7 +10,10 @@ import { Link } from "react-router-dom";
 import { RequestTutorModal } from "../../RequestTutor/RequestTutorModal";
 import AddIcon from "@material-ui/icons/Add";
 import { IconButton } from "@material-ui/core";
+import RequestAccordion from "./RequestAccordion";
+import Loading from "../../Loading/Loading";
 
+//consider limiting a user's concurrent requests
 const MAX_REQUESTS = 12;
 
 const useStyles = makeStyles((theme) => ({
@@ -59,8 +61,9 @@ export default function UserRequests() {
   return (
     <>
       <RequestTutorModal open={open} setOpen={setOpen} />{" "}
+      {/* <Loading loading={loading} /> */}
       {userRequests.length !== 0 ? (
-        <Paper elevation={2}>
+        <Paper>
           <Container
             className={"d-flex p-3 justify-content-between align-items-center"}
           >
@@ -82,7 +85,7 @@ export default function UserRequests() {
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                 >
-                  <Applications request={request} />
+                  <RequestAccordion request={request} />
                 </motion.div>
               );
             })}

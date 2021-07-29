@@ -1,13 +1,29 @@
 import BasicTable from "../components/RequestTable/BasicTable";
 import Loading from "../components/Loading/Loading";
 import useRequests from "../hooks/useRequests";
-import { Header } from "semantic-ui-react";
 import { Container } from "react-bootstrap";
-import { useState, useEffect } from "react";
-import ModuleSelect from "../components/RegistrationForm/TutoringPreferences/ModuleSelect";
+import { useAuth } from "../contexts/AuthContext";
 import { Link } from "react-router-dom";
+import { Header, Segment, Icon, Button } from "semantic-ui-react";
+
+function NotTutorPlaceholder() {
+  return (
+    <Segment color="blue" placeholder>
+      <Header icon>
+        <Icon name="address book outline" />
+        You need to register as a tutor to view requests.
+      </Header>
+      <Link to="/register">
+        {" "}
+        <Button primary>Register as Tutor</Button>
+      </Link>
+    </Segment>
+  );
+}
 
 export default function RelevantRequests() {
+  const { userData } = useAuth();
+
   const { requests, loading } = useRequests({
     onlyShowRelevant: true,
   });
@@ -20,23 +36,29 @@ export default function RelevantRequests() {
     <>
       <Loading loading={loading} />
 
-      <div className="text-center mb-5">
-        <Header as="h1">Relevant Requests</Header>
-      </div>
+      {userData.registeredTutor ? (
+        <>
+          <div className="text-center mb-5">
+            <Header as="h1">Relevant Requests</Header>
+          </div>
 
-      <Container
-        className="d-flex mt-4"
-        style={{ minHeight: "50vh", maxHeight: "70vh", maxWidth: "900px" }}
-      >
-        <div className="wrap-table100">
-          {toDisplay && <BasicTable data={toDisplay} />}
-        </div>
-      </Container>
+          <Container
+            className="d-flex mt-4"
+            style={{ minHeight: "50vh", maxHeight: "70vh", maxWidth: "900px" }}
+          >
+            <div className="wrap-table100">
+              {toDisplay && <BasicTable data={toDisplay} />}
+            </div>
+          </Container>
 
-      <Container
-        className="mt-4"
-        style={{ minHeight: "10vh", maxWidth: "900px" }}
-      ></Container>
+          <Container
+            className="mt-4"
+            style={{ minHeight: "10vh", maxWidth: "900px" }}
+          ></Container>
+        </>
+      ) : (
+        <NotTutorPlaceholder />
+      )}
     </>
   );
 }

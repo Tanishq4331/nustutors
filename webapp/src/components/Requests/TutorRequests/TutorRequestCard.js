@@ -2,6 +2,7 @@ import { Button, Card, Image, Statistic } from "semantic-ui-react";
 import { useState } from "react";
 import moment from "moment";
 import { TutorRequestModal } from "./TutorRequestModal";
+import AvatarIcon from "../../AvatarIcon/AvatarIcon";
 
 export default function TutorRequestCard({ request, addToBlacklist }) {
   const startDate = moment(request.startDate).format("D MMM");
@@ -25,9 +26,10 @@ export default function TutorRequestCard({ request, addToBlacklist }) {
       >
         <Card link={pop}>
           <Card.Content>
-            {request.user.url && (
-              <Image floated="right" size="big" src={request.user.url} avatar />
-            )}
+            <div className="float-right">
+              <AvatarIcon userData={request.user} />
+            </div>
+
             <Card.Header>{request.user.name}</Card.Header>
             {request.module.value}
             <Card.Description>
