@@ -89,7 +89,7 @@ export default function ModuleSelect({
         onInputChange={(value) => setInputValue(value)}
         options={slicedOptions}
         defaultValue={selectedMods}
-        placeholder={"Select your preferred modules"}
+        placeholder={!isSingle && "Select your preferred modules"}
         styles={{
           //red border around field when error detected
           control: (provided, state) =>

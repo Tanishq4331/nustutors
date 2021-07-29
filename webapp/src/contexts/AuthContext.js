@@ -86,6 +86,37 @@ export function AuthProvider({ children }) {
     return loggedIn;
   }
 
+  //if there is a change in database update userData
+  useEffect(() => {
+    if (currentUser) {
+      //return to unsubscribe from your realtime listener on unmount or you will create a memory leak
+      return db
+        .collection("users")
+        .doc(currentUser.uid)
+        .onSnapshot((snapshot) => {
+          console.log("updating");
+          if (!snapshot.empty) {
+            const data = snapshot.data();
+            try {
+              console.log(data, 1);
+              setUserData({
+                ...data,
+                timings: data.timings.map((x) => x.toDate()), //convert firebase date to js date object
+              });
+            } catch (error) {
+              setAlert({
+                message: "Unable to fetch user details",
+                successs: false,
+              });
+              console.log(`${error.code}: ${error.message}`);
+            }
+          } else {
+            setUserData(null);
+          }
+        });
+    }
+  }, []);
+
   //if there is a change in user data update the database
   useEffect(() => {
     if (currentUser && userData) {
@@ -165,7 +196,7 @@ export function AuthProvider({ children }) {
   function uploadDocuments(documents, uid) {
     // Create a storage reference from our storage service
     const userRef = storage.ref().child(`${uid}`);
-  
+
     try {
       documents.forEach((doc) => {
         const docRef = userRef.child(doc.name);
@@ -176,7 +207,6 @@ export function AuthProvider({ children }) {
       console.log(`${error.code}: ${error.message}`);
     }
   }
-  
 
   const value = {
     currentUser,

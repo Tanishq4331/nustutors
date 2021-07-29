@@ -75,19 +75,22 @@ export default function Applications({ request }) {
       </AccordionSummary>
       <AccordionDetails>
         <div className="w-100">
-          <Container className="mb-5">
+          <Container className="mb-5" fluid>
             <Row>
-              <Col>
+              <Col md="auto">
                 <strong> Start Date </strong>
-                <div>{startDate}</div>
+                <br />
+                <span>{startDate}</span>
               </Col>
-              <Col>
+              <Col md="auto">
                 <strong> Rate </strong>
-                <div>${request.rate} / hour</div>
+                <br />
+                <span>${request.rate} / hour</span>
               </Col>
-              <Col>
+              <Col md="auto">
                 <strong> Duration </strong>
-                <div>{request.duration} months</div>
+                <br />
+                <span>{request.duration} months</span>
               </Col>
             </Row>
           </Container>

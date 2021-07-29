@@ -7,9 +7,10 @@ import Loading from "../Loading/Loading";
 import { useState } from "react";
 import { useAuth } from "../../contexts/AuthContext";
 import RequestTutorForm from "./RequestTutorForm";
+import { db } from "../../config/firebase";
 
 export function RequestTutorModal({ setOpen, open }) {
-  const { setAlert, userData } = useAuth();
+  const { setAlert, userData, currentUser } = useAuth();
   const { makeRequest } = useData();
   const [loading, setLoading] = useState(false);
 
@@ -25,16 +26,35 @@ export function RequestTutorModal({ setOpen, open }) {
       .required("Please select a module")
       .nullable()
       .test(
+        //query user's requests to detect existing requests for the module
         "already-exists",
         "You have an existing request for this module.",
-        async (value, testContext) => {
-          return value && !userData.requests.includes(value.label);
+        async (mod, testContext) => {
+          return (
+            mod &&
+            db
+              .collection("requests")
+              .where("tuteeId", "==", currentUser.uid)
+              .get()
+              .then(
+                (querySnapshot) =>
+                  !querySnapshot.docs
+                    .map((doc) => doc.data().module.label)
+                    .includes(mod.label)
+              )
+              .catch((error) => {
+                console.log(`${error.code}: ${error.message}`);
+                setAlert({
+                  message: "Could not contact server",
+                  success: false,
+                });
+              })
+          );
         }
       ),
   });
 
   const handleSubmit = (values, { setSubmitting }) => {
-    console.log("submitting");
     setLoading(true);
     makeRequest(values)
       .then(() => {

@@ -21,10 +21,6 @@ export function DataProvider({ children }) {
       requestId: newDocRef.id,
       createdAt: await firebase.firestore.FieldValue.serverTimestamp(),
     };
-    setUserData((prev) => {
-      const newRequests = [...prev.requests, request.module.label];
-      return { ...prev, requests: newRequests };
-    });
     return newDocRef.set(combinedRequest);
   }
 
@@ -63,16 +59,6 @@ export function DataProvider({ children }) {
         setAlert({ message: "Could not contact server", success: false });
       });
   }
-
-  // async function getRequest(requestId) {
-  //   db.doc("/requests/{requestId}")
-  //     .get()
-  //     .then((doc) => {
-  //       if (!doc.exists) {
-  //         setAlert("The request does not exist");
-  //       }
-  //     });
-  // }
 
   const value = {
     makeRequest,

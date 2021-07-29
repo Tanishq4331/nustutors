@@ -47,7 +47,6 @@ export default function Registration() {
     locations: [false, false, false, false, false, false, false, false],
     yearOfStudy: "Year 1",
     timings: [],
-    requests: [],
   });
 
   const [tutorFormState, setTutorFormState] = useState({
@@ -196,7 +195,11 @@ export default function Registration() {
       <Loading loading={loading} />
       <div className="justify-content-center mb-5">
         <h2 className="text-center">
-          {currentUser && "Complete"} Registration
+          {userRegistrationComplete
+            ? "Register As Tutor"
+            : currentUser
+            ? "Complete Registration"
+            : "Registration"}
         </h2>
       </div>
 

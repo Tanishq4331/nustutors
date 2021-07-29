@@ -8,7 +8,7 @@ import { Container } from "react-bootstrap";
 
 const MAX_REQUESTS = 9;
 
-function MyPlaceholder() {
+function NoRequestsPlaceholder() {
   return (
     <>
       <Header icon>
@@ -105,7 +105,7 @@ export default function TutorRequests() {
           {filteredList.length >= MAX_REQUESTS && <ViewAllFooter />}
         </div>
       ) : (
-        <MyPlaceholder />
+        <NoRequestsPlaceholder />
       )}
     </Segment>
   );
