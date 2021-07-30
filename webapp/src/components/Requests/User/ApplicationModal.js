@@ -7,6 +7,7 @@ import { useData } from "../../../contexts/AppContext";
 import Loading from "../../Loading/Loading";
 import { useState } from "react";
 import { useAuth } from "../../../contexts/AuthContext";
+import AvatarIcon from "../../AvatarIcon/AvatarIcon";
 
 export function ApplicationModal({ application, setOpen, open }) {
   const { setAlert } = useAuth();
@@ -48,13 +49,9 @@ export function ApplicationModal({ application, setOpen, open }) {
             <Header>{user.name}</Header>
             {request.module.label}
           </div>
-          <Image
-            floated="right"
-            size="mini"
-            src={
-              "https://lh3.googleusercontent.com/a/AATXAJwmeH4S2dXjPxOAH3-s2m_YelfcieAYq4u9tZ-e=s96-c"
-            }
-          />
+          <div className="float-right">
+            <AvatarIcon userData={user} />
+          </div>
         </div>
       </Modal.Header>
       <Modal.Body>

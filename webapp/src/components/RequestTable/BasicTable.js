@@ -75,15 +75,17 @@ function RenderRowSubComponent({ row }) {
     <>
       <TutorRequestModal request={request} open={open} setOpen={setOpen} />
 
-      <div className="d-flex justify-content-between">
+      <div className="d-flex justify-content-between align-items-center">
         {alreadyApplied ? (
           <Button basic color="blue" Disabled>
             Applied
           </Button>
         ) : (
-          <Button basic color="green" onClick={() => setOpen(true)}>
-            Apply
-          </Button>
+          <div>
+            <Button basic color="green" onClick={() => setOpen(true)}>
+              Apply
+            </Button>
+          </div>
         )}
         <AvatarIcon userData={request.user} />
       </div>

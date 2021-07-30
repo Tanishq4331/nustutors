@@ -41,6 +41,9 @@ exports.onDeleteApplication = functions.firestore
       });
   });
 
-  //custom feed for each user
-  //if someone applies to their request
-  //if someone accepts their application
+//custom feed for each user
+//if someone applies to their request
+//if someone accepts their application
+
+
+//set verifiedToTrue if user uploads documents

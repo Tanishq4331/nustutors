@@ -43,7 +43,7 @@ export default function RequestAccordion({ request }) {
                 <h4> {request.module.label} </h4>
               </Typography>
             </Col>
-            <Col md="2" >
+            <Col md="2">
               <IconButton onClick={onClickDelete}>
                 <DeleteOutlineIcon />
               </IconButton>

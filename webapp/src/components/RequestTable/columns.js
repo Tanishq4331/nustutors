@@ -5,7 +5,7 @@ export const COLUMNS = [
     Header: "Module",
     accessor: "moduleName",
     // provide custom function to format props
-    Cell: (props) => `${props.value} months`,
+    Cell: (props) => `${props.value}`,
 
     disableSortBy: true,
     disableFilters: true,

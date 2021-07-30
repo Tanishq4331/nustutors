@@ -27,9 +27,8 @@ export default function useRequests({ onlyShowRelevant, limit }) {
 
   var query = db.collection("requests");
 
-  const userMods = userData.modules.map((mod) => mod.label);
+  const preferredMods = userData.modules.map((mod) => mod.label);
 
-  //Excluding requests in exlclusion list
   useEffect(() => {
     const unsubscribe = query.onSnapshot((snapshot) => {
       var rawRequests = snapshot.docs.map((doc) => doc.data());
@@ -45,9 +44,9 @@ export default function useRequests({ onlyShowRelevant, limit }) {
           (request) => request.rate >= userData.rate
         );
 
-        //only show requests for moduleOptions
+        //only show requests for tutor's preferred mods
         rawRequests = rawRequests.filter((request) =>
-          userMods.includes(request.module.label)
+          preferredMods.includes(request.module.label)
         );
       }
 
