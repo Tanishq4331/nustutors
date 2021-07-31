@@ -1,7 +1,7 @@
 import { Modal } from "react-bootstrap";
-import { Button, Image, Header, Segment } from "semantic-ui-react";
+import { Button, Icon, Header, Segment } from "semantic-ui-react";
 import { Row, Col, Container } from "react-bootstrap";
-import Schedule from "../Schedule";
+import Schedule from "../../Schedule";
 import moment from "moment";
 import { useData } from "../../../contexts/AppContext";
 import Loading from "../../Loading/Loading";
@@ -9,11 +9,11 @@ import { useState } from "react";
 import { useAuth } from "../../../contexts/AuthContext";
 import AvatarIcon from "../../AvatarIcon/AvatarIcon";
 
-export function TutorRequestModal({ request, setOpen, open }) {
+export function TutorRequestModal({ request, setOpen, open, onRemove }) {
   const { setAlert } = useAuth();
   const { apply } = useData();
   const [loading, setLoading] = useState(false);
-  
+
   const startDate = moment(request.startDate).format("MMMM Do YYYY");
   const tuteeTimes = request.user.timings.map((x) => x.toDate()); //convert firebase date to date
 
@@ -78,16 +78,20 @@ export function TutorRequestModal({ request, setOpen, open }) {
         </Container>
       </Modal.Body>
       <Modal.Footer>
-        <Button color="black" onClick={() => setOpen(false)}>
-          Nope
-        </Button>
-        <Button
-          content="Apply"
-          labelPosition="right"
-          icon="checkmark"
-          onClick={onApply}
-          positive
-        />
+        {/* onRemove passed in when viewing submitted application */}
+        {!onRemove ? (
+          <Button
+            content="Apply"
+            labelPosition="right"
+            icon="checkmark"
+            onClick={onApply}
+            positive
+          />
+        ) : (
+          <Button color="red" onClick={onRemove}>
+            <Icon name="remove" /> Remove Application
+          </Button>
+        )}
       </Modal.Footer>
     </Modal>
   );

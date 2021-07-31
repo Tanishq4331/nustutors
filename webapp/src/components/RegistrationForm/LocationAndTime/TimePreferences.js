@@ -1,6 +1,6 @@
 import ScheduleSelector from "react-schedule-selector";
 import { useState, useEffect } from "react";
-import { renderDateLabel } from "../../Requests/Schedule";
+import { renderDateLabel } from "../../Schedule";
 import { Card } from "react-bootstrap";
 
 export default function TimePreferences({ formState, setFormState, errors }) {

@@ -14,26 +14,6 @@ export function alreadyAppliedTo(request) {
   return useContext(AppContext);
 }
 
-export function deleteRequest(request) {
-  return db
-    .collection("requests")
-    .doc(request.requestId)
-    .delete()
-    .catch((error) => {
-      console.log("Error removing document: ", error);
-    });
-}
-
-export function deleteApplication(application) {
-  return db
-    .collection("applications")
-    .doc(application.applicationId)
-    .delete()
-    .catch((error) => {
-      console.log("Error removing document: ", error);
-    });
-}
-
 export function DataProvider({ children }) {
   const { currentUser, setAlert, userData, setUserData } = useAuth();
 
@@ -48,6 +28,55 @@ export function DataProvider({ children }) {
     return newDocRef.set(combinedRequest);
   }
 
+  function deleteApplication(application) {
+    return db
+      .collection("applications")
+      .doc(application.applicationId)
+      .delete()
+      .then(() => {
+        setAlert({
+          message: "Application successfully deleted.",
+          success: true,
+        });
+      })
+      .catch((error) => {
+        setAlert({ message: "Unable to delete application.", success: false });
+        console.log(`${error.code}: ${error.message}`);
+      });
+  }
+
+  function rejectAppication(request, application) {
+    return db
+      .collection("request")
+      .doc(request.requestId)
+      .update({
+        rejectedAppications: firebase.firestore.FieldValue.arrayAdd(
+          application.applicationId
+        ),
+      })
+      .catch((error) => {
+        setAlert({ message: "Unable to reject application.", success: false });
+        console.log(`${error.code}: ${error.message}`);
+      });
+  }
+
+  function deleteRequest(request) {
+    return db
+      .collection("requests")
+      .doc(request.requestId)
+      .delete()
+      .then(() => {
+        setAlert({
+          message: "Request successfully deleted.",
+          success: true,
+        });
+      })
+      .catch((error) => {
+        setAlert({ message: "Unable to delete request.", success: false });
+        console.log(`${error.code}: ${error.message}`);
+      });
+  }
+
   async function apply(request) {
     var newDocRef = db.collection("applications").doc();
     const grade = userData.grades[request.module.value] || null;
@@ -57,6 +86,7 @@ export function DataProvider({ children }) {
       applicationId: newDocRef.id,
       createdAt: await firebase.firestore.FieldValue.serverTimestamp(),
     };
+    //add requestId of application to user's applications
     setUserData((prev) => {
       const newApplications = [...prev.applications, request.requestId];
       return { ...prev, applications: newApplications };
@@ -87,6 +117,8 @@ export function DataProvider({ children }) {
   const value = {
     makeRequest,
     getAllRequests,
+    deleteApplication,
+    deleteRequest,
     apply,
   };
 

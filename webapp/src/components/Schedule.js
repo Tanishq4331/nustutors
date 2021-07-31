@@ -1,5 +1,5 @@
 import ScheduleSelector from "react-schedule-selector";
-import { useAuth } from "../../contexts/AuthContext";
+import { useAuth } from "../contexts/AuthContext";
 import { Label } from "semantic-ui-react";
 import styled from "styled-components";
 import moment from "moment";

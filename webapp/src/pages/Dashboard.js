@@ -1,9 +1,8 @@
 import { Container, Row, Col } from "react-bootstrap";
-import UserRequests from "../components/Requests/User/UserRequests";
+import UserRequests from "../components/UserDashboard/UserRequests/UserRequests";
 import { Header, Segment, Icon, Button } from "semantic-ui-react";
-import TutorRequests from "../components/Requests/TutorRequests";
-import { Link } from "react-router-dom";
-import { useAuth } from "../contexts/AuthContext";
+import TutorRequests from "../components/TutorDashboard/TutorRequests";
+import TutorApplications from "../components/TutorDashboard/TutorApplications/TutorApplications";
 
 export default function Dashboard() {
   return (
@@ -21,8 +20,15 @@ export default function Dashboard() {
           >
             <TutorRequests />
           </Col>
-          <Col md="md-4" style={{ maxWidth: "450px" }}>
+          <Col md="auto" style={{ maxWidth: "450px", marginBottom: "20px" }}>
             <UserRequests />
+          </Col>
+        </Row>
+      </Container>
+      <Container>
+        <Row>
+          <Col ml="6" style={{ marginBottom: "20px" }}>
+            <TutorApplications />
           </Col>
         </Row>
       </Container>

@@ -46,3 +46,4 @@
 - View applications
 - Ability to delete requests and applications
 - Show locations on tutor and tutee modals
+- Wrap accordion in a fixed scrollable div

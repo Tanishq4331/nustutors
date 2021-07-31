@@ -1,7 +1,7 @@
 import { Modal } from "react-bootstrap";
 import { Button, Image, Header, Segment } from "semantic-ui-react";
 import { Row, Col, Container } from "react-bootstrap";
-import Schedule from "../Schedule";
+import Schedule from "../../Schedule";
 import moment from "moment";
 import { useData } from "../../../contexts/AppContext";
 import Loading from "../../Loading/Loading";

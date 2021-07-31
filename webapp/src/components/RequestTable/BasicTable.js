@@ -2,7 +2,7 @@ import React, { useMemo } from "react";
 import { useTable, useSortBy, useFilters } from "react-table";
 import { COLUMNS } from "./columns";
 import { useAuth } from "../../contexts/AuthContext";
-import { TutorRequestModal } from "../Requests/TutorRequests/TutorRequestModal";
+import { TutorRequestModal } from "../TutorDashboard/TutorRequests/TutorRequestModal";
 import { useState } from "react";
 import { Button } from "semantic-ui-react";
 import { DefaultColumnFilter, Filter } from "./filters";

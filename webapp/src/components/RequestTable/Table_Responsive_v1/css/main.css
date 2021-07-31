@@ -43,12 +43,14 @@ table th {
 table tr {
   text-align: left;
 }
+
 table thead tr {
   height: 60px;
   background: #007bff;
 }
 table tbody tr {
-  height: 70px;
+  height: 64px;
+  border-bottom: 1px solid #f1eeee;
 }
 table tbody tr:last-child {
   border: 0;
@@ -87,6 +89,7 @@ tbody tr {
   font-family: OpenSans-Regular;
   font-size: 15px;
   color: #808080;
+  transition: 0.3s;
   line-height: 1.2;
   font-weight: unset;
 }

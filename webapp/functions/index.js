@@ -21,21 +21,13 @@ exports.onDeleteRequest = functions.firestore
 exports.onDeleteApplication = functions.firestore
   .document("/applications/{id}")
   .onDelete((snap, context) => {
-    const applicationId = context.params.id;
     const requestId = snap.data().requestId;
-
-    //tutor whose appllication was deleted
-    const relevantUserId = admin
-      .firestore()
-      .collection("applications")
-      .doc(applicationId)
-      .get()
-      .then((doc) => doc.data().tutorId);
+    const tutorId = snap.data().tutorId;
 
     return admin
       .firestore()
-      .collection("applications")
-      .doc(relevantUserId)
+      .collection("users")
+      .doc(tutorId)
       .update({
         applications: admin.firestore.FieldValue.arrayRemove(requestId),
       });
@@ -44,6 +36,5 @@ exports.onDeleteApplication = functions.firestore
 //custom feed for each user
 //if someone applies to their request
 //if someone accepts their application
-
 
 //set verifiedToTrue if user uploads documents

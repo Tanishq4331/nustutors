@@ -94,11 +94,9 @@ export function AuthProvider({ children }) {
         .collection("users")
         .doc(currentUser.uid)
         .onSnapshot((snapshot) => {
-          console.log("updating");
           if (!snapshot.empty) {
             const data = snapshot.data();
             try {
-              console.log(data, 1);
               setUserData({
                 ...data,
                 timings: data.timings.map((x) => x.toDate()), //convert firebase date to js date object
@@ -115,7 +113,7 @@ export function AuthProvider({ children }) {
           }
         });
     }
-  }, []);
+  }, [currentUser]);
 
   //if there is a change in user data update the database
   useEffect(() => {

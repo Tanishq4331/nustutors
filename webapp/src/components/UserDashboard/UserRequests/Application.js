@@ -22,11 +22,12 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   custom: (props) => ({
-    width: theme.spacing(4),
-    fontSize: "13px",    
-    height: theme.spacing(4),
-    color: theme.palette.getContrastText(gradeToColor[props.grade][500]),
-    backgroundColor: gradeToColor[props.grade][500],
+    width: theme.spacing(3.5),
+    fontSize: "13px",
+    height: theme.spacing(3.5),
+    color: theme.palette.getContrastText(gradeToColor[props.grade][700]),
+    border: `2px solid white`,
+    backgroundColor: gradeToColor[props.grade][700],
   }),
 }));
 
@@ -49,11 +50,15 @@ export default function Application({ application }) {
           <Container>
             <Row className="align-items-center">
               <Col md="2">
-                <AvatarIcon userData={application.user} />
+                <AvatarIcon userData={application.user} small />
               </Col>
               <Col md="auto">{application.user.name}</Col>
               <Col className="d-flex justify-content-end">
-                {classes && <Avatar variant="rounded" className={classes.custom}>{grade}</Avatar>}
+                {classes && (
+                  <Avatar variant="rounded" className={classes.custom}>
+                    {grade}
+                  </Avatar>
+                )}
               </Col>
             </Row>
           </Container>

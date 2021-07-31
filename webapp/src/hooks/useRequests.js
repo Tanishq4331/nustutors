@@ -25,12 +25,10 @@ export default function useRequests({ onlyShowRelevant, limit }) {
     setLoading(false);
   };
 
-  var query = db.collection("requests");
-
   const preferredMods = userData.modules.map((mod) => mod.label);
 
   useEffect(() => {
-    const unsubscribe = query.onSnapshot((snapshot) => {
+    const unsubscribe = db.collection("requests").onSnapshot((snapshot) => {
       var rawRequests = snapshot.docs.map((doc) => doc.data());
 
       //exlude requests by tutor

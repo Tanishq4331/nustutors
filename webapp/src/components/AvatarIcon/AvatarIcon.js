@@ -17,6 +17,15 @@ const CustomCheckCircleIcon = withStyles((theme) => ({
   },
 }))(CheckCircleIcon);
 
+const StyledAvatar = withStyles((theme) => ({
+  root: {
+    width: 35,
+    height: 35,
+    padding: 0,
+    margin: 0,
+  },
+}))(Avatar);
+
 const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
@@ -48,7 +57,7 @@ const VerifiedBadge = () => {
   );
 };
 
-export default function AvatarIcon({ userData }) {
+export default function AvatarIcon({ userData, small }) {
   const classes = useStyles();
   return (
     <div className={classes.root}>
@@ -61,11 +70,19 @@ export default function AvatarIcon({ userData }) {
         invisible={!userData.verifiedTutor}
         badgeContent={<VerifiedBadge />}
       >
-        <Avatar
-          alt={userData.name}
-          src={userData.url || "broken"}
-          className={classes.orange}
-        />
+        {small ? (
+          <StyledAvatar
+            alt={userData.name}
+            src={userData.url || "broken"}
+            className={classes.orange}
+          />
+        ) : (
+          <Avatar
+            alt={userData.name}
+            src={userData.url || "broken"}
+            className={classes.orange}
+          />
+        )}
       </Badge>
     </div>
   );

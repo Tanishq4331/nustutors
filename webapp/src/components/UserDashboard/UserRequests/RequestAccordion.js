@@ -11,7 +11,7 @@ import { makeStyles } from "@material-ui/core";
 import moment from "moment";
 import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 import { IconButton } from "@material-ui/core";
-import { deleteRequest } from "../../../contexts/AppContext";
+import { useData } from "../../../contexts/AppContext";
 
 const useStyles = makeStyles((theme) => ({
   heading: {
@@ -23,6 +23,7 @@ const useStyles = makeStyles((theme) => ({
 export default function RequestAccordion({ request }) {
   const startDate = moment(request.startDate).format("MMMM Do");
   const classes = useStyles();
+  const { deleteRequest } = useData();
 
   const onClickDelete = (event) => {
     event.stopPropagation();
