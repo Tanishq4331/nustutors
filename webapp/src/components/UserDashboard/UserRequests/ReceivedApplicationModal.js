@@ -2,14 +2,14 @@ import { Modal } from "react-bootstrap";
 import { Button, Image, Header, Segment } from "semantic-ui-react";
 import { Row, Col, Container } from "react-bootstrap";
 import Schedule from "../../Schedule";
-import moment from "moment";
+import { Icon } from "semantic-ui-react";
 import { useData } from "../../../contexts/AppContext";
 import Loading from "../../Loading/Loading";
 import { useState } from "react";
 import { useAuth } from "../../../contexts/AuthContext";
 import AvatarIcon from "../../AvatarIcon/AvatarIcon";
 
-export function ApplicationModal({ application, setOpen, open }) {
+export function ReceivedApplicationModal({ application, setOpen, open, onReject }) {
   const { setAlert } = useAuth();
   const { apply } = useData();
   const { request, user } = application;
@@ -66,8 +66,8 @@ export function ApplicationModal({ application, setOpen, open }) {
         </Container>
       </Modal.Body>
       <Modal.Footer>
-        <Button color="black" onClick={() => setOpen(false)}>
-          Nope
+        <Button color="red" onClick={onReject}>
+          <Icon name="remove" /> Reject
         </Button>
         <Button
           content="Accept"

@@ -1,11 +1,12 @@
 import { Avatar, styled } from "@material-ui/core";
 import { List, Image } from "semantic-ui-react";
-import { ApplicationModal } from "./ApplicationModal";
+import { ReceivedApplicationModal } from "./ReceivedApplicationModal";
 import { useState } from "react";
 import AvatarIcon from "../../AvatarIcon/AvatarIcon";
 import { Container, Row, Col } from "react-bootstrap";
 import { makeStyles } from "@material-ui/core";
 import { purple, blue, green, yellow } from "@material-ui/core/colors/";
+import { useData } from "../../../contexts/AppContext";
 
 const gradeToColor = {
   "A+": purple,
@@ -31,19 +32,25 @@ const useStyles = makeStyles((theme) => ({
   }),
 }));
 
-export default function Application({ application }) {
+export default function ReceivedApplication({ request, application  }) {
   const [open, setOpen] = useState(false);
-
+  const { rejectApplication } = useData();
   const modName = application.request.module.value;
   const grade = application.user.grades[modName];
   const classes = grade && useStyles({ grade });
 
+  const onReject = () => {
+    setOpen(false);
+    rejectApplication(request, application);
+  };
+
   return (
     <>
-      <ApplicationModal
+      <ReceivedApplicationModal
         application={application}
         open={open}
         setOpen={setOpen}
+        onReject={onReject}
       />
       <List.Item onClick={() => setOpen(true)}>
         <List.Content>

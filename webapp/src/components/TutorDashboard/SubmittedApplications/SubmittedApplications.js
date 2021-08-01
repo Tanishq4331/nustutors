@@ -1,8 +1,7 @@
-
 import { motion, AnimatePresence } from "framer-motion";
 import useApplications from "../../../hooks/useApplications";
 import styled from "styled-components";
-import { ApplicationCard } from "./ApplicationCard";
+import { SubmittedApplicationCard } from "./SubmittedApplicationCard";
 import { Header, Segment, Placeholder, Icon } from "semantic-ui-react";
 
 const LIMIT = 8;
@@ -32,7 +31,7 @@ function NoApplicationsPlaceholder() {
   );
 }
 
-export default function TutorApplications() {
+export default function SubmittedApplications() {
   const { applications, loading } = useApplications({ limit: LIMIT });
 
   return (
@@ -60,7 +59,7 @@ export default function TutorApplications() {
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                   >
-                    <ApplicationCard application={application} />
+                    <SubmittedApplicationCard application={application} />
                   </motion.div>
                 ))}
               </AnimatePresence>

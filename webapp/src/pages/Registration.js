@@ -47,6 +47,7 @@ export default function Registration() {
     locations: [false, false, false, false, false, false, false, false],
     yearOfStudy: "Year 1",
     timings: [],
+    rejectedApplications: [],
   });
 
   const [tutorFormState, setTutorFormState] = useState({

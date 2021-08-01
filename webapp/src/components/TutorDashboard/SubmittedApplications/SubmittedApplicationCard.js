@@ -29,7 +29,7 @@ const StyledCard = styled.div`
   }
 `;
 
-export function ApplicationCard({ application }) {
+export function SubmittedApplicationCard({ application }) {
   const [open, setOpen] = useState(false);
   const bigScreen = useWindowSize() > 990;
   const tinyScreen = useWindowSize() < 500;
@@ -74,13 +74,17 @@ export function ApplicationCard({ application }) {
             </Col>
             <Col md="1.5">
               <div>
-                {application.status === "pending" ? (
-                  <Button basic color="green" onClick={() => setOpen(true)}>
-                    Pending
-                  </Button>
-                ) : (
+                {/* request.user.rejectedApplications for users created before that do not have a rejectedApplications field */}
+                {request.user.rejectedApplications &&
+                request.user.rejectedApplications.includes(
+                  application.applicationId
+                ) ? (
                   <Button basic color="red" onClick={() => setOpen(true)}>
                     Rejected
+                  </Button>
+                ) : (
+                  <Button basic color="green" onClick={() => setOpen(true)}>
+                    Pending
                   </Button>
                 )}
               </div>

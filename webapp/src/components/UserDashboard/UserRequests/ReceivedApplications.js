@@ -1,32 +1,32 @@
 import { readIds } from "../../../hooks/useRequests";
 import { useState, useEffect } from "react";
 import { List } from "semantic-ui-react";
-
+import { useAuth } from "../../../contexts/AuthContext";
 import { db } from "../../../config/firebase";
 
-import Application from "./Application";
+import ReceivedApplication from "./ReceivedApplication";
 
-export default function Applications({ request }) {
+export default function ReceivedApplications({ request }) {
   const [applications, setApplications] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { userData } = useAuth();
 
   //retrieve user details from the tutorId of each request and add them to the request
-  async function addApplicantData(rawApplications, uids, rids) {
-    const promise1 = await readIds(db.collection("users"), uids);
-    const promise2 = await readIds(db.collection("requests"), rids);
-    const promises = [promise1, promise2];
-    const [userDetails, requestDetails] = await Promise.all(promises);
+  async function addApplicantData(rawApplications, tutorIds) {
+    const tutorDetails = await readIds(db.collection("users"), tutorIds);
 
     //add to each request the details of its corresponding user
-    const expandedRequests = rawApplications.map((rawRequest, index) => {
-      return {
-        ...rawRequest,
-        user: userDetails[index],
-        request: requestDetails[index],
-      };
-    });
+    const expandedApplications = rawApplications.map(
+      (rawApplication, index) => {
+        return {
+          ...rawApplication,
+          user: tutorDetails[index],
+          request: request,
+        };
+      }
+    );
 
-    setApplications(expandedRequests);
+    setApplications(expandedApplications);
     setLoading(false);
   }
 
@@ -35,24 +35,29 @@ export default function Applications({ request }) {
       .collection("applications")
       .where("requestId", "==", request.requestId)
       .onSnapshot((snapshot) => {
-        const rawApplications = snapshot.docs.map((doc) => doc.data());
-        const uids = rawApplications.map((request) => request.tutorId);
-        const rids = rawApplications.map((request) => request.requestId);
-        addApplicantData(rawApplications, uids, rids);
+        var rawApplications = snapshot.docs.map((doc) => doc.data());
+        rawApplications = rawApplications.filter((application) => {
+          return !userData.rejectedApplications.includes(
+            application.applicationId
+          );
+        });
+        const tutorIds = rawApplications.map((request) => request.tutorId);
+        addApplicantData(rawApplications, tutorIds);
       });
 
     //remember to unsubscribe from your realtime listener on unmount or you will create a memory leak
     return unsubscribe;
-  }, []);
+  }, [userData]);
 
   return (
     <List animated selection verticalAlign="middle">
       <h4>Applications</h4>
       {applications.map((application) => {
         return (
-          <Application
+          <ReceivedApplication
             key={application.applicationId}
             application={application}
+            request={request}
           />
         );
       })}

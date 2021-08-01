@@ -40,7 +40,6 @@ export default function useApplications({ limit }) {
       .where("tutorId", "==", currentUser.uid)
       .onSnapshot((snapshot) => {
         var rawApplications = snapshot.docs.map((doc) => doc.data());
-        console.log(rawApplications);
         const requestIds = rawApplications.map(
           (application) => application.requestId
         );

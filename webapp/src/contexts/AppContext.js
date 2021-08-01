@@ -45,14 +45,21 @@ export function DataProvider({ children }) {
       });
   }
 
-  function rejectAppication(request, application) {
+  function rejectApplication(request, application) {
+    //add the applicationId to rejectedApplications in userData
     return db
-      .collection("request")
-      .doc(request.requestId)
+      .collection("users")
+      .doc(currentUser.uid)
       .update({
-        rejectedAppications: firebase.firestore.FieldValue.arrayAdd(
+        rejectedApplications: firebase.firestore.FieldValue.arrayUnion(
           application.applicationId
         ),
+      })
+      .then(() => {
+        setAlert({
+          message: "Application rejected.",
+          success: true,
+        });
       })
       .catch((error) => {
         setAlert({ message: "Unable to reject application.", success: false });
@@ -118,6 +125,7 @@ export function DataProvider({ children }) {
     makeRequest,
     getAllRequests,
     deleteApplication,
+    rejectApplication,
     deleteRequest,
     apply,
   };

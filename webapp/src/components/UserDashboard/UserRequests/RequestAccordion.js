@@ -5,7 +5,7 @@ import {
   Typography,
 } from "@material-ui/core";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import Applications from "./Applications";
+import ReceivedApplications from "./ReceivedApplications";
 import { Row, Col, Container } from "react-bootstrap";
 import { makeStyles } from "@material-ui/core";
 import moment from "moment";
@@ -73,7 +73,7 @@ export default function RequestAccordion({ request }) {
               </Col>
             </Row>
           </Container>
-          <Applications request={request} />
+          <ReceivedApplications request={request} />
         </div>
       </AccordionDetails>
     </Accordion>

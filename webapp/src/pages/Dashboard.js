@@ -2,7 +2,7 @@ import { Container, Row, Col } from "react-bootstrap";
 import UserRequests from "../components/UserDashboard/UserRequests/UserRequests";
 import { Header, Segment, Icon, Button } from "semantic-ui-react";
 import TutorRequests from "../components/TutorDashboard/TutorRequests";
-import TutorApplications from "../components/TutorDashboard/TutorApplications/TutorApplications";
+import SubmittedApplications from "../components/TutorDashboard/SubmittedApplications/SubmittedApplications";
 
 export default function Dashboard() {
   return (
@@ -28,7 +28,7 @@ export default function Dashboard() {
       <Container>
         <Row>
           <Col ml="6" style={{ marginBottom: "20px" }}>
-            <TutorApplications />
+            <SubmittedApplications />
           </Col>
         </Row>
       </Container>

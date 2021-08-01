@@ -1,4 +1,3 @@
-import "react-initials-avatar/lib/ReactInitialsAvatar.css";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import { Avatar } from "@material-ui/core";
 import { deepOrange } from "@material-ui/core/colors";
