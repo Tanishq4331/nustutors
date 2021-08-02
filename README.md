@@ -44,4 +44,3 @@
 - Consider variations of modules
 - Custom firestore rule -> public, protected fields on profile
 - Show locations on tutor and tutee modals
-- Wrap accordion in a fixed scrollable div

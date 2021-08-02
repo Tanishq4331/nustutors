@@ -23,7 +23,7 @@ export default function Dashboard() {
             md="auto"
             style={{
               minWidth: "350px",
-              maxWidth: "450px",
+              maxWidth: "500px",
               marginBottom: "20px",
             }}
           >
