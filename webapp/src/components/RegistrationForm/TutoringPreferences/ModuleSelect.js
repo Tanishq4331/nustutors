@@ -30,23 +30,25 @@ export default function ModuleSelect({
   const showErrors =
     touched === undefined ? errors.modules : touched && errors.modules;
 
-  //load modules from NUSMods API
-  const loadModules = async () => {
-    setLoading(true);
-    const response = await fetch(
-      `https://api.nusmods.com/v2/2021-2022/moduleList.json`
-    );
-    const json = await response.json();
-    const modList = json.map((x) => ({
-      label: `${x.moduleCode}: ${x.title}`,
-      value: x.moduleCode,
-    }));
-    setAllModules(modList);
-    setLoading(false);
-  };
-
   //only load on component mount
-  useEffect(loadModules, []);
+  useEffect(() => {
+    //load modules from NUSMods API
+    const loadModules = async () => {
+      setLoading(true);
+      const response = await fetch(
+        `https://api.nusmods.com/v2/2021-2022/moduleList.json`
+      );
+      const json = await response.json();
+      const modList = json.map((x) => ({
+        label: `${x.moduleCode}: ${x.title}`,
+        value: x.moduleCode,
+      }));
+      setAllModules(modList);
+      setLoading(false);
+    };
+
+    loadModules();
+  }, []);
 
   //filter modlist based on input
   const filteredOptions = useMemo(() => {

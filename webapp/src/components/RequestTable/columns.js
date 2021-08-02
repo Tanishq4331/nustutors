@@ -1,5 +1,3 @@
-import AvatarIcon from "../AvatarIcon/AvatarIcon";
-
 export const COLUMNS = [
   {
     Header: "Module",

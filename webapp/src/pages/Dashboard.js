@@ -1,8 +1,7 @@
 import { Container, Row, Col } from "react-bootstrap";
 import UserRequests from "../components/UserDashboard/UserRequests/UserRequests";
-import { Header, Segment, Icon, Button } from "semantic-ui-react";
-import TutorRequests from "../components/TutorDashboard/TutorRequests";
-import SubmittedApplications from "../components/TutorDashboard/SubmittedApplications/SubmittedApplications";
+import { Header } from "semantic-ui-react";
+import UserSessions from "../components/OngoingSessions/UserSessions";
 
 export default function Dashboard() {
   return (
@@ -18,17 +17,17 @@ export default function Dashboard() {
             className="md-4"
             style={{ maxWidth: "1000px", marginBottom: "20px" }}
           >
-            <TutorRequests />
+            <UserSessions />
           </Col>
-          <Col md="auto" style={{ maxWidth: "450px", marginBottom: "20px" }}>
+          <Col
+            md="auto"
+            style={{
+              minWidth: "350px",
+              maxWidth: "450px",
+              marginBottom: "20px",
+            }}
+          >
             <UserRequests />
-          </Col>
-        </Row>
-      </Container>
-      <Container>
-        <Row>
-          <Col ml="6" style={{ marginBottom: "20px" }}>
-            <SubmittedApplications />
           </Col>
         </Row>
       </Container>

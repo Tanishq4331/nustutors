@@ -1,9 +1,9 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useRef, useState } from "react";
-import { Form, Card, Alert, Button } from "react-bootstrap";
+import { Form, Card, Button } from "react-bootstrap";
 import { useAuth } from "../contexts/AuthContext";
 import { Container } from "react-bootstrap";
-import { Link, useHistory } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Loading from "../components/Loading/Loading";
 
 export default function LoginBody() {

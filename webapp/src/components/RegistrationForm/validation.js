@@ -1,4 +1,3 @@
-import * as React from "react";
 import { emailAlreadyExists } from "../../contexts/AuthContext";
 import * as Yup from "yup";
 

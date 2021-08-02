@@ -1,5 +1,5 @@
-import { Modal, Form } from "react-bootstrap";
-import { Header, Button } from "semantic-ui-react";
+import { Modal } from "react-bootstrap";
+import { Header } from "semantic-ui-react";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { useData } from "../../contexts/AppContext";
@@ -10,7 +10,7 @@ import RequestTutorForm from "./RequestTutorForm";
 import { db } from "../../config/firebase";
 
 export function RequestTutorModal({ setOpen, open }) {
-  const { setAlert, userData, currentUser } = useAuth();
+  const { setAlert, currentUser } = useAuth();
   const { makeRequest } = useData();
   const [loading, setLoading] = useState(false);
 

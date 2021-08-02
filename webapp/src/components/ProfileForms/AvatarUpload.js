@@ -26,7 +26,7 @@ const CustomFileUpload = styled.form`
 
 const ImageWrap = styled.img`
   position: relative;
-  left:30px;
+  left: 30px;
   width: 250px;
   height: 250px;
   overflow: hidden;
@@ -83,7 +83,7 @@ export default function AvatarUpload() {
               }
             } catch (error) {
               //Usually invalid when initial url is sourced from google instead of storage
-              if (error.code != "storage/invalid-argument") {
+              if (error.code !== "storage/invalid-argument") {
                 console.log(`${error.code}: ${error.message}`);
               }
             }

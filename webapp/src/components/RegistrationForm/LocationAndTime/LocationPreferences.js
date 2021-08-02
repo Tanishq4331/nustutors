@@ -1,8 +1,5 @@
-import { Form, Card, Button } from "react-bootstrap";
+import { Form, Card } from "react-bootstrap";
 import { css } from "@emotion/css";
-import { useAuth } from "../../../contexts/AuthContext";
-import Alert from "@material-ui/lab/Alert";
-import TimePreferences from "./TimePreferences";
 
 export default function LocationPreferences({
   formState,

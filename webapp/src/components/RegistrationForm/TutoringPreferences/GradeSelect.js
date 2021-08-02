@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Radio } from "antd";
-import { Card, Row, Col, Container } from "react-bootstrap";
+import { Row, Col, Container } from "react-bootstrap";
 
 const OPTIONS = [
   { label: "A+", value: "A+" },

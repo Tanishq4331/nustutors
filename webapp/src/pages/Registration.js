@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Form, Container, Button } from "react-bootstrap";
+import { Form, Container } from "react-bootstrap";
 import LoginDetails from "../components/RegistrationForm/LoginCredentials";
 import PersonalDetails from "../components/RegistrationForm/PersonalDetails";
 import { useAuth } from "../contexts/AuthContext";
@@ -107,15 +107,13 @@ export default function Registration() {
   };
 
   //start actively validating the whole form when there are already errors
-  useEffect(async () => {
+  useEffect(() => {
     if (errorPresent(errors)) {
-      const newErrors = await validatePage(
-        displayedSteps[activeStep].label,
-        userFormState
+      validatePage(displayedSteps[activeStep].label, userFormState).then(
+        (newErrors) => setErrors(newErrors)
       );
-      setErrors(newErrors);
     }
-  }, [userFormState]);
+  }, [userFormState, activeStep, displayedSteps, errors]);
 
   const onStepSubmit = async (action) => {
     setLoading(true);
@@ -161,6 +159,9 @@ export default function Registration() {
               "User Registration successful. You need to complete the tutor registration to teach.",
             success: true,
           });
+          break;
+        default:
+          console.log("Something wrong with onSubmit action");
       }
     } catch (error) {
       console.log(`${error.code}: ${error.message}`);

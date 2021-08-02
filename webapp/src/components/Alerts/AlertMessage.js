@@ -15,7 +15,7 @@ export default function AlertMessage() {
 
   const DURATION = 6000;
 
-  useEffect(() => setOpen(message), [alert]);
+  useEffect(() => setOpen(message), [message]);
 
   const handleClose = (event, reason) => {
     if (reason === "clickaway") {

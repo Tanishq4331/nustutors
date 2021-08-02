@@ -34,7 +34,7 @@ function ViewAllFooter() {
 }
 
 export default function TutorRequests() {
-  const { currentUser, userData, setUserData, setAlert } = useAuth();
+  const { userData, setUserData } = useAuth();
   const { blacklist, applications } = userData;
 
   const { requests, loading } = useRequests({

@@ -1,4 +1,4 @@
-import { Button, Card, Image, Statistic } from "semantic-ui-react";
+import { Button, Card, Statistic } from "semantic-ui-react";
 import { useState } from "react";
 import moment from "moment";
 import { TutorRequestModal } from "./TutorRequestModal";

@@ -17,6 +17,7 @@ import Registration from "./pages/Registration";
 import { DataProvider } from "./contexts/AppContext";
 import AllRequests from "./pages/AllRequests";
 import RelevantRequests from "./pages/RelevantRequests";
+import TutorDashboard from "./pages/TutorDashboard";
 
 export default function App() {
   return (
@@ -28,6 +29,11 @@ export default function App() {
           <main className="mt-4">
             <Switch>
               <PrivateRoute exact path="/dashboard" component={Dashboard} />
+              <PrivateRoute
+                exact
+                path="/tutor-dashboard"
+                component={TutorDashboard}
+              />
               <PrivateRoute exact path="/profile" component={Profile} />
               <PrivateRoute
                 exact

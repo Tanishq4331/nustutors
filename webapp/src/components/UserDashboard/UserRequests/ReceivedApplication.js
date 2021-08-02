@@ -1,19 +1,11 @@
-import { Avatar, styled } from "@material-ui/core";
-import { List, Image } from "semantic-ui-react";
+import { Avatar } from "@material-ui/core";
+import { List } from "semantic-ui-react";
 import { ReceivedApplicationModal } from "./ReceivedApplicationModal";
 import { useState } from "react";
 import AvatarIcon from "../../AvatarIcon/AvatarIcon";
 import { Container, Row, Col } from "react-bootstrap";
 import { makeStyles } from "@material-ui/core";
-import { purple, blue, green, yellow } from "@material-ui/core/colors/";
 import { useData } from "../../../contexts/AppContext";
-
-const gradeToColor = {
-  "A+": purple,
-  A: blue,
-  "A-": green,
-  "B+": yellow,
-};
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -26,18 +18,18 @@ const useStyles = makeStyles((theme) => ({
     width: theme.spacing(3.5),
     fontSize: "13px",
     height: theme.spacing(3.5),
-    color: theme.palette.getContrastText(gradeToColor[props.grade][700]),
-    border: `2px solid white`,
-    backgroundColor: gradeToColor[props.grade][700],
+    color: theme.palette.getContrastText("#F2F7FF"),
+    border: `1px solid ${theme.palette.getContrastText("#F2F7FF")}`,
+    backgroundColor: "#F2F7FF",
   }),
 }));
 
-export default function ReceivedApplication({ request, application  }) {
+export default function ReceivedApplication({ request, application }) {
   const [open, setOpen] = useState(false);
   const { rejectApplication } = useData();
   const modName = application.request.module.value;
   const grade = application.user.grades[modName];
-  const classes = grade && useStyles({ grade });
+  const classes = useStyles();
 
   const onReject = () => {
     setOpen(false);

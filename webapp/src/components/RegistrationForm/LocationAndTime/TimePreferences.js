@@ -5,7 +5,6 @@ import { Card } from "react-bootstrap";
 
 export default function TimePreferences({ formState, setFormState, errors }) {
   const [schedule, setSchedule] = useState(formState.timings);
-
   useEffect(() => {
     setSchedule(formState.timings);
   }, []);

@@ -18,8 +18,23 @@ export default function CustomizeProfileForm() {
   const [errors, setErrors] = useState("");
   const [currTab, setCurrTab] = useState(0);
   const [loading, setLoading] = useState(false);
+
   const [formState, setFormState] = useState({ ...userData, documents: [] });
+  useEffect(() => setFormState({ ...userData, documents: [] }), []);
+
   const [provider, setProvider] = useState("");
+  //set the provider state to the sign in provider
+  useEffect(() => {
+    currentUser
+      .getIdTokenResult()
+      .then((idToken) => {
+        setProvider(idToken.signInProvider);
+      })
+      .catch((error) => {
+        console.log(`${error.code}: ${error.message}`);
+      });
+  }, [currentUser]);
+
   const [changesMade, setChangesMade] = useState(true);
 
   useEffect(() => {
@@ -33,20 +48,6 @@ export default function CustomizeProfileForm() {
       )
     );
   }, [formState, userData]);
-
-  useEffect(() => setFormState({ ...userData, documents: [] }), []);
-
-  //set the provider state to the sign in provider
-  useEffect(() => {
-    currentUser
-      .getIdTokenResult()
-      .then((idToken) => {
-        setProvider(idToken.signInProvider);
-      })
-      .catch((error) => {
-        console.log(`${error.code}: ${error.message}`);
-      });
-  }, []);
 
   const tabData = [
     { label: "Personal Details", form: PersonalDetails },
@@ -90,12 +91,16 @@ export default function CustomizeProfileForm() {
     setFormState({ ...formState, [name]: checked });
   };
 
-  //start actively validating the whole form when there are already errors
-  useEffect(async () => {
+  const manageErrors = async () => {
     if (errorPresent(errors)) {
       const newErrors = await validatePage(currTabData.label, formState);
       setErrors(newErrors);
     }
+  };
+
+  //start actively validating the whole form when there are already errors
+  useEffect(() => {
+    manageErrors();
   }, [formState]);
 
   const onSubmit = async (action) => {

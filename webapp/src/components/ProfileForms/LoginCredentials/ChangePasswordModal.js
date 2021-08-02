@@ -1,6 +1,6 @@
-import { Button, Row, Col, Form, Modal } from "react-bootstrap";
+import { Button, Form, Modal } from "react-bootstrap";
 import { useAuth } from "../../../contexts/AuthContext";
-import { useState, setShow, useEffect } from "react";
+import { useState } from "react";
 import { passwordValidator } from "../../RegistrationForm/validation";
 
 export default function ChangePasswordModal(props) {

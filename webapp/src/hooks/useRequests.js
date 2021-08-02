@@ -28,30 +28,33 @@ export default function useRequests({ onlyShowRelevant, limit }) {
   const preferredMods = userData.modules.map((mod) => mod.label);
 
   useEffect(() => {
-    const unsubscribe = db.collection("requests").onSnapshot((snapshot) => {
-      var rawRequests = snapshot.docs.map((doc) => doc.data());
+    const unsubscribe = db
+      .collection("requests")
+      .orderBy("createdAt", "desc")
+      .onSnapshot((snapshot) => {
+        var rawRequests = snapshot.docs.map((doc) => doc.data());
 
-      //exlude requests by tutor
-      rawRequests = rawRequests.filter(
-        (request) => request.tuteeId != currentUser.uid
-      );
-
-      if (onlyShowRelevant) {
-        //show requests offering more than rate
+        //exlude requests by tutor
         rawRequests = rawRequests.filter(
-          (request) => request.rate >= userData.rate
+          (request) => request.tuteeId != currentUser.uid
         );
 
-        //only show requests for tutor's preferred mods
-        rawRequests = rawRequests.filter((request) =>
-          preferredMods.includes(request.module.label)
-        );
-      }
+        if (onlyShowRelevant) {
+          //show requests offering more than rate
+          rawRequests = rawRequests.filter(
+            (request) => request.rate >= userData.rate
+          );
 
-      const uids = rawRequests.map((request) => request.tuteeId);
+          //only show requests for tutor's preferred mods
+          rawRequests = rawRequests.filter((request) =>
+            preferredMods.includes(request.module.label)
+          );
+        }
 
-      addRequesterData(rawRequests, uids);
-    });
+        const uids = rawRequests.map((request) => request.tuteeId);
+
+        addRequesterData(rawRequests, uids);
+      });
 
     //remember to unsubscribe from your realtime listener on unmount or you will create a memory leak
     return unsubscribe;

@@ -1,4 +1,4 @@
-import { NavDropdown, Nav, Navbar, Alert } from "react-bootstrap";
+import { NavDropdown, Nav, Navbar } from "react-bootstrap";
 import { useAuth } from "../../contexts/AuthContext";
 import styles from "./NavBar.module.css";
 import AvatarIcon from "../AvatarIcon/AvatarIcon";
@@ -24,6 +24,7 @@ export default function NavBar() {
           {userData && (
             <>
               <Nav.Link href="/dashboard">Dashboard</Nav.Link>
+              {userData.registeredTutor && <Nav.Link href="/tutor-dashboard">Tutor Dashboard</Nav.Link>}
               {userData.registeredTutor && (
                 <Nav.Link href="/all-requests">View All Requests</Nav.Link>
               )}

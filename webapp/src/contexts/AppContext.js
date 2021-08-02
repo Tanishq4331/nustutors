@@ -1,16 +1,11 @@
-import React, { useContext, useState, useEffect } from "react";
-import { useHistory } from "react-router-dom";
-import { db, storage } from "../config/firebase";
+import React, { useContext } from "react";
+import { db } from "../config/firebase";
 import { useAuth } from "./AuthContext";
 import firebase from "firebase";
 
 const AppContext = React.createContext();
 
 export function useData() {
-  return useContext(AppContext);
-}
-
-export function alreadyAppliedTo(request) {
   return useContext(AppContext);
 }
 
@@ -86,7 +81,6 @@ export function DataProvider({ children }) {
 
   async function apply(request) {
     var newDocRef = db.collection("applications").doc();
-    const grade = userData.grades[request.module.value] || null;
     const combinedApplication = {
       tutorId: currentUser.uid,
       requestId: request.requestId,
@@ -101,29 +95,8 @@ export function DataProvider({ children }) {
     return newDocRef.set(combinedApplication);
   }
 
-  async function getAllRequests() {
-    return db
-      .collection("requests")
-      .orderBy("createdAt", "desc")
-      .get()
-      .then((data) => {
-        let requests = [];
-        data.forEach((doc) => {
-          requests.push({
-            id: doc.id,
-            ...doc.data(),
-          });
-        });
-      })
-      .catch((error) => {
-        console.log(`${error.code}: ${error.message}`);
-        setAlert({ message: "Could not contact server", success: false });
-      });
-  }
-
   const value = {
     makeRequest,
-    getAllRequests,
     deleteApplication,
     rejectApplication,
     deleteRequest,

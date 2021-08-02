@@ -1,4 +1,4 @@
-import { Button, Row, Col, Form, Modal } from "react-bootstrap";
+import { Button, Form, Modal } from "react-bootstrap";
 import { useAuth } from "../../../contexts/AuthContext";
 import { useState } from "react";
 import { emailValidator } from "../../RegistrationForm/validation";

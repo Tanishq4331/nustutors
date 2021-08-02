@@ -1,6 +1,5 @@
-import { Modal } from "react-bootstrap";
-import { Button, Image, Header, Segment } from "semantic-ui-react";
-import { Row, Col, Container } from "react-bootstrap";
+import { Modal, Container } from "react-bootstrap";
+import { Button, Header, Segment } from "semantic-ui-react";
 import Schedule from "../../Schedule";
 import { Icon } from "semantic-ui-react";
 import { useData } from "../../../contexts/AppContext";
