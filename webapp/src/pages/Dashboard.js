@@ -1,7 +1,7 @@
 import { Container, Row, Col } from "react-bootstrap";
 import UserRequests from "../components/UserDashboard/UserRequests/UserRequests";
 import { Header } from "semantic-ui-react";
-import UserSessions from "../components/OngoingSessions/UserSessions";
+import UserCommitments from "../components/UserDashboard/UserCommitments/UserSessions";
 
 export default function Dashboard() {
   return (
@@ -17,7 +17,7 @@ export default function Dashboard() {
             className="md-4"
             style={{ maxWidth: "1000px", marginBottom: "20px" }}
           >
-            <UserSessions />
+            <UserCommitments />
           </Col>
           <Col
             md="auto"
