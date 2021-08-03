@@ -1,13 +1,8 @@
 import React, { useMemo } from "react";
 import { useTable, useSortBy, useFilters } from "react-table";
 import { COLUMNS } from "./columns";
-import { useAuth } from "../../contexts/AuthContext";
-import { TutorRequestModal } from "../TutorDashboard/TutorRequests/TutorRequestModal";
-import { useState } from "react";
-import { Button } from "semantic-ui-react";
 import { DefaultColumnFilter, Filter } from "./filters";
 import "./Table_Responsive_v1/css/main.css";
-import AvatarIcon from "../AvatarIcon/AvatarIcon";
 import { TableSortLabel } from "@material-ui/core";
 import TablePagination from "@material-ui/core/TablePagination";
 import { useCallback } from "react";
@@ -64,34 +59,6 @@ const generateSortingIndicator = (column) => {
     )
   );
 };
-
-function RenderRowSubComponent({ row }) {
-  const { userData } = useAuth();
-  const [open, setOpen] = useState(false);
-  const request = row.original;
-  const alreadyApplied = userData.applications.includes(request.requestId);
-
-  return (
-    <>
-      <TutorRequestModal request={request} open={open} setOpen={setOpen} />
-
-      <div className="d-flex justify-content-between align-items-center">
-        {alreadyApplied ? (
-          <Button basic color="blue" Disabled>
-            Applied
-          </Button>
-        ) : (
-          <div>
-            <Button basic color="green" onClick={() => setOpen(true)}>
-              Apply
-            </Button>
-          </div>
-        )}
-        <AvatarIcon userData={request.user} />
-      </div>
-    </>
-  );
-}
 
 export default function BasicTable({ data }) {
   const columns = useMemo(() => COLUMNS, []);
@@ -160,7 +127,6 @@ export default function BasicTable({ data }) {
                     </th>
                   );
                 })}
-                <th>Status</th>
               </tr>
             );
           })}
@@ -179,9 +145,6 @@ export default function BasicTable({ data }) {
                     </td>
                   );
                 })}
-                <td className="lastColumn">
-                  <RenderRowSubComponent row={row} />
-                </td>
               </tr>
             );
           })}

@@ -48,11 +48,9 @@ export default function TutorRequests() {
     });
   }
 
-  //exclude any requests that have been applied to or blacklisted
+  //exclude any requests that have been blacklisted
   const filteredList = requests.filter(
-    (request) =>
-      !blacklist.includes(request.requestId) &&
-      !applications.includes(request.requestId)
+    (request) => !blacklist.includes(request.requestId)
   );
 
   return (

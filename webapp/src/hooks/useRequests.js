@@ -36,7 +36,12 @@ export default function useRequests({ onlyShowRelevant, limit }) {
 
         //exlude requests by tutor
         rawRequests = rawRequests.filter(
-          (request) => request.tuteeId != currentUser.uid
+          (request) => request.tuteeId !== currentUser.uid
+        );
+
+        //exclude any requests that have been applied to
+        rawRequests = rawRequests.filter(
+          (request) => !userData.applications.includes(request.requestId)
         );
 
         if (onlyShowRelevant) {
@@ -58,7 +63,7 @@ export default function useRequests({ onlyShowRelevant, limit }) {
 
     //remember to unsubscribe from your realtime listener on unmount or you will create a memory leak
     return unsubscribe;
-  }, []);
+  }, [userData]);
 
-  return { requests, loading };
+  return { requests: requests, loading };
 }

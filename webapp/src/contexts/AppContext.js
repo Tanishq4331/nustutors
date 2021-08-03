@@ -40,7 +40,7 @@ export function DataProvider({ children }) {
       });
   }
 
-  function rejectApplication(request, application) {
+  function rejectApplication(application) {
     //add the applicationId to rejectedApplications in userData
     return db
       .collection("users")

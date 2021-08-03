@@ -29,7 +29,10 @@ export default function AllRequests() {
   }, [moduleSelectionWrapper, requests]);
 
   const toDisplay = displayedRequests.map((request) => {
-    return { ...request, moduleName: request.module.label };
+    return {
+      ...request,
+      moduleName: request.module.label,
+    };
   });
 
   return (

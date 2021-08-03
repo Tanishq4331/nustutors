@@ -26,15 +26,9 @@ const useStyles = makeStyles((theme) => ({
 
 export default function ReceivedApplication({ request, application }) {
   const [open, setOpen] = useState(false);
-  const { rejectApplication } = useData();
   const modName = application.request.module.value;
   const grade = application.user.grades[modName];
   const classes = useStyles();
-
-  const onReject = () => {
-    setOpen(false);
-    rejectApplication(request, application);
-  };
 
   return (
     <>
@@ -42,7 +36,6 @@ export default function ReceivedApplication({ request, application }) {
         application={application}
         open={open}
         setOpen={setOpen}
-        onReject={onReject}
       />
       <List.Item onClick={() => setOpen(true)}>
         <List.Content>
@@ -53,7 +46,7 @@ export default function ReceivedApplication({ request, application }) {
               </Col>
               <Col md="auto">{application.user.name}</Col>
               <Col className="d-flex justify-content-end">
-                {classes && (
+                {grade && (
                   <Avatar variant="rounded" className={classes.custom}>
                     {grade}
                   </Avatar>

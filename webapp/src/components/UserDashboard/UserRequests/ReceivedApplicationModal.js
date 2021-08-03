@@ -8,11 +8,16 @@ import { useState } from "react";
 import { useAuth } from "../../../contexts/AuthContext";
 import AvatarIcon from "../../AvatarIcon/AvatarIcon";
 
-export function ReceivedApplicationModal({ application, setOpen, open, onReject }) {
+export function ReceivedApplicationModal({ application, setOpen, open }) {
   const { setAlert } = useAuth();
-  const { apply } = useData();
+  const { apply, rejectApplication } = useData();
   const { request, user } = application;
   const [loading, setLoading] = useState(false);
+
+  const onReject = () => {
+    setOpen(false);
+    rejectApplication(application);
+  };
 
   const tutorTimes = user.timings.map((x) => x.toDate()); //convert firebase date to date
 
