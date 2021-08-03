@@ -7,9 +7,8 @@
 - For You page for relevant requests
 - Mailing List/ Notification system for tutors to find relevant requests
 
-**Optional:**
+**Additional:**
 
-- Automatically determine tags/details based on descriptions
 - Reputation system for tutors - quantitative reviews which contribute to the tutor rating (this is visible to learners)
 - An app
 
@@ -17,9 +16,8 @@
 
 - Node(.js)
 - React(.js)
-- Firestore, Firebase Auth, Firebase Storage
+- Firestore, Firebase Auth, Firebase Storage, Firebase Hosting
 - Git
-- Hosted on Heroku
 
 **Troubleshooting**
 
@@ -43,5 +41,5 @@
 - manage previous uploads
 - Consider variations of modules
 - Custom firestore rule -> public, protected fields on profile
-- Show locations on tutor and tutee modals
 - Animate presence on BasicTable
+- Show location preferences on tutor and tutee modals
