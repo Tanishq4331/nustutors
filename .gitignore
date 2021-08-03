@@ -3,3 +3,4 @@
 .history
 *.swp
 node_modules
+*.cache
