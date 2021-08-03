@@ -17,9 +17,8 @@
 
 - Node(.js)
 - React(.js)
-- Firestore, Firebase Auth, Firebase Storage
+- Firestore, Firebase Auth, Firebase Storage, Firebase Hosting
 - Git
-- Hosted on Heroku
 
 **Troubleshooting**
 
