@@ -1,7 +1,7 @@
 import { Container, Row, Col } from "react-bootstrap";
 import UserRequests from "../components/UserDashboard/UserRequests/UserRequests";
 import { Header } from "semantic-ui-react";
-import UserCommitments from "../components/UserDashboard/UserCommitments/UserSessions";
+import TuteeCommitments from "../components/UserDashboard/TuteeCommitments/TuteeCommitments";
 
 export default function Dashboard() {
   return (
@@ -15,9 +15,10 @@ export default function Dashboard() {
           {/* bottom margin provides a gutter when columns are stacked */}
           <Col
             className="md-4"
+            md="auto"
             style={{ maxWidth: "1000px", marginBottom: "20px" }}
           >
-            <UserCommitments />
+            <TuteeCommitments />
           </Col>
           <Col
             md="auto"

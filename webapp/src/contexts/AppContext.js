@@ -62,6 +62,15 @@ export function DataProvider({ children }) {
       });
   }
 
+  //filter useApplications and useRequests based on commitments
+  function acceptApplication(request, application) {
+    return db.collection("commitments").doc().set({
+      requestId: request.requestId,
+      tuteeId: currentUser.uid,
+      tutorId: application.tutorId,
+    });
+  }
+
   function deleteRequest(request) {
     return db
       .collection("requests")
@@ -99,6 +108,7 @@ export function DataProvider({ children }) {
     makeRequest,
     deleteApplication,
     rejectApplication,
+    acceptApplication,
     deleteRequest,
     apply,
   };

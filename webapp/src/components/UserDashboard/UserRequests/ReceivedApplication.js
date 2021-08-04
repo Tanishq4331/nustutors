@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
   }),
 }));
 
-export default function ReceivedApplication({ request, application }) {
+export default function ReceivedApplication({ application }) {
   const [open, setOpen] = useState(false);
   const modName = application.request.module.value;
   const grade = application.user.grades[modName];

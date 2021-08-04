@@ -6,7 +6,7 @@ import { Header, Segment, Placeholder, Icon } from "semantic-ui-react";
 
 const LIMIT = 8;
 
-const ApplicationContainer = styled.div`
+export const ApplicationContainer = styled.div`
   width: 100%;
   padding: 20px;
 

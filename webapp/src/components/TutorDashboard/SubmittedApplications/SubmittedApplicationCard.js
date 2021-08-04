@@ -8,7 +8,7 @@ import { useState } from "react";
 import styled from "styled-components";
 import { Button } from "semantic-ui-react";
 
-const StyledCard = styled.div`
+export const StyledCard = styled.div`
   width: 100%;
   background-color: rgba(97, 179, 226, 0.1);
   transition: all 0.5s ease-out;

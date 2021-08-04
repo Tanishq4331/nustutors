@@ -2,6 +2,7 @@ import { Header } from "semantic-ui-react";
 import { Container, Row, Col } from "react-bootstrap";
 import TutorRequests from "../components/TutorDashboard/TutorRequests";
 import SubmittedApplications from "../components/TutorDashboard/SubmittedApplications/SubmittedApplications";
+import TutorCommitments from "../components/TutorDashboard/TutorCommitments/TutorCommitments";
 
 export default function TutorDashboard() {
   return (
@@ -10,7 +11,7 @@ export default function TutorDashboard() {
         <Header as="h1">Tutor Dashboard</Header>
       </div>
 
-      <Container fluid className="d-flex justify-content-center ">
+      <Container>
         <Row>
           {/* bottom margin provides a gutter when columns are stacked */}
           <Col
@@ -23,10 +24,13 @@ export default function TutorDashboard() {
       </Container>
       <Container>
         <Row>
-          <Col ml="6" style={{ marginBottom: "20px" }}>
+          <Col auto style={{ marginBottom: "20px" }}>
             <SubmittedApplications />
           </Col>
         </Row>
+      </Container>
+      <Container style={{ marginBottom: "20px" }}>
+        <TutorCommitments />
       </Container>
     </>
   );

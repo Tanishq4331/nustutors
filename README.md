@@ -43,3 +43,4 @@
 - Custom firestore rule -> public, protected fields on profile
 - Animate presence on BasicTable
 - Show location preferences on tutor and tutee modals
+- Alert to prompt users to update their start date if it is already past (or just use the currentDate as start date until updated)

@@ -10,7 +10,7 @@ import AvatarIcon from "../../AvatarIcon/AvatarIcon";
 
 export function ReceivedApplicationModal({ application, setOpen, open }) {
   const { setAlert } = useAuth();
-  const { apply, rejectApplication } = useData();
+  const { apply, rejectApplication, acceptApplication } = useData();
   const { request, user } = application;
   const [loading, setLoading] = useState(false);
 
@@ -21,13 +21,13 @@ export function ReceivedApplicationModal({ application, setOpen, open }) {
 
   const tutorTimes = user.timings.map((x) => x.toDate()); //convert firebase date to date
 
-  const onApply = async () => {
+  const onAccept = async () => {
     setLoading(true);
     try {
-      await apply(request);
+      await acceptApplication(request, application);
       setLoading(false);
       setAlert({
-        message: `Application successfully submitted`,
+        message: "Application successfully accepted.",
         success: true,
       });
       setOpen(false);
@@ -77,7 +77,7 @@ export function ReceivedApplicationModal({ application, setOpen, open }) {
           content="Accept"
           labelPosition="right"
           icon="checkmark"
-          onClick={onApply}
+          onClick={onAccept}
           positive
         />
       </Modal.Footer>
