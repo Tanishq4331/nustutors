@@ -16,28 +16,28 @@ describe("Web app", () => {
   it("Can update a request when logged in as tutee", async () => {
     await db
       .collection("requests")
-      .doc("test_request")
+      .doc("g8rEgL9RbCIweJsoVNTJ")
       .update({
         rejectedAppications:
           firebase.firestore.FieldValue.arrayUnion("added a new value"),
       });
   });
-  it("Can add a field to a firebase doc", async () => {
-    var addField = firebase.functions().httpsCallable("addField");
-    const testDoc = db.collection("users").doc("dummy");
+  // it("Can add a field to a firebase doc", async () => {
+  //   var addField = firebase.functions().httpsCallable("addField");
+  //   const testDoc = db.collection("users").doc("dummy");
 
-    await testDoc.set({
-      name: "dummy",
-    });
+  //   await testDoc.set({
+  //     name: "dummy",
+  //   });
 
-    await addField({
-      collection: "users",
-      attribute: "rejectedApplications",
-      value: [],
-    });
+  //   await addField({
+  //     collection: "users",
+  //     attribute: "rejectedApplications",
+  //     value: [],
+  //   });
 
-    await firebase.assertSucceeds(
-      testDoc.get().then((doc) => doc.data().value.length === 0)
-    );
-  });
+  //   await firebase.assertSucceeds(
+  //     testDoc.get().then((doc) => doc.data().value.length === 0)
+  //   );
+  // });
 });

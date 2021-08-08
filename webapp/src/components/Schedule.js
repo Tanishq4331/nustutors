@@ -7,7 +7,6 @@ import { Header } from "semantic-ui-react";
 
 const OverlapWrapper = styled.div`
   height: 400px;
-  margin-top: 2rem;
   position: relative;
 
   .base {
@@ -15,7 +14,6 @@ const OverlapWrapper = styled.div`
     height: 100%;
     transform: scale(0.9);
     position: absolute;
-    top: 1rem;
     left: 0;
   }
 
@@ -49,8 +47,9 @@ export default function Schedule({ tuteeTimes, switcheroo }) {
 
   return (
     <div className="mb-2" style={{ pointerEvents: "none" }}>
+      <Header as="h4">Time Preferences</Header>
+      <hr />
       <OverlapWrapper>
-        <Header as="h4">Time Preferences</Header>
         <div className="base">
           <ScheduleSelector
             selection={tutorSchedule}

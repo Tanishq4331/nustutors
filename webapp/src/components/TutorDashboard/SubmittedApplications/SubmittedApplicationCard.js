@@ -74,17 +74,18 @@ export function SubmittedApplicationCard({ application }) {
             </Col>
             <Col md="1.5">
               <div>
-                {/* request.user.rejectedApplications for users created before that do not have a rejectedApplications field */}
-                {request.user.rejectedApplications &&
-                request.user.rejectedApplications.includes(
-                  application.applicationId
-                ) ? (
-                  <Button basic color="red" onClick={() => setOpen(true)}>
-                    Rejected
+                {!request.acceptedApplication ? (
+                  <Button basic color="grey" onClick={() => setOpen(true)}>
+                    Pending
+                  </Button>
+                ) : request.acceptedApplication ===
+                  application.applicationId ? (
+                  <Button basic color="green" onClick={() => setOpen(true)}>
+                    Accepted
                   </Button>
                 ) : (
-                  <Button basic color="green" onClick={() => setOpen(true)}>
-                    Pending
+                  <Button basic color="red" onClick={() => setOpen(true)}>
+                    Rejected
                   </Button>
                 )}
               </div>

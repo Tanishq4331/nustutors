@@ -2,18 +2,11 @@ import { useAuth } from "../contexts/AuthContext";
 import { db } from "../config/firebase";
 import { useState, useEffect } from "react";
 import { readIds } from "./useRequests";
-import useCommitments from "./useCommitments";
 
 export default function useApplications({ limit }) {
   const [applications, setApplications] = useState([]);
   const [loading, setLoading] = useState(true);
-  const { currentUser, userData } = useAuth();
-  const { commitments } = useCommitments("tutor");
-
-   //list of requestIds corresponding to successful applications
-  const successfulApplications = commitments.map(
-    (commitment) => commitment.requestId
-  );
+  const { currentUser } = useAuth();
 
   const LIMIT = limit ? limit : Infinity;
 
@@ -50,18 +43,13 @@ export default function useApplications({ limit }) {
       .onSnapshot((snapshot) => {
         var rawApplications = snapshot.docs.map((doc) => doc.data());
 
-        //do not show successful applications
-        const filteredApplications = rawApplications.filter(
-          (application) => !successfulApplications.includes(application.requestId)
-        );
-
-        const requestIds = filteredApplications.map(
+        const requestIds = rawApplications.map(
           (application) => application.requestId
         );
 
-        addRequesterData(filteredApplications, requestIds);
+        addRequesterData(rawApplications, requestIds);
       });
-  }, [successfulApplications]);
+  }, []);
 
   return { applications, loading };
 }

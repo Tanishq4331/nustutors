@@ -50,20 +50,36 @@ export function CommitmentModal({ request, setOpen, open, user }) {
           </div>
         )}
         <Container>
-          <Row className="mb-2">
+          <Header as="h4">Request Information</Header>
+          <hr />
+          <Row className="d-flex mt-4 mb-5">
             <Col>
-              <strong> Start Date </strong>
-              <div>{startDate}</div>
+              <div className="subheading"> Start Date </div>
+              <div className="text-muted">{startDate}</div>
             </Col>
             <Col>
-              <strong> Offered Rate </strong>
-              <div>${request.rate} / hour</div>
+              <div className="subheading"> Offered Rate </div>
+              <div className="text-muted">${request.rate} / hour</div>
             </Col>
             <Col>
-              <strong> Duration </strong>
-              <div>{request.duration} months</div>
+              <div className="subheading"> Duration </div>
+              <div className="text-muted">{request.duration} months</div>
             </Col>
           </Row>
+
+          <Header as="h4">Contact Information</Header>
+          <hr />
+          <Row className="mt-4 mb-5">
+            <Col>
+              <div className="subheading"> Email </div>
+              <div className="text-muted">{user.email}</div>
+            </Col>
+            <Col>
+              <div className="subheading"> Phone </div>
+              <div className="text-muted">{user.phone}</div>
+            </Col>
+          </Row>
+          
           <Schedule tuteeTimes={userTimes} />
         </Container>
       </Modal.Body>

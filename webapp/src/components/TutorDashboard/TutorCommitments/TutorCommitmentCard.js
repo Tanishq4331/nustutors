@@ -14,8 +14,6 @@ export function TutorCommitmentCard({ tutorCommitment }) {
   const bigScreen = useWindowSize() > 990;
   const tinyScreen = useWindowSize() < 500;
   const { request, user } = tutorCommitment;
-  const startDate =
-    request.startDate && moment(request.startDate).format("D MMM");
   const code = request.module.value;
   const label = request.module.label;
   const title = label.substr(label.indexOf(" ") + 1);
@@ -25,6 +23,18 @@ export function TutorCommitmentCard({ tutorCommitment }) {
   //   setOpen(false);
   //   terminate(tutorCommitment);
   // };
+
+  const startsIn = () => {
+    const startDate = request.startDate;
+    const today = moment();
+    const daysBetween = today.diff(startDate, 'day')
+
+    if (daysBetween < 0) {
+      return `Starts in ${-1 * daysBetween} days`
+    } else {
+      return "Ongoing"
+    }
+  }
 
   return (
     <>
@@ -49,12 +59,8 @@ export function TutorCommitmentCard({ tutorCommitment }) {
                 {bigScreen && <div>{title}</div>}
               </div>
             </Col>
-            <Col md="1.5">
-              <div>
-                <Button basic color="blue" onClick={() => setOpen(true)}>
-                  Contact
-                </Button>
-              </div>
+            <Col md="2">
+              <div>{startsIn()}</div>
             </Col>
           </Row>
         </Container>

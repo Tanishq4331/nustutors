@@ -16,7 +16,7 @@ export default function TutorDashboard() {
           {/* bottom margin provides a gutter when columns are stacked */}
           <Col
             className="md-4"
-            style={{ maxWidth: "1000px", marginBottom: "20px" }}
+            style={{ marginBottom: "20px" }}
           >
             <TutorRequests />
           </Col>

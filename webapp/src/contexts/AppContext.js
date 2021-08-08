@@ -40,35 +40,10 @@ export function DataProvider({ children }) {
       });
   }
 
-  function rejectApplication(application) {
-    //add the applicationId to rejectedApplications in userData
-    return db
-      .collection("users")
-      .doc(currentUser.uid)
-      .update({
-        rejectedApplications: firebase.firestore.FieldValue.arrayUnion(
-          application.applicationId
-        ),
-      })
-      .then(() => {
-        setAlert({
-          message: "Application rejected.",
-          success: true,
-        });
-      })
-      .catch((error) => {
-        setAlert({ message: "Unable to reject application.", success: false });
-        console.log(`${error.code}: ${error.message}`);
-      });
-  }
-
-  //filter useApplications and useRequests based on commitments
   function acceptApplication(request, application) {
-    return db.collection("commitments").doc().set({
-      requestId: request.requestId,
-      tuteeId: currentUser.uid,
-      tutorId: application.tutorId,
-    });
+    return db.collection("requests")
+      .doc(request.requestId)
+      .update({ acceptedApplication: application.applicationId, tutorId: application.tutorId });
   }
 
   function deleteRequest(request) {
@@ -107,7 +82,6 @@ export function DataProvider({ children }) {
   const value = {
     makeRequest,
     deleteApplication,
-    rejectApplication,
     acceptApplication,
     deleteRequest,
     apply,

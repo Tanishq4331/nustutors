@@ -1,11 +1,12 @@
-import useTutorCommitments from "../../../hooks/useCommitments";
 import { Segment, Header, Placeholder } from "semantic-ui-react";
 import { ApplicationContainer } from "../SubmittedApplications/SubmittedApplications";
 import { AnimatePresence, motion } from "framer-motion";
 import { TutorCommitmentCard } from "./TutorCommitmentCard";
 import { Icon } from "@material-ui/core";
-import { useEffect } from "react";
-import useCommitments from "../../../hooks/useCommitments";
+import { useState, useEffect } from "react";
+import { readIds } from "../../../hooks/useRequests";
+import { db } from "../../../config/firebase";
+import { useAuth } from "../../../contexts/AuthContext";
 
 function NoCommitmentsPlaceholder() {
   return (
@@ -19,7 +20,35 @@ function NoCommitmentsPlaceholder() {
 }
 
 export default function TutorCommitments() {
-  const { commitments, loading } = useCommitments("tutor");
+  const [commitments, setCommitments] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const { currentUser } = useAuth();
+
+  const updateCommitments = async (rawRequests) => {
+    const tuteeIds = rawRequests.map((request) => request.tuteeId);
+    const tuteeDetails = await readIds(db.collection("users"), tuteeIds);
+
+    const newCommitments = rawRequests.map((request, index) => {
+      return { request: rawRequests[index], user: tuteeDetails[index] };
+    });
+
+    setCommitments(newCommitments);
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    const unsubscribe = db
+      .collection("requests")
+      .where("tutorId", "==", currentUser.uid)
+      .onSnapshot((snapshot) => {
+        // setLoading(true);
+        const rawRequests = snapshot.docs.map((doc) => doc.data());
+        updateCommitments(rawRequests);
+      });
+
+    //remember to unsubscribe from your realtime listener on unmount or you will create a memory leak
+    return unsubscribe;
+  }, []);
 
   return (
     <Segment color="blue" placeholder={!commitments.length}>
@@ -41,7 +70,7 @@ export default function TutorCommitments() {
                 {commitments.map((commitment, index) => (
                   <motion.div
                     layout
-                    key={commitment.applicationId}
+                    key={commitment.request.acceptedApplication}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}

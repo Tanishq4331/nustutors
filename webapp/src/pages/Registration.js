@@ -47,7 +47,6 @@ export default function Registration() {
     locations: [false, false, false, false, false, false, false, false],
     yearOfStudy: "Year 1",
     timings: [],
-    rejectedApplications: [],
   });
 
   const [tutorFormState, setTutorFormState] = useState({
@@ -108,12 +107,16 @@ export default function Registration() {
 
   //start actively validating the whole form when there are already errors
   useEffect(() => {
-    if (errorPresent(errors)) {
-      validatePage(displayedSteps[activeStep].label, userFormState).then(
-        (newErrors) => setErrors(newErrors)
-      );
-    }
-  }, [userFormState, activeStep, displayedSteps, errors]);
+    (async function effectFunction() {
+      if (errorPresent(errors)) {
+        const newErrors = await validatePage(
+          displayedSteps[activeStep].label,
+          userFormState
+        );
+        setErrors(newErrors);
+      }
+    })();
+  }, [userFormState]);
 
   const onStepSubmit = async (action) => {
     setLoading(true);

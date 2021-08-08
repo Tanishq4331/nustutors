@@ -10,7 +10,6 @@ import AddIcon from "@material-ui/icons/Add";
 import { IconButton } from "@material-ui/core";
 import RequestAccordion from "./RequestAccordion";
 import Loading from "../../Loading/Loading";
-import useCommitments from "../../../hooks/useCommitments";
 
 //consider limiting a user's concurrent requests
 const MAX_REQUESTS = 12;
@@ -34,13 +33,6 @@ export default function UserRequests() {
   const [loading, setLoading] = useState(true);
   const [open, setOpen] = useState(false);
 
-  const { commitments } = useCommitments("tutee");
-
-  //list of requestIds corresponding to successful requests
-  const successfulRequests = commitments.map(
-    (commitment) => commitment.requestId
-  );
-
   const [userRequests, setUserRequests] = useState([]);
 
   //Add any requests by the user
@@ -54,14 +46,15 @@ export default function UserRequests() {
 
         //do not show successful requests
         const finalRequests = rawRequests.filter(
-          (request) => !successfulRequests.includes(request.requestId)
+          (request) => !request.acceptedApplication
         );
+
         setUserRequests(finalRequests);
         setLoading(false);
       });
 
     return unsubscribe;
-  }, [successfulRequests]);
+  }, []);
 
   return (
     <>

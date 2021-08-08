@@ -6,35 +6,6 @@ const phoneRegex = new RegExp(/^[0-9 ()+-]+$/);
 const ccardRegex = new RegExp(/^[0-9-]+$/);
 const cvcRegex = new RegExp(/^[0-9]+$/);
 
-export const loginValidationSchema = Yup.object().shape({
-  email: Yup.string()
-    .email()
-    .required("Email field is required")
-    .test(
-      "is-taken",
-      "This email has been taken",
-      async (value, testContext) => !emailAlreadyExists(value)
-    ),
-  password: Yup.string()
-    .min(7, "Password should be at least 7 characters long.")
-    .required("Password is required"),
-  passwordConfirm: Yup.string().oneOf(
-    [Yup.ref("password"), null],
-    "Passwords must match"
-  ),
-});
-
-export const personalValidationSchema = Yup.object().shape({
-  name: Yup.string(),
-  phone: Yup.string()
-    .matches(phoneRegex, "Phone number is not valid")
-    .required("Phone number is required"),
-  dateOfBirth: Yup.date()
-    .min(new Date(1950, 12), "Invalid date")
-    .max(new Date(2005, 12), "Invalid Date")
-    .required("Name is required"),
-});
-
 export const termsValidator = (value) =>
   value ? "" : "It's required to agree with Terms and Conditions.";
 
@@ -51,6 +22,7 @@ export const emailValidator = async (value) => {
           return "";
         }
       } catch (error) {
+        console.log(error)
         return "";
       }
     } else {
@@ -185,3 +157,34 @@ export function validatePage(label, formState) {
 export function errorPresent(errors) {
   return Object.values(errors).some((x) => x !== "");
 }
+
+
+
+// export const loginValidationSchema = Yup.object().shape({
+//   email: Yup.string()
+//     .email()
+//     .required("Email field is required")
+//     .test(
+//       "is-taken",
+//       "This email has been taken",
+//       async (value, testContext) => !emailAlreadyExists(value)
+//     ),
+//   password: Yup.string()
+//     .min(7, "Password should be at least 7 characters long.")
+//     .required("Password is required"),
+//   passwordConfirm: Yup.string().oneOf(
+//     [Yup.ref("password"), null],
+//     "Passwords must match"
+//   ),
+// });
+
+// export const personalValidationSchema = Yup.object().shape({
+//   name: Yup.string(),
+//   phone: Yup.string()
+//     .matches(phoneRegex, "Phone number is not valid")
+//     .required("Phone number is required"),
+//   dateOfBirth: Yup.date()
+//     .min(new Date(1950, 12), "Invalid date")
+//     .max(new Date(2005, 12), "Invalid Date")
+//     .required("Name is required"),
+// });

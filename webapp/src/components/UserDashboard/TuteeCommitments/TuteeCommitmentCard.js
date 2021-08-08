@@ -15,12 +15,16 @@ export function TuteeCommitmentCard({ userCommitment }) {
   const bigScreen = useWindowSize() > 990;
   const tinyScreen = useWindowSize() < 500;
   const { request, user } = userCommitment;
+
   const startDate =
     request.startDate && moment(request.startDate).format("D MMM");
+
+  const alreadyStarted = new Date().getTime() > startDate.getTime();
+
   const code = request.module.value;
   const label = request.module.label;
   const title = label.substr(label.indexOf(" ") + 1);
-  
+
   return (
     <>
       <CommitmentModal
@@ -40,13 +44,6 @@ export function TuteeCommitmentCard({ userCommitment }) {
             <Col md="2">
               <div>
                 <strong>{code}</strong>
-              </div>
-            </Col>
-            <Col md="1.5">
-              <div>
-                <Button basic color="blue" onClick={() => setOpen(true)}>
-                  Contact
-                </Button>
               </div>
             </Col>
           </Row>

@@ -10,12 +10,15 @@ export function useAuth() {
 }
 
 export async function emailAlreadyExists(email) {
-  const snapshot = await db
-    .collection("users")
-    .where("email", "==", email)
-    .limit(1)
-    .get();
-  return !snapshot.empty;
+  return auth
+    .fetchSignInMethodsForEmail(email)
+    .then((signInMethods) => {
+      // if sign-in methods is non-empty, the email already exists in the Auth database
+      return signInMethods.length;
+    })
+    .catch((error) => {
+      console.log(error);
+    });
 }
 
 export function AuthProvider({ children }) {

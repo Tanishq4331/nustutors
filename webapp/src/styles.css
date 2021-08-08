@@ -46,3 +46,21 @@ hr {
 
   grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
 }
+
+.subheading {
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+.modal-content {
+  max-width: 600px;
+}
+
+.modal-header {
+  margin-bottom: 10px;
+}
+
+.text-muted {
+  color: #919aa3;
+  font-weight: 400;
+}

@@ -10,14 +10,9 @@ import AvatarIcon from "../../AvatarIcon/AvatarIcon";
 
 export function ReceivedApplicationModal({ application, setOpen, open }) {
   const { setAlert } = useAuth();
-  const { apply, rejectApplication, acceptApplication } = useData();
+  const { acceptApplication } = useData();
   const { request, user } = application;
   const [loading, setLoading] = useState(false);
-
-  const onReject = () => {
-    setOpen(false);
-    rejectApplication(application);
-  };
 
   const tutorTimes = user.timings.map((x) => x.toDate()); //convert firebase date to date
 
@@ -70,9 +65,6 @@ export function ReceivedApplicationModal({ application, setOpen, open }) {
         </Container>
       </Modal.Body>
       <Modal.Footer>
-        <Button color="red" onClick={onReject}>
-          <Icon name="remove" /> Reject
-        </Button>
         <Button
           content="Accept"
           labelPosition="right"
