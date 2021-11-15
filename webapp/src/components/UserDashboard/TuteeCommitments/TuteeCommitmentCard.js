@@ -19,7 +19,8 @@ export function TuteeCommitmentCard({ userCommitment }) {
   const startDate =
     request.startDate && moment(request.startDate).format("D MMM");
 
-  const alreadyStarted = new Date().getTime() > startDate.getTime();
+  // const alreadyStarted =
+  //   startDate && new Date().getTime() > startDate.getTime();
 
   const code = request.module.value;
   const label = request.module.label;
