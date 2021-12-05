@@ -78,7 +78,6 @@ export default function UserRequests() {
                 <motion.div
                   layout
                   key={request.requestId}
-                  style={{ width: "100%" }}
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}

@@ -43,7 +43,12 @@ export default function RequestAccordion({ request }) {
   );
 
   return (
-    <Collapse bordered={false} expandIconPosition={"right"} accordion>
+    <Collapse
+      style={{ width: "450px" }}
+      bordered={false}
+      expandIconPosition={"right"}
+      accordion
+    >
       <StyledPanel
         header={
           <Grid container spacing={2}>
